@@ -1,9 +1,4 @@
 import { defineConfig } from 'vitepress'
-import { readFormatter } from './read-examples'
-import path from 'path'
-
-// const examplesDir = path.join(__dirname, '../../en/examples/src')
-// const guideDir = path.join(__dirname, '../../en/guide')
 
 export const en = defineConfig({
   lang: 'en-US',

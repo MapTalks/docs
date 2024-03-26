@@ -7,7 +7,7 @@
   * sidebar item的link应指向md，例如```guide/path/to/foo.md```，link写为```'path/to/foo'```（无扩展名）
 * 完成后提交文档并创建pr
 
-### 添加英文文档
+### 添加中文文档
 * 在en/guide/目录下创建md
 * 修改.vitepress/config/en.ts中sidebarGuide方法，增加一个sidebar item
   * sidebar item的link指向md，例如```en/guide/path/to/foo.md```，link写为```'path/to/foo'```

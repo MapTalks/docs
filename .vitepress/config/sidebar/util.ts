@@ -1,22 +1,18 @@
+import { DefaultTheme } from "vitepress";
+
 export function getSidebarItems(items: any[], locale?: string) {
   let textProp = locale;
-  if (!locale || locale === 'default') {
-    textProp = 'text'
-  }
-  let prefix = '';
-  switch (type) {
-  case 'english':
-    prefix = 'en';
-    break;
+  if (!textProp) {
+    textProp = 'text';
   }
 
-  const targetItems = [];
+  const targetItems = [] as DefaultTheme.SidebarItem[];
   for (let i = 0; i < items.length; i++) {
-    const item = {
+    const item: DefaultTheme.SidebarItem = {
       text: items[i][textProp]
     };
     if (items[i].link) {
-      item.link = prefix + items[i].link;
+      item.link = items[i].link;
     }
     if (items[i].collapsed !== undefined) {
       item.collapsed = !!items[i].collapsed;

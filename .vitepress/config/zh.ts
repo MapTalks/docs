@@ -1,5 +1,6 @@
-import { defineConfig } from 'vitepress'
+import { DefaultTheme, defineConfig } from 'vitepress'
 import StudioSidebarItems from './sidebar/studio'
+import DesignerSidebarItems from './sidebar/designer';
 import { getSidebarItems } from './sidebar/util'
 
 export const zh = defineConfig({
@@ -29,29 +30,29 @@ export const zh = defineConfig({
     ],
 
     sidebar: {
-      '/guide/sdk/': { items: sidebarGuide() },
-      '/examples/': { items: sidebarExamples() },
-      '/guide/studio/': { items: sidebarStudio() },
-      // '/guide/designer/': { items: sidebarDesigner() }
+      '/guide/sdk/': { items: sidebarGuide(), base: '/guide/sdk/' },
+      '/examples/': { items: sidebarExamples(), base: '/examples/' },
+      '/guide/studio/': { items: sidebarStudio(), base: '/guide/studio/' },
+      '/guide/designer/': { items: sidebarDesigner(), base: '/guide/designer/' }
     }
   }
 })
 
 
-function sidebarGuide() {
+function sidebarGuide(): DefaultTheme.SidebarItem[] {
   return [];
 }
 
-function sidebarStudio() {
+function sidebarStudio(): DefaultTheme.SidebarItem[] {
   const items = getSidebarItems(StudioSidebarItems);
-  JSON.stringify(items);
   return items;
 }
 
-function sidebarDesigner() {
+function sidebarDesigner(): DefaultTheme.SidebarItem[] {
+  return getSidebarItems(DesignerSidebarItems);
 }
 
-function sidebarExamples() {
+function sidebarExamples(): DefaultTheme.SidebarItem[] {
   return [
     {
       text: '基础用法',

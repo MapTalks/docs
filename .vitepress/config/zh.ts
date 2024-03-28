@@ -22,7 +22,7 @@ export const zh = defineConfig({
         items: [
           { text: '开发指南', link: '/guide/sdk/indtroduction.html' },
           { text: 'studio指南', link: '/guide/studio/intro' },
-          { text: 'designer指南', link: '/guide/designer/indtroduction.html' }
+          { text: 'designer指南', link: '/guide/designer/intro' }
         ]
       },
       { text: '示例', link: '/examples/' },

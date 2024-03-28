@@ -5,7 +5,7 @@ import { getSidebarItems } from './sidebar/util'
 
 export const zh = defineConfig({
   lang: 'zh-CN',
-  description: 'maptalks三维地图引擎.',
+  description: 'maptalks.',
 
   themeConfig: {
     nav: [
@@ -29,11 +29,12 @@ export const zh = defineConfig({
       { text: '价格', link: '/pricing' },
     ],
 
-    sidebar: {
+    sidebar:
+    {
       '/guide/sdk/': { items: sidebarGuide(), base: '/guide/sdk/' },
       '/examples/': { items: sidebarExamples(), base: '/examples/' },
       '/guide/studio/': { items: sidebarStudio(), base: '/guide/studio/' },
-      '/guide/designer/': { items: sidebarDesigner(), base: '/guide/designer/' }
+      '/guide/designer/': [{ text: 'Designer指南', items: sidebarDesigner(), base: '/guide/designer/' }]
     }
   }
 })

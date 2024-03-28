@@ -5,8 +5,8 @@ import { zh, search as zhSearch } from './config/zh'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "builder docs",
-  description: "docs for 3d builder",
+  title: "MapTalks",
+  description: "",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 

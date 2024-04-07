@@ -1,0 +1,3 @@
+# 连接GeoServer
+
+这里以GeoServer为例，假定您已经有了geoserver托管的是矢量瓦片数据服务，如何用自定义数据源面板连接GeoServer。

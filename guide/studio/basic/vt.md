@@ -3,6 +3,16 @@ id: vt
 title: 什么是矢量瓦片
 ---
 
+Rendering is done by the client (for example, OpenLayers), not by the server. This allows different maps/applications to style a map differently without having to reconfigure GeoServer.
+
+The size of a vector tile is usually smaller than an image tile, resulting in faster data transfer and lower bandwidth usage.
+
+GeoWebCache, embedded with GeoServer efficiently stores the vector tile data. Since styling is done by the client, not the server, GeoWebCache only needs to store one tile for all different styles.
+
+Because the vector data is available on the client, very high-resolution maps can be drawn without corresponding increases in bandwidth.
+
+The client has native access to the actual feature information (attributes and geometry), allowing for very sophisticated rendering.
+
 矢量瓦片格式全称 mapbox vector tile format，是 [mapbox](https://mapbox.com) 公司制定的一种替换传统栅格瓦片的数据格式标准。
 
 传统栅格底图最大的问题是制备成本高，因为底图设计不仅需要专业的GIS制图师和专业的制图软件，而且栅格瓦片的切片也需要大量的时间与算力。例如22级精度到1：50的全国底图需要数周时间来生成切片。而更麻烦的是，每次底图样式的修改都需要重新生成所有的地图瓦片。

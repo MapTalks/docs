@@ -80,13 +80,13 @@ onMounted(() => {
 
 <template>
   <section class="examples">
-    <article class="instruction" ref="instruction">
+    <!-- <article class="instruction" ref="instruction">
       <div class="vt-doc" v-html="descriptionContent"></div>
-    </article>
+    </article> -->
     <Repl
       v-if="EditorComponent"
       layout="vertical"
-      :layoutReverse="false"
+      :layoutReverse="true"
       ref="replRef"
       :theme="theme"
       :editor="EditorComponent"
@@ -131,7 +131,7 @@ onMounted(() => {
 }
 
 .vue-repl {
-  width: 55%;
+  width: 100%;
   height: var(--height);
 }
 

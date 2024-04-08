@@ -1,106 +1,98 @@
 <script setup lang="ts">
-import { Repl, ReplStore } from '@vue/repl'
-import type CodeMirror from '@vue/repl/codemirror-editor'
-import { ref, watchEffect, onMounted, computed } from 'vue'
-import { shallowRef } from 'vue'
-import { onHashChange } from '../common/utils.ts'
-import { data } from './examples.data'
+import { Repl, useStore, useVueImportMap } from "@vue/repl";
+// import type CodeMirror from "@vue/repl/codemirror-editor";
+import { ref, watchEffect, onMounted, computed, toRef } from "vue";
+import { shallowRef } from "vue";
+import { onHashChange } from "../common/utils";
+import { data } from "./examples.data";
+import CodeMirror from "@vue/repl/codemirror-editor";
 
-const EditorComponent = shallowRef<typeof CodeMirror>()
+const EditorComponent = shallowRef<typeof CodeMirror>();
 
-import('@vue/repl/codemirror-editor').then(
-  mod => (EditorComponent.value = mod.default),
-)
+const { vueVersion, defaultVersion } = useVueImportMap();
 
-const replRef = ref<InstanceType<typeof Repl>>()
+const importMap = {
+  imports: {
+    maptalks: "https://unpkg.com/maptalks/dist/maptalks.es.js",
+    "gl-layers":
+      "https://unpkg.com/@maptalks/gl-layers/dist/maptalks-gl-layers.js",
+  },
+};
+
+const store = useStore({
+  vueVersion,
+  builtinImportMap: toRef(importMap),
+});
+
+import("@vue/repl/codemirror-editor").then(
+  (mod) => (EditorComponent.value = mod.default)
+);
+
+const replRef = ref<InstanceType<typeof Repl>>();
 
 const setVH = () => {
-  document.documentElement.style.setProperty('--vh', window.innerHeight + `px`)
-}
-window.addEventListener('resize', setVH)
-setVH()
+  document.documentElement.style.setProperty("--vh", window.innerHeight + `px`);
+};
+window.addEventListener("resize", setVH);
+setVH();
 
-const useProdMode = ref(false)
-
-const store = new ReplStore({
-  productionMode: useProdMode.value,
-  defaultVueRuntimeURL: import.meta.env.PROD
-    ? `${location.origin}/vue.runtime.esm-browser.js`
-    : `${location.origin}/src/vue-dev-proxy`,
-  defaultVueRuntimeProdURL: import.meta.env.PROD
-    ? `${location.origin}/vue.runtime.esm-browser.prod.js`
-    : `${location.origin}/src/vue-dev-proxy-prod`,
-  defaultVueServerRendererURL: import.meta.env.PROD
-    ? `${location.origin}/server-renderer.esm-browser.js`
-    : `${location.origin}/src/vue-server-renderer-dev-proxy`,
-})
-
-let currentHash = ref('hello')
-const descriptionContent = computed(() => {
-  return data[currentHash.value]?.['description.md'] || `<html><body>hi</body></html>`
-})
+let currentHash = ref("hello");
 
 watchEffect(updateExample, {
   onTrigger(e) {
-    console.log(e)
-    debugger
-  }
-})
-onHashChange(updateExample)
+    console.log(e);
+    debugger;
+  },
+});
+onHashChange(updateExample);
 /**
  * We perform some runtime logic to transform source files into different
  * API / format combinations:
  * - Options vs. Composition
  * - plain HTML vs. SFCs
  */
-function updateExample() {
-  let hash = location.hash.slice(1)
+async function updateExample() {
+  let hash = location.hash.slice(1);
   if (!hash) {
-    hash = 'hello'
-    location.hash = `#${hash}`
+    hash = "hello";
+    location.hash = `#${hash}`;
   }
-  fetch('./' + hash + '/index.html').then(response => response.text()).then(text => {
-    store.setFiles({ 'index.html': text }, 'index.html')
-  })
-  currentHash.value = hash
+  const htmlRes = await fetch("./" + hash + "/index.html");
+  const htmlText = await htmlRes.text();
+  const cssRes = await fetch("./" + hash + "/index.css");
+  const cssText = await cssRes.text();
+  const jsRes = await fetch("./" + hash + "/index.js");
+  const jsText = await jsRes.text();
+  store.setFiles(
+    { "index.js": jsText, "index.css": cssText, "index.html": htmlText },
+    "index.html"
+  );
+
+  currentHash.value = hash;
 }
 
-
-
-const theme = ref<'dark' | 'light'>('dark')
+const theme = ref<"dark" | "light">("dark");
 function toggleTheme(isDark: boolean) {
-  theme.value = isDark ? 'dark' : 'light'
+  theme.value = isDark ? "dark" : "light";
 }
 onMounted(() => {
-  const cls = document.documentElement.classList
-  toggleTheme(cls.contains('dark'))
-
-})
+  const cls = document.documentElement.classList;
+  toggleTheme(cls.contains("dark"));
+});
 </script>
 
 <template>
   <section class="examples">
-    <!-- <article class="instruction" ref="instruction">
-      <div class="vt-doc" v-html="descriptionContent"></div>
-    </article> -->
     <Repl
-      v-if="EditorComponent"
       layout="vertical"
-      :layoutReverse="true"
       ref="replRef"
-      :theme="theme"
-      :editor="EditorComponent"
-      @keydown.ctrl.s.prevent
-      @keydown.meta.s.prevent
-
+      :clearConsole="false"
+      :editor="CodeMirror"
+      :layoutReverse="true"
       :store="store"
       :showCompileOutput="false"
       :showImportMap="false"
       :showTsConfig="false"
-      :autoResize="true"
-
-      :clearConsole="false"
-
     />
   </section>
 </template>
@@ -114,9 +106,7 @@ onMounted(() => {
   display: flex;
   max-width: 1440px;
   margin: 0 auto;
-  --height: calc(
-    100vh - var(--vt-nav-height) - var(--vt-banner-height, 0px)
-  );
+  --height: calc(100vh - var(--vt-nav-height) - var(--vt-banner-height, 0px));
 }
 
 .instruction {
@@ -132,7 +122,15 @@ onMounted(() => {
 
 .vue-repl {
   width: 100%;
-  height: var(--height);
+  height: 100%;
+}
+
+.vue-repl .output-container {
+  height: 600px;
+}
+
+.vue-repl .editor-container {
+  height: 600px;
 }
 
 .vt-doc :deep(h1) {
@@ -159,7 +157,7 @@ button {
   background-color: var(--vt-c-brand);
   color: var(--vt-c-bg);
   padding: 4px 12px 3px;
-  border-radius: 8px;
+  border-radius: 0;
   font-weight: 600;
   font-size: 14px;
 }
@@ -193,9 +191,7 @@ button {
   }
   .vue-repl {
     width: 100%;
-    height: calc(
-      70vh - var(--vt-nav-height) - var(--vt-banner-height, 0px)
-    );
+    height: calc(70vh - var(--vt-nav-height) - var(--vt-banner-height, 0px));
   }
   :deep(.wide) {
     display: none;

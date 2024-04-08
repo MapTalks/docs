@@ -1,15 +1,16 @@
 {
+  "type": "module",
   "dependencies": {
-    "@vue/repl": "^3.2.0",
-    "vue": "^3.3.11"
+    "@vue/repl": "^4.1.1",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
-    "vitepress": "1.0.1"
+    "@types/node": "^20.12.5",
+    "vitepress": "1.0.2"
   },
   "scripts": {
-    "docs:dev": "vitepress dev",
+    "start": "vitepress dev",
     "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview",
-    "start": "npm run docs:dev"
+    "docs:preview": "vitepress preview"
   }
 }

@@ -14,7 +14,7 @@ export default {
   components: {
     ExampleRepl: defineAsyncComponent({
       loader: () => import('./ExampleRepl.vue'),
-      loadingComponent: ReplLoading
+      // loadingComponent: ReplLoading
     })
   }
 }

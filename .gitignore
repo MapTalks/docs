@@ -34,6 +34,8 @@ dist/
 .vitepress/dist
 .vitepress/cache
 
+.vscode
+
 # lock file
 yarn.lock
 package-lock.json

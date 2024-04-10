@@ -1,0 +1,1 @@
+`updateSymbol` is used for local updates of layer styles, which has higher performance compared to `setStyle` . In addition, except for some properties that require mesh reconstruction, it generally does not cause layer refresh flicker. For details, please refer to this [doc](https://doc.maptalks.com/docs/api/vt/vector-perf/)。

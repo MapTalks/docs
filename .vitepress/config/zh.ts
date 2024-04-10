@@ -1,44 +1,58 @@
-import { DefaultTheme, defineConfig } from 'vitepress'
-import StudioSidebarItems from './sidebar/studio'
-import DesignerSidebarItems from './sidebar/designer';
-import { getSidebarItems } from './sidebar/util'
+import { DefaultTheme, defineConfig } from "vitepress";
+
+import DesignerSidebarItems from "./sidebar/designer";
+import StudioSidebarItems from "./sidebar/studio";
+import examplesZH from "./examples/zh";
+import { getSidebarItems } from "./sidebar/util";
 
 export const zh = defineConfig({
-  lang: 'zh-CN',
-  description: 'maptalks.',
+  lang: "zh-CN",
+  description: "maptalks.",
 
   themeConfig: {
     nav: [
       {
-        text: '产品',
+        text: "产品",
         items: [
-          { text: 'maptalks.js', link: './examples'},
-          { text: 'studio', link: 'https://studio.maptalks.com', target: '_blank'},
-          { text: 'designer', link: 'https://designer.maptalks.com', target: '_blank'}
-        ]
+          { text: "maptalks.js", link: "./examples" },
+          {
+            text: "studio",
+            link: "https://studio.maptalks.com",
+            target: "_blank",
+          },
+          {
+            text: "designer",
+            link: "https://designer.maptalks.com",
+            target: "_blank",
+          },
+        ],
       },
       {
-        text: '文档',
+        text: "文档",
         items: [
-          { text: '开发指南', link: '/guide/sdk/indtroduction.html' },
-          { text: 'studio指南', link: '/guide/studio/intro' },
-          { text: 'designer指南', link: '/guide/designer/intro' }
-        ]
+          { text: "开发指南", link: "/guide/sdk/indtroduction.html" },
+          { text: "studio指南", link: "/guide/studio/intro" },
+          { text: "designer指南", link: "/guide/designer/intro" },
+        ],
       },
-      { text: '示例', link: '/examples/' },
-      { text: '价格', link: '/pricing' },
+      { text: "示例", link: "/examples/" },
+      { text: "价格", link: "/pricing" },
     ],
 
-    sidebar:
-    {
-      '/guide/sdk/': { items: sidebarGuide(), base: '/guide/sdk/' },
-      '/examples/': { items: sidebarExamples(), base: '/examples/' },
-      '/guide/studio/': { items: sidebarStudio(), base: '/guide/studio/' },
-      '/guide/designer/': [{ text: 'Designer指南', items: sidebarDesigner(), base: '/guide/designer/' }]
-    }
-  }
-})
-
+    sidebar: {
+      "/guide/sdk/": { items: sidebarGuide(), base: "/guide/sdk/" },
+      "/examples/": { items: examplesZH, base: "/examples/" },
+      "/guide/studio/": { items: sidebarStudio(), base: "/guide/studio/" },
+      "/guide/designer/": [
+        {
+          text: "Designer指南",
+          items: sidebarDesigner(),
+          base: "/guide/designer/",
+        },
+      ],
+    },
+  },
+});
 
 function sidebarGuide(): DefaultTheme.SidebarItem[] {
   return [];
@@ -56,11 +70,19 @@ function sidebarDesigner(): DefaultTheme.SidebarItem[] {
 function sidebarExamples(): DefaultTheme.SidebarItem[] {
   return [
     {
-      text: '基础用法',
+      text: "GLTF模型",
       items: [
-        { text: 'hello', link: '#hello' },
-        { text: 'hello2', link: '#hello2' }
-      ]
-    }
-  ]
+        {
+          text: "GLTFMarker",
+          items: [
+            { text: "添加GLTFMarker", link: "#gltf/gltf-layer/add-to-map" },
+            { text: "复制GLTFMarker", link: "#copy-marker" },
+          ],
+        },
+        { text: "hello2", link: "#hello2" },
+        { text: "一个", items: [{ text: "hello3", link: "#hello3" }] },
+      ],
+    },
+    {},
+  ];
 }

@@ -1,13 +1,12 @@
-import { zh, search as zhSearch } from "./config/zh";
-
-import type { Config as ThemeConfig } from "@vue/theme";
 import { defineConfig } from "vitepress";
 import { en } from "./config/en";
+import { zh } from "./config/zh";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "MapTalks",
   description: "",
+  srcDir: 'src',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 

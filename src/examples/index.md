@@ -1,6 +1,7 @@
 ---
 page: true
 title: Samples
+layout: page
 aside: false
 footer: false
 outline: false

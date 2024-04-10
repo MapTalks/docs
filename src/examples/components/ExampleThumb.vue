@@ -8,11 +8,7 @@ function getSrc(hash: string) {
 
 <template>
   <div class="thumbs">
-    <div
-      v-for="exampleI in examplesZh[0].items"
-      class="list"
-      :key="exampleI.text"
-    >
+    <div v-for="exampleI in examplesZh[0].items" :key="exampleI.text">
       <div class="title">{{ exampleI.text }}</div>
       <el-row :gutter="28">
         <el-col
@@ -21,15 +17,18 @@ function getSrc(hash: string) {
           :sm="12"
           :md="8"
           :lg="6"
-          ><div class="card">
-            <img width="100%" :src="getSrc(exampleJ.link!)" /><span class="text"
-              ><div class="circle" />
+        >
+          <div class="card">
+            <img width="100%" :src="getSrc(exampleJ.link!)" /><span
+              class="text"
+            >
+              <div class="circle" />
               <span class="name" :title="exampleJ.text">{{
                 exampleJ.text
-              }}</span></span
-            >
-          </div></el-col
-        >
+              }}</span>
+            </span>
+          </div>
+        </el-col>
       </el-row>
     </div>
   </div>
@@ -37,11 +36,8 @@ function getSrc(hash: string) {
 
 <style scoped>
 .thumbs {
+  padding: 10px 10px 0 10px;
   color: #333;
-}
-
-.list {
-  margin-bottom: 20px;
 }
 
 .title {

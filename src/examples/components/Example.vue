@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import ExampleRepl from "./ExampleRepl.vue";
 import ThumbList from "./ExampleThumb.vue";
+import { onHashChange } from "./utils";
 
-const hash = location.hash.slice(1);
+const hash = ref(location.hash.slice(1));
+
+onHashChange(() => (hash.value = location.hash.slice(1)));
 </script>
 
 <template>

@@ -9,6 +9,7 @@ const importMap = {
     maptalks: "https://unpkg.com/maptalks/dist/maptalks.es.js",
     "gl-layers":
       "https://unpkg.com/@maptalks/gl-layers/dist/maptalks-gl-layers.js",
+    "draco": "https://maptalks.com/api/transcoders.draco.js",
     "mt.gui": "/lib/mt.gui.js",
   },
 };

@@ -14,7 +14,7 @@ const map = new maptalks.Map("map", {
     },
   },
   baseLayer: new maptalks.TileLayer("base", {
-    urlTemplate: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+    urlTemplate: "{urlTemplate}",
     subdomains: ["a", "b", "c", "d"]
   }),
 });

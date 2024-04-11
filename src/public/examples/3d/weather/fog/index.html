@@ -1,19 +1,17 @@
-<script
-  type="text/javascript"
-  src="https://maptalks.com/api/transcoders.draco.js"
-></script>
-
 <div id="map" class="container"></div>
 
 <script>
-  import { Map } from "maptalks";
+  import "draco";
+
   import {
-    GroupGLLayer,
-    VectorTileLayer,
     GLTFLayer,
     GLTFMarker,
+    GroupGLLayer,
+    VectorTileLayer,
   } from "gl-layers";
+
   import { GUI } from "mt.gui";
+  import { Map } from "maptalks";
 
   const map = new Map("map", {
     center: [-73.88756247170068, 40.68791104561976],
@@ -149,78 +147,78 @@
     },
   ];
 
-  // const vtLayer = new VectorTileLayer("vt", {
-  //   urlTemplate: "http://tile.maptalks.com/test/planet-single/{z}/{x}/{y}.mvt",
-  //   style: vtStyle,
-  // });
+  const vtLayer = new VectorTileLayer("vt", {
+    urlTemplate: "http://tile.maptalks.com/test/planet-single/{z}/{x}/{y}.mvt",
+    style: vtStyle,
+  });
 
-  // const gltfLayer = new GLTFLayer("gltf");
+  const gltfLayer = new GLTFLayer("gltf");
 
-  // const gltfMarker = new GLTFMarker([-73.88713688860861, 40.68848442450471], {
-  //   symbol: {
-  //     shadow: true,
-  //     url: "{res}/gltf/29c/scene.gltf",
-  //     scaleX: 289.77474184549226,
-  //     scaleY: 289.77474184549226,
-  //     scaleZ: 289.77474184549226,
-  //     rotationZ: 299.6285,
-  //     shader: "pbr",
-  //     uniforms: {
-  //       polygonFill: [1, 1, 1, 1],
-  //       polygonOpacity: 1,
-  //       baseColorIntensity: 1,
-  //       outputSRGB: 1,
-  //     },
-  //   },
-  //   zoomOnAdded: 17,
-  // });
+  const gltfMarker = new GLTFMarker([-73.88713688860861, 40.68848442450471], {
+    symbol: {
+      shadow: true,
+      url: "{res}/gltf/29c/scene.gltf",
+      scaleX: 289.77474184549226,
+      scaleY: 289.77474184549226,
+      scaleZ: 289.77474184549226,
+      rotationZ: 299.6285,
+      shader: "pbr",
+      uniforms: {
+        polygonFill: [1, 1, 1, 1],
+        polygonOpacity: 1,
+        baseColorIntensity: 1,
+        outputSRGB: 1,
+      },
+    },
+    zoomOnAdded: 17,
+  });
 
-  // gltfLayer.addGeometry(gltfMarker);
+  gltfLayer.addGeometry(gltfMarker);
 
-  // const sceneConfig = {
-  //   environment: {
-  //     enable: true,
-  //     mode: 1,
-  //     level: 0,
-  //     brightness: 0.489,
-  //   },
-  //   shadow: {
-  //     type: "esm",
-  //     enable: true,
-  //     quality: "high",
-  //     opacity: 0.5,
-  //     color: [0, 0, 0],
-  //     blurOffset: 1,
-  //   },
-  //   postProcess: {
-  //     enable: true,
-  //   },
-  //   weather: {
-  //     enable: true,
-  //     fog: {
-  //       enable: true,
-  //       start: 0.1,
-  //       end: 26,
-  //       color: [0.9, 0.9, 0.9],
-  //     },
-  //   },
-  //   ground: {
-  //     enable: true,
-  //     renderPlugin: {
-  //       type: "fill",
-  //     },
-  //     symbol: {
-  //       polygonFill: [
-  //         0.803921568627451, 0.803921568627451, 0.803921568627451, 1,
-  //       ],
-  //       polygonOpacity: 1,
-  //     },
-  //   },
-  // };
+  const sceneConfig = {
+    environment: {
+      enable: true,
+      mode: 1,
+      level: 0,
+      brightness: 0.489,
+    },
+    shadow: {
+      type: "esm",
+      enable: true,
+      quality: "high",
+      opacity: 0.5,
+      color: [0, 0, 0],
+      blurOffset: 1,
+    },
+    postProcess: {
+      enable: true,
+    },
+    weather: {
+      enable: true,
+      fog: {
+        enable: true,
+        start: 0.1,
+        end: 26,
+        color: [0.9, 0.9, 0.9],
+      },
+    },
+    ground: {
+      enable: true,
+      renderPlugin: {
+        type: "fill",
+      },
+      symbol: {
+        polygonFill: [
+          0.803921568627451, 0.803921568627451, 0.803921568627451, 1,
+        ],
+        polygonOpacity: 1,
+      },
+    },
+  };
 
-  // const groupGLLayer = new GroupGLLayer("gl", [vtLayer, gltfLayer], {
-  //   sceneConfig,
-  // }).addTo(map);
+  const groupGLLayer = new GroupGLLayer("gl", [vtLayer, gltfLayer], {
+    sceneConfig,
+  }).addTo(map);
 
   const gui = new GUI();
   gui
@@ -279,6 +277,6 @@
 </script>
 
 <style>
-  @import "https://unpkg.com/maptalks/dist/maptalks.css";
+  @import "https://maptalks.com/api/maptalks.css";
   @import "./index.css";
 </style>

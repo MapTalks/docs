@@ -4,6 +4,10 @@ import examplesZh from "../../../.vitepress/config/examples/zh";
 function getSrc(hash: string) {
   return `/thumbnails/${hash.slice(1).replaceAll("/", "_")}.webp`;
 }
+
+function goPage(link: string) {
+  window.location = link;
+}
 </script>
 
 <template>
@@ -19,7 +23,7 @@ function getSrc(hash: string) {
           :lg="6"
         >
           <div class="card">
-            <img width="100%" :src="getSrc(exampleJ.link!)" /><span
+            <img width="100%" :src="getSrc(exampleJ.link!)" @click="goPage(exampleJ.link!)" /><span
               class="text"
             >
               <div class="circle" />

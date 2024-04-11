@@ -105,10 +105,6 @@ const examplesEN: DefaultTheme.SidebarItem[] = [
             link: "#basic/tilelayer-projection/wms-reload",
           },
           {
-            text: "Add a mapbox vector-tile Layer",
-            link: "#basic/tilelayer-projection/vector-tile",
-          },
-          {
             text: "Add an ArcGIS TileLayer",
             link: "#basic/tilelayer-projection/arcgis-tile",
           },

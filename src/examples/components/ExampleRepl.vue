@@ -7,9 +7,10 @@ import { onHashChange } from "./utils";
 const importMap = {
   imports: {
     maptalks: "https://unpkg.com/maptalks/dist/maptalks.es.js",
+    draco: "https://maptalks.com/api/transcoders.draco.js",
+    proj4: "https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.11.0/proj4.js",
     "gl-layers":
       "https://unpkg.com/@maptalks/gl-layers/dist/maptalks-gl-layers.js",
-    "draco": "https://maptalks.com/api/transcoders.draco.js",
     "mt.gui": "/lib/mt.gui.js",
   },
 };

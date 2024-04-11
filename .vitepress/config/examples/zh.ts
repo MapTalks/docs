@@ -109,10 +109,6 @@ const examplesZH: DefaultTheme.SidebarItem[] = [
             link: "#basic/tilelayer-projection/wms-reload",
           },
           {
-            text: "Vector-Tile图层",
-            link: "#basic/tilelayer-projection/vector-tile",
-          },
-          {
             text: "ArcGIS瓦片图层",
             link: "#basic/tilelayer-projection/arcgis-tile",
           },

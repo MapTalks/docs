@@ -5,5 +5,16 @@ body {
   width: 100%;
 }
 
-#map-left {width:calc(50% - 2px);height:calc(100% - 2px);float:left;border:1px solid white}
-#map-right {width:calc(50% - 2px);height:calc(100% - 2px);float:right;border:1px solid white}
+#map-left {
+  width: calc(50% - 2px);
+  height: calc(100% - 2px);
+  float: left;
+  border: 1px solid white;
+}
+
+#map-right {
+  width: calc(50% - 2px);
+  height: calc(100% - 2px);
+  float: right;
+  border: 1px solid white;
+}

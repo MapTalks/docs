@@ -1,6 +1,7 @@
+import { join, resolve } from "path";
+import { readFileSync, readdirSync, statSync } from "fs";
+
 import { createMarkdownRenderer } from "vitepress";
-import fs from "fs";
-import path from "path";
 
 export declare const data: Record<string, ExampleData>;
 
@@ -9,37 +10,43 @@ export type ExampleData = {
 };
 
 export default {
-  watch: "src/**",
-  async load() {
-    const md = await createMarkdownRenderer(process.cwd(), undefined, "/");
-    const srcDir = path.resolve(__dirname, "./src");
-    const files = readExamples(srcDir);
-    for (const step in files) {
-      const stepFiles = files[step];
-      const desc = stepFiles["description.md"] as string;
-      if (desc) {
-        stepFiles["description.md"] = md.render(desc);
-      }
-    }
-    return files;
+  watch: "/examples/**",
+  load() {
+    const srcDir = resolve(__dirname, "../../public/examples");
+    return readExamples(srcDir);
   },
 };
 
 export function readExamples(srcDir: string): Record<string, ExampleData> {
-  const examples = fs.readdirSync(srcDir);
   const data: Record<string, ExampleData> = {};
-  for (const name of examples) {
-    data[name] = readExample(path.join(srcDir, name));
+  const examplesI = readdirSync(srcDir);
+  for (const nameI of examplesI) {
+    if (nameI === "resources") {
+      continue;
+    }
+    const examplesJ = readdirSync(join(srcDir, nameI));
+    for (const nameJ of examplesJ) {
+      const examplesK = readdirSync(join(srcDir, nameI, nameJ));
+      for (const nameK of examplesK) {
+        data[`${nameI}/${nameJ}/${nameK}`] = readExample(
+          join(srcDir, nameI, nameJ, nameK)
+        );
+      }
+    }
   }
   return data;
 }
 
 function readExample(dir: string): ExampleData {
-  const filenames = fs.readdirSync(dir);
+  const filenames = readdirSync(dir);
   const files: ExampleData = {};
   for (const filename of filenames) {
-    const fullPath = path.join(dir, filename);
-    files[filename] = fs.readFileSync(fullPath, "utf-8");
+    const fullPath = join(dir, filename);
+    if (statSync(fullPath).isDirectory()) {
+      files[filename] = readExample(fullPath);
+    } else {
+      files[filename] = readFileSync(fullPath, "utf-8");
+    }
   }
   return files;
 }

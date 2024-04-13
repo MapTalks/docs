@@ -3,6 +3,7 @@ import { Repl, useStore } from "@vue/repl";
 import CodeMirror from "@vue/repl/codemirror-editor";
 import { watchEffect, toRef } from "vue";
 import { onHashChange } from "./utils";
+import { data } from "./examples.data";
 
 const importMap = {
   imports: {
@@ -24,22 +25,23 @@ watchEffect(updateExample, {
     debugger;
   },
 });
+
 onHashChange(updateExample);
 
-async function updateExample() {
+function updateExample() {
   let hash = location.hash.slice(1);
-  if (!hash) {
-    hash = "hello";
-    location.hash = `#${hash}`;
+  if (!hash.includes("/")) {
+    return;
   }
-  const htmlRes = await fetch(hash + "/index.html");
-  const htmlText = await htmlRes.text();
-  const cssRes = await fetch(hash + "/index.css");
-  const cssText = await cssRes.text();
+  const htmlText = data[hash]["index.html"].replaceAll(
+    "{res}",
+    "/examples/resources"
+  );
+  const cssText = data[hash]["index.css"];
   store.setFiles(
     {
+      "index.html": htmlText,
       "index.css": cssText,
-      "index.html": htmlText.replaceAll("{res}", "/examples/resources"),
     },
     "index.html"
   );

@@ -12,7 +12,7 @@ import { defineAsyncComponent } from 'vue'
 
 export default {
   components: {
-    ExampleRepl: defineAsyncComponent({
+    Editor: defineAsyncComponent({
       loader: () => import('./Editor.vue'),
     })
   }
@@ -20,5 +20,5 @@ export default {
 </script>
 
 <ClientOnly>
-  <ExampleRepl />
+  <Editor />
 </ClientOnly>

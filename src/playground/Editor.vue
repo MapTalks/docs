@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, reactive } from "vue";
 import Split from 'split.js';
 import loader from '@monaco-editor/loader';
 import { ElMessage } from 'element-plus'
@@ -14,9 +14,15 @@ import { getCode, createShareUrl } from './code';
 
 const editorRef = ref('editorRef');
 const previewRef = ref('previewRef');
+const toolRef = ref('toolRef');
+
+const state = reactive({
+    loaded: false,
+    isDark: false
+})
 
 
-let editor;
+let editor: any;
 
 const prettierOptions = {
     tabWidth: 4
@@ -122,6 +128,28 @@ const shareUrl = () => {
     })
 }
 
+let rAFId: number;
+let currentTheme = 'vs';
+const checkTheme = () => {
+    if (editor) {
+        const htmlElement = document.body.parentElement;
+        if (htmlElement) {
+            const isDark = htmlElement.classList.contains('dark');
+            const theme = isDark ? 'vs-dark' : 'vs';
+            state.isDark = isDark;
+            if (theme !== currentTheme) {
+                editor.updateOptions({ theme });
+                currentTheme = theme;
+            }
+        }
+    }
+    if (!state.loaded) {
+        state.loaded = true;
+    }
+
+    rAFId = requestAnimationFrame(checkTheme);
+}
+
 onMounted(() => {
     Split(['#editor-panel', '#preview-panel']);
     // https://github.com/suren-atoyan/monaco-loader
@@ -130,6 +158,7 @@ onMounted(() => {
     });
     loader.init().then((monaco) => {
         createEditor(monaco);
+        rAFId = requestAnimationFrame(checkTheme);
     }).catch(() => {
         ElMessage.error('load monaco editor error');
     })
@@ -140,6 +169,9 @@ onUnmounted(() => {
         console.log('dispose editor');
         editor.dispose();
     }
+    if (rAFId) {
+        cancelAnimationFrame(rAFId);
+    }
 })
 
 </script>
@@ -147,7 +179,7 @@ onUnmounted(() => {
 <template>
     <div class="editor-container">
         <div id="editor-panel" class="editor-panel panel">
-            <div class="tools">
+            <div v-if="state.loaded" ref="toolRef" class="tools" :class="{ 'tools-dark': state.isDark }">
                 <button class="button" @click="runCode">Run</button>
                 <button class="button" @click="copyCode">Copy</button>
                 <button class="button" @click="shareUrl">Share</button>
@@ -194,11 +226,15 @@ onUnmounted(() => {
 .button {
     background-color: var(--vp-c-brand-1);
     color: white;
-    margin-right: 10px;
+    margin-left: 10px;
     padding: 0px 5px;
 }
 </style>
 <style>
+.tools-dark {
+    border-bottom: 1px solid black !important;
+}
+
 .split {
     display: flex;
     flex-direction: row;

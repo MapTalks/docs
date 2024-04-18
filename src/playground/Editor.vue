@@ -3,6 +3,13 @@ import { ref, onMounted, onUnmounted } from "vue";
 import Split from 'split.js';
 import loader from '@monaco-editor/loader';
 import { ElMessage } from 'element-plus'
+import { format } from 'prettier';
+import HTMLPlugin from 'prettier/plugins/html';
+import BabelPlugin from 'prettier/plugins/babel';
+import PostCssPlugin from 'prettier/plugins/postcss';
+import AcornPlugin from 'prettier/plugins/acorn';
+import ESTreePlugin from 'prettier/plugins/estree';
+
 import { getCode, createShareUrl } from './code';
 
 const editorRef = ref('editorRef');
@@ -10,6 +17,46 @@ const previewRef = ref('previewRef');
 
 
 let editor;
+
+const prettierOptions = {
+    tabWidth: 4
+}
+
+const getWholeRange = () => {
+    const model = editor.getModel();
+    const linesNumber = model.getLineCount();
+    const range = {
+        startLineNumber: 1,
+        endLineNumber: linesNumber,
+        startColumn: 1,
+        endColumn: 100000
+    };
+    return [range];
+
+}
+
+const bindPrettier = (monaco) => {
+    editor.addAction({
+        id: '', // 菜单项 id
+        label: 'Format Code', // 菜单项名称
+        keybindings: [monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF],
+        contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
+        run: () => {
+            format(editor.getValue(), Object.assign({}, prettierOptions, {
+                parser: 'html',
+                plugins: [HTMLPlugin, PostCssPlugin, AcornPlugin, ESTreePlugin, BabelPlugin]
+            })).then(text => {
+                const [range] = getWholeRange();
+                editor.executeEdits('', [
+                    {
+                        range,
+                        text
+                    }
+                ]);
+            });
+        }
+    });
+}
 
 const createEditor = (monaco) => {
     // https://microsoft.github.io/monaco-editor/
@@ -19,6 +66,7 @@ const createEditor = (monaco) => {
         // theme: 'vs-dark',
         automaticLayout: true
     });
+    bindPrettier(monaco);
     const code = getCode();
     if (code) {
         editor.setValue(code);
@@ -49,7 +97,7 @@ const copyCode = () => {
         return;
     }
     navigator.clipboard.writeText(value).then(() => {
-        ElMessage.success('copy code Successful');
+        ElMessage.success('Copy code Successful');
     }).catch(error => {
         ElMessage.error('copy code error');
         console.error(error);
@@ -67,7 +115,7 @@ const shareUrl = () => {
     }
     const url = createShareUrl(value);
     navigator.clipboard.writeText(url).then(() => {
-        ElMessage.success('share url Successful');
+        ElMessage.success('Share url Successful');
     }).catch(error => {
         ElMessage.error('share url error');
         console.error(error);

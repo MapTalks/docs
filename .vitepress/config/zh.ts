@@ -30,9 +30,11 @@ export const zh = defineConfig({
       {
         text: "文档",
         items: [
-          { text: "开发指南", link: "/guide/sdk/indtroduction.html" },
+          { text: "API", link: "/api/vector-tile-layer" },
+          { text: "开发指南", link: "/guide/sdk/intro" },
           { text: "studio指南", link: "/guide/studio/intro" },
           { text: "designer指南", link: "/guide/designer/intro" },
+          { text: "参与开发", link: "/guide/developer/intro" },
         ],
       },
       { text: "示例", link: "/examples/" },
@@ -41,6 +43,7 @@ export const zh = defineConfig({
     ],
 
     sidebar: {
+      "/api/": { items: sidebarAPI(), base: "/api/" },
       "/guide/sdk/": { items: sidebarGuide(), base: "/guide/sdk/" },
       "/examples/": { items: examplesZH, base: "/examples/" },
       "/guide/studio/": { items: sidebarStudio(), base: "/guide/studio/" },
@@ -68,22 +71,107 @@ function sidebarDesigner(): DefaultTheme.SidebarItem[] {
   return getSidebarItems(DesignerSidebarItems);
 }
 
-function sidebarExamples(): DefaultTheme.SidebarItem[] {
+function sidebarAPI(): DefaultTheme.SidebarItem[] {
   return [
     {
-      text: "GLTF模型",
+      text: "webgl矢量图层",
+      collapsed: true,
       items: [
-        {
-          text: "GLTFMarker",
-          items: [
-            { text: "添加GLTFMarker", link: "#gltf/gltf-layer/add-to-map" },
-            { text: "复制GLTFMarker", link: "#copy-marker" },
-          ],
-        },
-        { text: "hello2", link: "#hello2" },
-        { text: "一个", items: [{ text: "hello3", link: "#hello3" }] },
+        { text: "VectorTileLayer", link: "vector-tile-layer" },
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
       ],
     },
-    {},
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
+    {
+      text: "webgl矢量图层",
+      collapsed: true,
+      items: [
+        { text: "GeoJSONVectorTileLayer", link: "geojson-vector-tile-layer" },
+        { text: "PointLayer", link: "point-layer" },
+        { text: "LineStringLayer", link: "line-string-layer" },
+        { text: "PolygonLayer", link: "polygon-layer" },
+        { text: "ExtrudePolygonLayer", link: "extrude-polygon-layer" },
+      ],
+    },
   ];
 }

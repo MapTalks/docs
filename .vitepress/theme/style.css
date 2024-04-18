@@ -137,3 +137,15 @@
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
 
+details {
+  background-color: var(--vp-c-bg);
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-default-1);
+  padding: 6px 12px 6px 12px;
+  margin: 20px 0px;
+}
+
+details[open] summary::before {
+  content:"▼";
+  padding: .7em;
+}

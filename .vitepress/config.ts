@@ -13,6 +13,9 @@ export default defineConfig({
     socialLinks: [
       { icon: "github", link: "https://github.com/maptalks/maptalks.js" },
     ],
+    editLink: {
+      pattern: 'https://github.com/fuzhenn/builder-docs/edit/master/src/:path'
+    }
   },
 
   locales: {

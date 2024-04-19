@@ -10,15 +10,20 @@ import PostCssPlugin from 'prettier/plugins/postcss';
 import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
-import { getCode, createShareUrl } from './code';
+import { getCode, createShareUrl, getExtraLibs } from './code';
 
 const editorRef = ref('editorRef');
 const previewRef = ref('previewRef');
 const toolRef = ref('toolRef');
 
 const state = reactive({
+    size: 'small',
     loaded: false,
-    isDark: false
+    isDark: false,
+    libDialogShow: false,
+    imageDialogShow: false,
+    libList: getExtraLibs().libs,
+    pluginList: getExtraLibs().plugins
 })
 
 
@@ -82,6 +87,15 @@ const createEditor = (monaco) => {
     }
 }
 
+const clipboardText = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+        ElMessage.success('Copy Successful');
+    }).catch(error => {
+        ElMessage.error('copy error');
+        console.error(error);
+    })
+}
+
 const runCode = () => {
     if (!editor || !previewRef || !previewRef.value) {
         ElMessage.error('editor not created');
@@ -102,12 +116,7 @@ const copyCode = () => {
     if (!value) {
         return;
     }
-    navigator.clipboard.writeText(value).then(() => {
-        ElMessage.success('Copy code Successful');
-    }).catch(error => {
-        ElMessage.error('copy code error');
-        console.error(error);
-    })
+    clipboardText(value);
 }
 
 const shareUrl = () => {
@@ -120,12 +129,7 @@ const shareUrl = () => {
         return;
     }
     const url = createShareUrl(value);
-    navigator.clipboard.writeText(url).then(() => {
-        ElMessage.success('Share url Successful');
-    }).catch(error => {
-        ElMessage.error('share url error');
-        console.error(error);
-    })
+    clipboardText(url);
 }
 
 let rAFId: number;
@@ -183,15 +187,46 @@ onUnmounted(() => {
                 <button class="button" @click="runCode">Run</button>
                 <button class="button" @click="copyCode">Copy</button>
                 <button class="button" @click="shareUrl">Share</button>
+                <button class="button" @click="state.libDialogShow = true">Libs</button>
+                <button class="button">
+                    <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to Base64</a>
+                </button>
             </div>
             <div ref="editorRef" class="editor-main"></div>
         </div>
         <div id="preview-panel" class="preview-panel panel">
             <iframe ref="previewRef" class="preview-result"></iframe>
         </div>
+        <el-dialog v-model="state.libDialogShow" title="Some libs CDN URL" width="800">
+            <!-- <span>Common Libs</span> -->
+            <el-divider content-position="left">Maptalks Plugins</el-divider>
+            <div v-for="item in state.pluginList" class="flex row">
+                <div class="label">{{ item.name }}</div>
+                <div class="value">
+                    <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
+                        placeholder="Please input" />
+                    <button class="button" @click="clipboardText(item.url)">Copy</button>
+                </div>
+            </div>
+            <el-divider content-position="left">Common Libs</el-divider>
+            <div v-for="item in state.libList" class="flex row">
+                <div class="label">{{ item.name }}</div>
+                <div class="value">
+                    <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
+                        placeholder="Please input" />
+                    <button class="button" @click="clipboardText(item.url)">Copy</button>
+                </div>
+            </div>
+
+
+        </el-dialog>
     </div>
 </template>
 <style scoped>
+.flex {
+    display: flex;
+}
+
 .editor-container {
     width: 100%;
     min-height: 900px;
@@ -228,6 +263,10 @@ onUnmounted(() => {
     color: white;
     margin-left: 10px;
     padding: 0px 5px;
+}
+
+.row .label {
+    width: 160px;
 }
 </style>
 <style>

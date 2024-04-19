@@ -59,3 +59,68 @@ function getDefaultCode() {
     </html>
     `
 }
+
+const CDNURL = 'https://cdn.jsdelivr.net/npm/';
+
+export function getExtraLibs() {
+    return {
+        libs: [
+            {
+                name: 'threejs',
+                url: 'three@0.138.0/build/three.min.js'
+            },
+            {
+                name: 'vue',
+                url: 'vue/dist/vue.global.min.js'
+            },
+            {
+                name: 'react',
+                url: 'react/umd/react.production.min.js'
+            },
+            {
+                name: 'react-dom',
+                url: 'react-dom/umd/react-dom.production.min.js'
+            },
+            {
+                name: 'jsts',
+                url: 'jsts/dist/jsts.min.js'
+            },
+            {
+                name: 'turfjs',
+                url: '@turf/turf@6.5.0/turf.min.js'
+            },
+            {
+                name: 'anime',
+                url: 'animejs/lib/anime.min.js'
+            }
+        ].map(item => {
+            return {
+                name: item.name,
+                url: `<script type='text/javascript' src='${CDNURL}${item.url}'></script>`
+            }
+        }),
+        plugins: [
+            {
+                name: 'maptalks.three',
+                url: 'maptalks.three/dist/maptalks.three.min.js'
+            },
+            {
+                name: 'maptalks.snap',
+                url: 'maptalks.snap/dist/maptalks.snap.min.js'
+            },
+            {
+                name: 'maptalks.routeplayer',
+                url: 'maptalks.routeplayer/dist/maptalks.routeplayer.min.js'
+            },
+            {
+                name: 'maptalks.modelcontrol',
+                url: 'maptalks.modelcontrol/dist/maptalks.modelcontrol.min.js'
+            }
+        ].map(item => {
+            return {
+                name: item.name,
+                url: `<script type='text/javascript' src='${CDNURL}${item.url}'></script>`
+            }
+        })
+    }
+}

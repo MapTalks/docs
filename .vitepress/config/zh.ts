@@ -38,7 +38,7 @@ export const zh = defineConfig({
         ],
       },
       { text: "示例", link: "/examples/" },
-      { text: 'Playground', link: '/playground/' },
+      { text: '演练场', link: '/playground/' },
       { text: "价格", link: "/pricing" },
     ],
 

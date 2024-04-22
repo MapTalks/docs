@@ -10,11 +10,13 @@ import PostCssPlugin from 'prettier/plugins/postcss';
 import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
-import { getCode, createShareUrl, getExtraLibs } from './code';
+import { getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
+import { stringify } from "querystring";
 
-const editorRef = ref('editorRef');
+const editorJSRef = ref('editorJSRef');
+const editorHTMLRef = ref('editorHTMLRef');
+const editorCSSRef = ref('editorCSSRef');
 const previewRef = ref('previewRef');
-const toolRef = ref('toolRef');
 
 const state = reactive({
     size: 'small',
@@ -27,13 +29,16 @@ const state = reactive({
 })
 
 
-let editor: any;
+let editorJS: any;
+let editorHTML: any;
+let editorCSS: any;
+let editors: any[] = [];
 
 const prettierOptions = {
     tabWidth: 4
 }
 
-const getWholeRange = () => {
+const getWholeRange = (editor) => {
     const model = editor.getModel();
     const linesNumber = model.getLineCount();
     const range = {
@@ -47,40 +52,58 @@ const getWholeRange = () => {
 }
 
 const bindPrettier = (monaco) => {
-    editor.addAction({
-        id: '', // 菜单项 id
-        label: 'Format Code', // 菜单项名称
-        keybindings: [monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF],
-        contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
-        run: () => {
-            format(editor.getValue(), Object.assign({}, prettierOptions, {
-                parser: 'html',
-                plugins: [HTMLPlugin, PostCssPlugin, AcornPlugin, ESTreePlugin, BabelPlugin]
-            })).then(text => {
-                const [range] = getWholeRange();
-                editor.executeEdits('', [
-                    {
-                        range,
-                        text
-                    }
-                ]);
-            });
-        }
+    editors.forEach(editor => {
+        editor.addAction({
+            id: '', // 菜单项 id
+            label: 'Format Code', // 菜单项名称
+            keybindings: [monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF],
+            contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
+            run: () => {
+                const language = editor.getModel().getLanguageId();
+                // console.log(editor.getModel().getLanguageId());
+                format(editor.getValue(), Object.assign({}, prettierOptions, {
+                    parser: language === 'javascript' ? 'babel' : language,
+                    plugins: [HTMLPlugin, PostCssPlugin, AcornPlugin, ESTreePlugin, BabelPlugin]
+                })).then(text => {
+                    const [range] = getWholeRange(editor);
+                    editor.executeEdits('', [
+                        {
+                            range,
+                            text
+                        }
+                    ]);
+                });
+            }
+        });
     });
 }
 
 const createEditor = (monaco) => {
     // https://microsoft.github.io/monaco-editor/
-    editor = monaco.editor.create(editorRef.value, {
-        value: '<h1>hello world</h1>',
-        language: 'html',
+    const editorOptions = {
+        minimap: {
+            autohide: true
+        },
+        value: '',
         // theme: 'vs-dark',
         automaticLayout: true
-    });
+    }
+    editorJS = monaco.editor.create(editorJSRef.value, Object.assign({}, editorOptions, {
+        language: 'javascript',
+    }));
+    editorHTML = monaco.editor.create(editorHTMLRef.value, Object.assign({}, editorOptions, {
+        language: 'html',
+    }));
+    editorCSS = monaco.editor.create(editorCSSRef.value, Object.assign({}, editorOptions, {
+        language: 'css',
+    }));
+    editors = [editorJS, editorHTML, editorCSS];
     bindPrettier(monaco);
-    const code = getCode();
-    if (code) {
-        editor.setValue(code);
+    const result = getCode();
+    if (result) {
+        editorJS.setValue(result.jsCode);
+        editorHTML.setValue(result.htmlCode);
+        editorCSS.setValue(result.cssCode);
         setTimeout(() => {
             runCode();
         }, 500);
@@ -97,52 +120,56 @@ const clipboardText = (text: string) => {
 }
 
 const runCode = () => {
-    if (!editor || !previewRef || !previewRef.value) {
+    if (!editors.length || !previewRef || !previewRef.value) {
         ElMessage.error('editor not created');
         return;
     }
-    const value = editor.getValue();
-    const blob = new Blob([value], { type: 'text/html' });
+    const jsCode = editorJS.getValue();
+    const htmlCode = editorHTML.getValue();
+    const cssCode = editorCSS.getValue();
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    const blob = new Blob([code], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     (previewRef.value as any).src = url
 }
 
 const copyCode = () => {
-    if (!editor) {
+    if (!editors.length) {
         ElMessage.error('editor not created');
         return;
     }
-    const value = editor.getValue();
-    if (!value) {
-        return;
-    }
-    clipboardText(value);
+    const jsCode = editorJS.getValue();
+    const htmlCode = editorHTML.getValue();
+    const cssCode = editorCSS.getValue();
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    clipboardText(code);
 }
 
 const shareUrl = () => {
-    if (!editor) {
+    if (!editors.length) {
         ElMessage.error('editor not created');
         return;
     }
-    const value = editor.getValue();
-    if (!value) {
-        return;
-    }
-    const url = createShareUrl(value);
+    const jsCode = editorJS.getValue();
+    const htmlCode = editorHTML.getValue();
+    const cssCode = editorCSS.getValue();
+    const url = createShareUrl(jsCode, htmlCode, cssCode);
     clipboardText(url);
 }
 
 let rAFId: number;
 let currentTheme = 'vs';
 const checkTheme = () => {
-    if (editor) {
+    if (editors.length) {
         const htmlElement = document.body.parentElement;
         if (htmlElement) {
             const isDark = htmlElement.classList.contains('dark');
             const theme = isDark ? 'vs-dark' : 'vs';
             state.isDark = isDark;
             if (theme !== currentTheme) {
-                editor.updateOptions({ theme });
+                editors.forEach(editor => {
+                    editor.updateOptions({ theme });
+                })
                 currentTheme = theme;
             }
         }
@@ -150,17 +177,64 @@ const checkTheme = () => {
     if (!state.loaded) {
         state.loaded = true;
     }
-
     rAFId = requestAnimationFrame(checkTheme);
+}
+
+const loadDTS = (monaco) => {
+    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        allowJs: true,
+        allowNonTsExtensions: true,
+        checkJs: true,
+        strict: true,
+        alwaysStrict: true,
+        // lib: ['example.d.ts'],
+        target: monaco.languages.typescript.ScriptTarget.ESNext,
+        esModuleInterop: true,
+        noEmit: true,
+        noImplicitAny: true
+    });
+    console.log(monaco.languages.typescript)
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+        // noSemanticValidation: false,
+        // noSyntaxValidation: false
+    })
+
+    // fetch('/lib/Coordinate.d.ts').then(res => res.text()).then(text => {
+    //     var libUri = `ts:filename/Canvas.d.ts`;
+    //     console.log(libUri);
+    //     monaco.languages.typescript.javascriptDefaults.addExtraLib(text, libUri);
+    //     monaco.editor.createModel(text, "typescript", monaco.Uri.parse(libUri));
+    // });
+    fetch('/lib/maptalks.dts.json').then(res => res.json()).then(json => {
+        type Item = { path: string, content: string };
+        json.forEach((item: Item) => {
+            if (!item.path || !item.content) {
+                return;
+            }
+            if (item.path.includes('maptalks.d.ts')) {
+                item.content += '\n export as namespace maptalks';
+                console.log(item.content);
+            }
+            var libUri = `file:///node_modules/@types/maptalks/${item.path}`;
+            monaco.languages.typescript.javascriptDefaults.addExtraLib(item.content, libUri);
+            // monaco.editor.createModel(item.content, "typescript", monaco.Uri.parse(libUri));
+        });
+
+    }).catch(error => {
+        ElMessage.error('load maptalks d.ts error');
+        console.error(error)
+    })
 }
 
 onMounted(() => {
     Split(['#editor-panel', '#preview-panel']);
+    // Split(['#editor-js', '#editor-html', '#editor-css']);
     // https://github.com/suren-atoyan/monaco-loader
     loader.config({
         paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' }
     });
     loader.init().then((monaco) => {
+        loadDTS(monaco);
         createEditor(monaco);
         rAFId = requestAnimationFrame(checkTheme);
     }).catch(() => {
@@ -169,9 +243,11 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    if (editor) {
+    if (editors) {
         console.log('dispose editor');
-        editor.dispose();
+        editors.forEach(editor => {
+            editor.dispose();
+        })
     }
     if (rAFId) {
         cancelAnimationFrame(rAFId);
@@ -183,16 +259,32 @@ onUnmounted(() => {
 <template>
     <div class="editor-container">
         <div id="editor-panel" class="editor-panel panel">
-            <div v-if="state.loaded" ref="toolRef" class="tools" :class="{ 'tools-dark': state.isDark }">
-                <button class="button" @click="runCode">Run</button>
-                <button class="button" @click="copyCode">Copy</button>
-                <button class="button" @click="shareUrl">Share</button>
-                <button class="button" @click="state.libDialogShow = true">Libs</button>
-                <button class="button">
-                    <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to Base64</a>
-                </button>
+            <div class="editor-item editor-middle">
+                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                    <span class="title">JavaScript</span>
+                    <button class="button" @click="runCode">Run</button>
+                    <button class="button" @click="copyCode">Copy</button>
+                    <button class="button" @click="shareUrl">Share</button>
+                    <button class="button" @click="state.libDialogShow = true">Libs</button>
+                    <button class="button">
+                        <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to
+                            Base64</a>
+                    </button>
+                </div>
+                <div ref="editorJSRef" class="editor editor-js" id="editor-js"></div>
             </div>
-            <div ref="editorRef" class="editor-main"></div>
+            <div class="editor-item editor-small">
+                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                    <span class="title">HTML</span>
+                </div>
+                <div ref="editorHTMLRef" class="editor editor-html" id="editor-html"></div>
+            </div>
+            <div class="editor-item  editor-small">
+                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                    <span class="title">CSS</span>
+                </div>
+                <div ref="editorCSSRef" class="editor editor-css" id="editor-css"></div>
+            </div>
         </div>
         <div id="preview-panel" class="preview-panel panel">
             <iframe ref="previewRef" class="preview-result"></iframe>
@@ -241,14 +333,29 @@ onUnmounted(() => {
     height: 100%;
 }
 
+
+.editor-middle {
+    height: 60%;
+}
+
+.editor-small {
+    height: 20%;
+}
+
 .tools {
+    padding-left: 10px;
     height: 30px;
     border-bottom: 1px solid #e9e9e9;
+    border-top: 1px solid #e9e9e9;
     text-align: right;
 
 }
 
-.editor-main {
+.tools .title {
+    float: left;
+}
+
+.editor {
     height: calc(100% - 30px);
 }
 
@@ -272,6 +379,7 @@ onUnmounted(() => {
 <style>
 .tools-dark {
     border-bottom: 1px solid black !important;
+    border-top: 1px solid black !important;
 }
 
 .split {

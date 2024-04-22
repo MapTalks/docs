@@ -11,7 +11,6 @@ import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
 import { getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
-import { stringify } from "querystring";
 
 const editorJSRef = ref('editorJSRef');
 const editorHTMLRef = ref('editorHTMLRef');
@@ -193,7 +192,7 @@ const loadDTS = (monaco) => {
         noEmit: true,
         noImplicitAny: true
     });
-    console.log(monaco.languages.typescript)
+    // console.log(monaco.languages.typescript)
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         // noSemanticValidation: false,
         // noSyntaxValidation: false
@@ -205,13 +204,13 @@ const loadDTS = (monaco) => {
     //     monaco.languages.typescript.javascriptDefaults.addExtraLib(text, libUri);
     //     monaco.editor.createModel(text, "typescript", monaco.Uri.parse(libUri));
     // });
-    fetch('/lib/maptalks.dts.json').then(res => res.json()).then(json => {
+    fetch('/lib/maptalks.d.ts.json').then(res => res.json()).then(json => {
         type Item = { path: string, content: string };
         json.forEach((item: Item) => {
             if (!item.path || !item.content) {
                 return;
             }
-            if (item.path.includes('maptalks.d.ts')) {
+            if (item.path.includes('namespace.d.ts')) {
                 item.content += '\n export as namespace maptalks';
                 console.log(item.content);
             }

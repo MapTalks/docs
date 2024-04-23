@@ -1,7 +1,5 @@
-<canvas width="600" height="300" id="map" style="border: 1px solid"></canvas>
-
 <script type="module">
-  import { Map, TileLayer } from "maptalks";
+  import * as maptalks from "maptalks";
 
   const res =
     (window.devicePixelRatio ||
@@ -20,12 +18,12 @@
       "px";
   }
 
-  const map = new Map("map", {
+  const map = new maptalks.Map("map", {
     center: [-0.113049, 51.498568],
     zoom: 14,
     zoomControl: true, // ignored in a canvas container
     scaleControl: true, // ignored in a canvas container
-    baseLayer: new TileLayer("base", {
+    baseLayer: new maptalks.TileLayer("base", {
       urlTemplate:
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
       subdomains: ["a", "b", "c", "d"],
@@ -34,6 +32,8 @@
     }),
   });
 </script>
+
+<canvas width="600" height="300" id="map" style="border: 1px solid"></canvas>
 
 <style>
   @import "https://maptalks.com/api/maptalks.css";

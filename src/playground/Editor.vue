@@ -12,12 +12,14 @@ import ESTreePlugin from 'prettier/plugins/estree';
 
 import { getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
 
+
 const editorJSRef = ref('editorJSRef');
 const editorHTMLRef = ref('editorHTMLRef');
 const editorCSSRef = ref('editorCSSRef');
 const previewRef = ref('previewRef');
 
 const state = reactive({
+    loading: false,
     size: 'small',
     loaded: false,
     isDark: false,
@@ -37,7 +39,7 @@ const prettierOptions = {
     tabWidth: 4
 }
 
-const getWholeRange = (editor) => {
+const getWholeRange = (editor: any) => {
     const model = editor.getModel();
     const linesNumber = model.getLineCount();
     const range = {
@@ -50,11 +52,11 @@ const getWholeRange = (editor) => {
 
 }
 
-const bindPrettier = (monaco) => {
+const bindPrettier = (monaco: any) => {
     editors.forEach(editor => {
         editor.addAction({
             id: '', // 菜单项 id
-            label: 'Format Code', // 菜单项名称
+            label: 'Prettier Format Code', // 菜单项名称
             keybindings: [monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF],
             contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
             run: () => {
@@ -77,7 +79,7 @@ const bindPrettier = (monaco) => {
     });
 }
 
-const createEditor = (monaco) => {
+const createEditor = (monaco: any) => {
     // https://microsoft.github.io/monaco-editor/
     const editorOptions = {
         minimap: {
@@ -179,7 +181,7 @@ const checkTheme = () => {
     rAFId = requestAnimationFrame(checkTheme);
 }
 
-const loadDTS = (monaco) => {
+const loadDTS = (monaco: any) => {
     monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         allowJs: true,
         allowNonTsExtensions: true,
@@ -192,36 +194,31 @@ const loadDTS = (monaco) => {
         noEmit: true,
         noImplicitAny: true
     });
-    // console.log(monaco.languages.typescript)
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-        // noSemanticValidation: false,
-        // noSyntaxValidation: false
+        noSemanticValidation: false,
+        noSyntaxValidation: false
     })
-
-    // fetch('/lib/Coordinate.d.ts').then(res => res.text()).then(text => {
-    //     var libUri = `ts:filename/Canvas.d.ts`;
-    //     console.log(libUri);
-    //     monaco.languages.typescript.javascriptDefaults.addExtraLib(text, libUri);
-    //     monaco.editor.createModel(text, "typescript", monaco.Uri.parse(libUri));
-    // });
-    fetch('/lib/maptalks.d.ts.json').then(res => res.json()).then(json => {
+    fetch(`/lib/maptalks.d.ts.json?t=${new Date().getTime()}`).then(res => res.json()).then(json => {
         type Item = { path: string, content: string };
         json.forEach((item: Item) => {
             if (!item.path || !item.content) {
                 return;
             }
-            if (item.path.includes('namespace.d.ts')) {
+            var libUri = `file:///node_modules/@types/maptalks/${item.path}`;
+            if (libUri.includes('maptalks/index.d.ts')) {
                 item.content += '\n export as namespace maptalks';
                 console.log(item.content);
             }
-            var libUri = `file:///node_modules/@types/maptalks/${item.path}`;
+
             monaco.languages.typescript.javascriptDefaults.addExtraLib(item.content, libUri);
             // monaco.editor.createModel(item.content, "typescript", monaco.Uri.parse(libUri));
         });
+        state.loading = false;
 
     }).catch(error => {
         ElMessage.error('load maptalks d.ts error');
         console.error(error)
+        state.loading = false;
     })
 }
 
@@ -232,11 +229,13 @@ onMounted(() => {
     loader.config({
         paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' }
     });
+    state.loading = true;
     loader.init().then((monaco) => {
         loadDTS(monaco);
         createEditor(monaco);
         rAFId = requestAnimationFrame(checkTheme);
     }).catch(() => {
+        state.loading = false;
         ElMessage.error('load monaco editor error');
     })
 })
@@ -257,7 +256,8 @@ onUnmounted(() => {
 
 <template>
     <div class="editor-container">
-        <div id="editor-panel" class="editor-panel panel">
+        <div id="editor-panel" class="editor-panel panel" v-loading="state.loading"
+            element-loading-text="Loading editor and d.ts files">
             <div class="editor-item editor-middle">
                 <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
                     <span class="title">JavaScript</span>

@@ -99,6 +99,10 @@ export function getExtraLibs() {
                 url: 'three@0.138.0/build/three.min.js'
             },
             {
+                name: 'lil-gui',
+                url: 'lil-gui@0.19.2/dist/lil-gui.umd.min.js'
+            },
+            {
                 name: 'vue',
                 url: 'vue/dist/vue.global.min.js'
             },

@@ -1,14 +1,11 @@
-<div id="map" class="container"></div>
-<div id="coordinate"></div>
-
 <script type="module">
-  import { Map, TileLayer } from "maptalks";
+  import * as maptalks from "maptalks";
 
-  const map = new Map("map", {
+  const map = new maptalks.Map("map", {
     center: [-0.113049, 51.498568],
     zoom: 14,
     centerCross: true,
-    baseLayer: new TileLayer("base", {
+    baseLayer: new maptalks.TileLayer("base", {
       urlTemplate:
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
       subdomains: ["a", "b", "c", "d"],
@@ -42,6 +39,9 @@
       "</div>";
   }
 </script>
+
+<div id="map" class="container"></div>
+<div id="coordinate"></div>
 
 <style>
   @import "https://maptalks.com/api/maptalks.css";

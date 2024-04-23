@@ -1,9 +1,7 @@
-<div id="map" class="container"></div>
-
 <script type="module">
-  import { Map, TileLayer } from "maptalks";
+  import * as maptalks from "maptalks";
 
-  const map = new Map("map", {
+  const map = new maptalks.Map("map", {
     center: [-0.113049, 51.498568],
     zoom: 14,
     pitch: 45,
@@ -11,7 +9,7 @@
     zoomControl: true, // add zoom control
     scaleControl: true, // add scale control
     overviewControl: true, // add overview control
-    baseLayer: new TileLayer("base", {
+    baseLayer: new maptalks.TileLayer("base", {
       urlTemplate:
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
       subdomains: ["a", "b", "c", "d"],
@@ -20,6 +18,8 @@
     }),
   });
 </script>
+
+<div id="map" class="container"></div>
 
 <style>
   @import "https://maptalks.com/api/maptalks.css";

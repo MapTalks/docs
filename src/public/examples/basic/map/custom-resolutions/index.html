@@ -1,7 +1,5 @@
-<div id="map" class="container"></div>
-
 <script type="module">
-  import { Map, TileLayer, VectorLayer } from "maptalks";
+  import * as maptalks from "maptalks";
 
   const MAX_ZOOM = 28;
   const spatialReference = {
@@ -22,11 +20,11 @@
     },
   };
 
-  const map = new Map("map", {
+  const map = new maptalks.Map("map", {
     center: [-0.113049, 51.498568],
     zoom: 14,
     spatialReference: spatialReference,
-    baseLayer: new TileLayer("base", {
+    baseLayer: new maptalks.TileLayer("base", {
       maxAvailableZoom: 20,
       urlTemplate:
         "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
@@ -34,9 +32,11 @@
       attribution:
         "&copy; <a href='http://osm.org'>OpenStreetMap</a> contributors, &copy; <a href='https://carto.com/'>CARTO</a>",
     }),
-    layers: [new VectorLayer("v")],
+    layers: [new maptalks.VectorLayer("v")],
   });
 </script>
+
+<div id="map" class="container"></div>
 
 <style>
   @import "https://maptalks.com/api/maptalks.css";

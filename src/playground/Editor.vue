@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, reactive } from "vue";
 import Split from 'split.js';
 import loader from '@monaco-editor/loader';
 import { ElMessage } from 'element-plus'
+import { saveAs } from 'file-saver';
 import { format } from 'prettier';
 import HTMLPlugin from 'prettier/plugins/html';
 import BabelPlugin from 'prettier/plugins/babel';
@@ -111,13 +112,20 @@ const createEditor = (monaco: any) => {
     }
 }
 
-const clipboardText = (text: string) => {
+const clipboardText = (text: string, message?: string) => {
     navigator.clipboard.writeText(text).then(() => {
-        ElMessage.success('Copy Successful');
+        ElMessage.success(message || 'Copy Successful');
     }).catch(error => {
         ElMessage.error('copy error');
         console.error(error);
     })
+}
+
+const getEditorCodes = () => {
+    const jsCode = editorJS.getValue();
+    const htmlCode = editorHTML.getValue();
+    const cssCode = editorCSS.getValue();
+    return { jsCode, htmlCode, cssCode };
 }
 
 const runCode = () => {
@@ -125,9 +133,7 @@ const runCode = () => {
         ElMessage.error('editor not created');
         return;
     }
-    const jsCode = editorJS.getValue();
-    const htmlCode = editorHTML.getValue();
-    const cssCode = editorCSS.getValue();
+    const { jsCode, htmlCode, cssCode } = getEditorCodes();
     const code = generateHTMLCode(jsCode, htmlCode, cssCode);
     const blob = new Blob([code], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -139,11 +145,9 @@ const copyCode = () => {
         ElMessage.error('editor not created');
         return;
     }
-    const jsCode = editorJS.getValue();
-    const htmlCode = editorHTML.getValue();
-    const cssCode = editorCSS.getValue();
+    const { jsCode, htmlCode, cssCode } = getEditorCodes();
     const code = generateHTMLCode(jsCode, htmlCode, cssCode);
-    clipboardText(code);
+    clipboardText(code,'Copy Code Successful');
 }
 
 const shareUrl = () => {
@@ -151,11 +155,20 @@ const shareUrl = () => {
         ElMessage.error('editor not created');
         return;
     }
-    const jsCode = editorJS.getValue();
-    const htmlCode = editorHTML.getValue();
-    const cssCode = editorCSS.getValue();
+    const { jsCode, htmlCode, cssCode } = getEditorCodes();
     const url = createShareUrl(jsCode, htmlCode, cssCode);
-    clipboardText(url);
+    clipboardText(url, 'Copy Share URL Successful');
+}
+
+const downloadCode = () => {
+    if (!editors.length) {
+        ElMessage.error('editor not created');
+        return;
+    }
+    const { jsCode, htmlCode, cssCode } = getEditorCodes();
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    const blob = new Blob([code], { type: 'text/html' });
+    saveAs(blob, `maptalks-playground-${new Date().getTime()}.html`);
 }
 
 let rAFId: number;
@@ -264,6 +277,7 @@ onUnmounted(() => {
                     <button class="button" @click="runCode">Run</button>
                     <button class="button" @click="copyCode">Copy</button>
                     <button class="button" @click="shareUrl">Share</button>
+                    <button class="button" @click="downloadCode">Download</button>
                     <button class="button" @click="state.libDialogShow = true">Libs</button>
                     <button class="button">
                         <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to

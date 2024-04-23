@@ -5,6 +5,7 @@
     "@vue/repl": "^4.1.1",
     "@vue/theme": "^2.2.5",
     "element-plus": "^2.7.0",
+    "file-saver": "^2.0.5",
     "lz-string": "^1.5.0",
     "prettier": "^3.2.5",
     "split.js": "^1.6.5",
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "start": "vitepress dev",
-    "dev":"npm run start",
+    "dev": "npm run start",
     "build": "vitepress build",
     "docs:preview": "vitepress preview"
   }

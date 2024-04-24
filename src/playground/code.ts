@@ -89,7 +89,7 @@ function getDefaultJSCode() {
 
 
 
-const CDNURL = 'https://cdn.jsdelivr.net/npm/';
+export const CDNURL = 'https://cdn.jsdelivr.net/npm/';
 
 export function getExtraLibs() {
     return {

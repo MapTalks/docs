@@ -11,7 +11,7 @@ import PostCssPlugin from 'prettier/plugins/postcss';
 import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
-import { getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
+import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
 
 
 const editorJSRef = ref('editorJSRef');
@@ -147,7 +147,7 @@ const copyCode = () => {
     }
     const { jsCode, htmlCode, cssCode } = getEditorCodes();
     const code = generateHTMLCode(jsCode, htmlCode, cssCode);
-    clipboardText(code,'Copy Code Successful');
+    clipboardText(code, 'Copy Code Successful');
 }
 
 const shareUrl = () => {
@@ -240,7 +240,7 @@ onMounted(() => {
     // Split(['#editor-js', '#editor-html', '#editor-css']);
     // https://github.com/suren-atoyan/monaco-loader
     loader.config({
-        paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@latest/min/vs' }
+        paths: { vs: `${CDNURL}/monaco-editor@0.47.0/min/vs` }
     });
     state.loading = true;
     loader.init().then((monaco) => {

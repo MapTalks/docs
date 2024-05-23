@@ -24,6 +24,7 @@ const state = reactive({
     size: 'small',
     loaded: false,
     isDark: false,
+    esmEnable: false,
     libDialogShow: false,
     imageDialogShow: false,
     libList: getExtraLibs().libs,
@@ -106,6 +107,8 @@ const createEditor = (monaco: any) => {
         editorJS.setValue(result.jsCode);
         editorHTML.setValue(result.htmlCode);
         editorCSS.setValue(result.cssCode);
+        state.esmEnable = result.esm as any;
+        console.log(result);
         setTimeout(() => {
             runCode();
         }, 500);
@@ -134,7 +137,7 @@ const runCode = () => {
         return;
     }
     const { jsCode, htmlCode, cssCode } = getEditorCodes();
-    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode, state.esmEnable);
     const blob = new Blob([code], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     (previewRef.value as any).src = url
@@ -146,7 +149,7 @@ const copyCode = () => {
         return;
     }
     const { jsCode, htmlCode, cssCode } = getEditorCodes();
-    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode, state.esmEnable);
     clipboardText(code, 'Copy Code Successful');
 }
 
@@ -156,7 +159,7 @@ const shareUrl = () => {
         return;
     }
     const { jsCode, htmlCode, cssCode } = getEditorCodes();
-    const url = createShareUrl(jsCode, htmlCode, cssCode);
+    const url = createShareUrl(jsCode, htmlCode, cssCode, state.esmEnable);
     clipboardText(url, 'Copy Share URL Successful');
 }
 
@@ -166,7 +169,7 @@ const downloadCode = () => {
         return;
     }
     const { jsCode, htmlCode, cssCode } = getEditorCodes();
-    const code = generateHTMLCode(jsCode, htmlCode, cssCode);
+    const code = generateHTMLCode(jsCode, htmlCode, cssCode, state.esmEnable);
     const blob = new Blob([code], { type: 'text/html' });
     saveAs(blob, `maptalks-playground-${new Date().getTime()}.html`);
 }
@@ -273,7 +276,13 @@ onUnmounted(() => {
             element-loading-text="Loading editor and d.ts files">
             <div class="editor-item editor-middle">
                 <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
-                    <span class="title">JavaScript</span>
+                    <span class="title">JavaScript <el-tooltip class="box-item" effect="dark"
+                            content="If your code is ESM,Please checked it" placement="top-start"><el-checkbox v-model="state.esmEnable"
+                                label="ESM" :size="state.size" />
+                        </el-tooltip>
+
+                    </span>
+
                     <button class="button" @click="runCode">Run</button>
                     <button class="button" @click="copyCode">Copy</button>
                     <button class="button" @click="shareUrl">Share</button>

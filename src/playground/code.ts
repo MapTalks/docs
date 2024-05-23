@@ -5,25 +5,28 @@ export function getCode() {
     const jsCode = params.get('code');
     const htmlCode = params.get('htmlcode');
     const cssCode = params.get('csscode');
+    const esm = params.get('esm')
     return {
         htmlCode: htmlCode ? decompressFromEncodedURIComponent(htmlCode) : getDefaultHTMLCode(),
         cssCode: cssCode ? decompressFromEncodedURIComponent(cssCode) : getDefaultCSSCode(),
         jsCode: jsCode ? decompressFromEncodedURIComponent(jsCode) : getDefaultJSCode(),
+        esm: esm === 'true'
     }
 
 }
 
-export function createShareUrl(jsCode: string, htmlCode: string, cssCode: string) {
+export function createShareUrl(jsCode: string, htmlCode: string, cssCode: string, esm: boolean) {
     const code = compressToEncodedURIComponent(jsCode);
     const htmlcode = compressToEncodedURIComponent(htmlCode);
     const csscode = compressToEncodedURIComponent(cssCode);
     const { origin, pathname } = window.location;
-    return `${origin}${pathname}?code=${code}&htmlcode=${htmlcode}&csscode=${csscode}`;
+    return `${origin}${pathname}?esm=${esm}&code=${code}&htmlcode=${htmlcode}&csscode=${csscode}`;
 }
 
-export function generateHTMLCode(jsCode: string, htmlCode: string, cssCode: string) {
+export function generateHTMLCode(jsCode: string, htmlCode: string, cssCode: string, esm: boolean) {
     const html = getHTMLTemplate();
-    return html.replace('{css}', cssCode).replace('{html}', htmlCode).replace('{js}', jsCode);
+    const jsMode = esm ? 'module' : 'text/javascript';
+    return html.replace('{css}', cssCode).replace('{html}', htmlCode).replace('{js}', jsCode).replace('{jsMode}', jsMode);
 }
 
 function getHTMLTemplate() {
@@ -36,13 +39,10 @@ function getHTMLTemplate() {
     <style type='text/css'>
        {css}
     </style>
-    <link rel='stylesheet' href='https://maptalks.com/api/maptalks.css' />
-    <script type='text/javascript' src='https://maptalks.com/api/maptalks.min.js'></script>
-    <script type='text/javascript' src='https://maptalks.com/api/maptalks-gl-layers.js'></script>
     
     <body>
     {html}
-        <script>
+        <script type="{jsMode}">
            {js}
         </script>
     </body>
@@ -53,7 +53,22 @@ function getHTMLTemplate() {
 
 export function getDefaultHTMLCode() {
     return `
+   
+    <link rel='stylesheet' href='https://maptalks.com/api/maptalks.css' />
+    <!-- umd package -->
+    <script type='text/javascript' src='https://maptalks.com/api/maptalks.min.js'></script>
+    <script type='text/javascript' src='https://maptalks.com/api/maptalks-gl-layers.js'></script>
+    <!-- esm package -->
+    <script type="importmap">
+    {
+        "imports": {
+            "maptalks": "https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.es.js"
+
+        }
+    }
+   </script>
    <div id="map" class="container"></div>
+   
    `
 }
 

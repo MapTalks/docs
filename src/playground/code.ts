@@ -51,10 +51,9 @@ function getHTMLTemplate() {
     `
 }
 
-export function getDefaultHTMLCode() {
+export function getMTKImPorts() {
     return `
-   
-    <link rel='stylesheet' href='https://maptalks.com/api/maptalks.css' />
+   <link rel='stylesheet' href='https://maptalks.com/api/maptalks.css' />
     <!-- umd package -->
     <script type='text/javascript' src='https://maptalks.com/api/maptalks.min.js'></script>
     <script type='text/javascript' src='https://maptalks.com/api/maptalks-gl-layers.js'></script>
@@ -67,6 +66,13 @@ export function getDefaultHTMLCode() {
         }
     }
    </script>
+   `
+}
+
+export function getDefaultHTMLCode() {
+    return `
+     ${getMTKImPorts()}
+    
    <div id="map" class="container"></div>
    
    `
@@ -90,15 +96,29 @@ export function getDefaultCSSCode() {
 
 function getDefaultJSCode() {
     return `
-   var map = new maptalks.Map('map', {
-    center: [-0.113049,51.498568],
-    zoom: 14,
-    baseLayer: new maptalks.TileLayer('base', {
-      urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-      subdomains: ["a","b","c","d"],
-      attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
-    })
-  });
+    const map = new maptalks.Map("map", {
+        center: [-0.113049, 51.498568],
+        zoom: 14,
+        baseLayer: new maptalks.TileLayer("base", {
+            urlTemplate:
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
+            subdomains: ["a", "b", "c", "d"],
+            attribution:
+                '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>',
+        }),
+    });
+    
+    const layer = new maptalks.VectorLayer("layer").addTo(map);
+    const point = new maptalks.Marker(map.getCenter(), {
+        symbol: {
+            textName: "Hello Maptalks",
+            textSize: 40,
+            textWeight: "bold",
+        },
+    }).addTo(layer);
+    
+
+  
    `
 }
 

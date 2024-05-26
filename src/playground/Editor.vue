@@ -11,13 +11,22 @@ import PostCssPlugin from 'prettier/plugins/postcss';
 import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
-import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs } from './code';
+import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs, getMTKImPorts } from './code';
+import examplesZH from './../../.vitepress/config/examples/zh';
+import Example_Tree from './Example-Tree.vue';
+import { checkTreeData, locationAchor, searchTree, TreeNode } from './util';
+import { ElLoading } from 'element-plus'
+import { getDefaultHTMLCode } from "./code";
 
 
 const editorJSRef = ref('editorJSRef');
 const editorHTMLRef = ref('editorHTMLRef');
 const editorCSSRef = ref('editorCSSRef');
 const previewRef = ref('previewRef');
+
+const allExamples = checkTreeData(examplesZH as Array<TreeNode>);
+
+const TIME_DELAY = 400;
 
 const state = reactive({
     loading: false,
@@ -27,8 +36,14 @@ const state = reactive({
     esmEnable: false,
     libDialogShow: false,
     imageDialogShow: false,
+    examples: [] as Array<TreeNode>,
+    keywords: '',
     libList: getExtraLibs().libs,
-    pluginList: getExtraLibs().plugins
+    pluginList: getExtraLibs().plugins,
+    mainContainerStyle: {
+        width: '100%',
+        height: '900px'
+    }
 })
 
 
@@ -111,7 +126,7 @@ const createEditor = (monaco: any) => {
         console.log(result);
         setTimeout(() => {
             runCode();
-        }, 500);
+        }, TIME_DELAY);
     }
 }
 
@@ -238,6 +253,94 @@ const loadDTS = (monaco: any) => {
     })
 }
 
+const is404 = (code: string) => {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(code, 'text/html');
+    const script = xmlDoc.querySelectorAll('script')[0];
+    if (script) {
+        return true;
+    }
+    return false;
+}
+
+const hashChange = () => {
+    const { hash } = window.location;
+    if (!hash) {
+        return;
+    }
+    locationAchor({ hash });
+
+    const path = hash.substring(1, Infinity).replaceAll('__', '/');
+    const loading = ElLoading.service({
+        lock: true,
+        text: `Loading ${path} Example Codes`,
+        // background: 'rgba(0, 0, 0, 0.9)',
+    })
+    const htmlUrl = `./../examples/${path}/index.html`;
+    const jsUrl = `./../examples/${path}/index.js`;
+    const cssUrl = `./../examples/${path}/index.css`;
+    let htmlCode = '', jsCode = '', cssCode = '';
+    //load current example codes
+    fetch(htmlUrl).then(res => res.text()).then(html => {
+        htmlCode = html;
+        htmlCode = getMTKImPorts() + htmlCode;
+    }).catch(() => {
+        htmlCode = '<!-- not find html -->'
+    }).finally(() => {
+        fetch(jsUrl).then(res => res.text()).then(js => {
+            jsCode = js;
+
+            //vitejs 可能返回404,如果404说明js不存在
+            if (is404(js)) {
+                jsCode = '//not find js';
+            }
+        }).catch(() => {
+            jsCode = '//not find js';
+        }).finally(() => {
+            fetch(cssUrl).then(res => res.text()).then(css => {
+                cssCode = css;
+                if (is404(css)) {
+                    cssCode = '/* not find css */'
+                }
+            }).catch(() => {
+                cssCode = '/* not find css */'
+            }).finally(() => {
+                state.esmEnable = true;
+                if (editorJS) {
+                    editorJS.setValue(jsCode);
+                }
+                if (editorHTML) {
+                    editorHTML.setValue(htmlCode);
+                }
+                if (editorCSS) {
+                    editorCSS.setValue(cssCode);
+                }
+                setTimeout(() => {
+                    runCode();
+                    setTimeout(() => {
+                        loading.close();
+                    }, TIME_DELAY);
+                }, TIME_DELAY);
+            })
+        })
+    })
+}
+
+const containerResize = () => {
+    const { innerHeight } = window;
+    Object.assign(state.mainContainerStyle, { height: `${innerHeight - 65}px` });
+}
+
+const search = () => {
+    if (!state.keywords) {
+        state.examples = allExamples;
+    } else {
+        const filterData = searchTree(state.keywords, allExamples);
+        state.examples = filterData;
+    }
+}
+
+
 onMounted(() => {
     Split(['#editor-panel', '#preview-panel']);
     // Split(['#editor-js', '#editor-html', '#editor-css']);
@@ -250,10 +353,15 @@ onMounted(() => {
         loadDTS(monaco);
         createEditor(monaco);
         rAFId = requestAnimationFrame(checkTheme);
+        hashChange();
     }).catch(() => {
         state.loading = false;
         ElMessage.error('load monaco editor error');
     })
+    containerResize();
+    search();
+    window.addEventListener('hashchange', hashChange);
+    window.addEventListener('resize', containerResize);
 })
 
 onUnmounted(() => {
@@ -266,85 +374,124 @@ onUnmounted(() => {
     if (rAFId) {
         cancelAnimationFrame(rAFId);
     }
+    window.removeEventListener('hashchange', hashChange);
+    window.removeEventListener('resize', containerResize);
 })
 
 </script>
 
 <template>
-    <div class="editor-container">
-        <div id="editor-panel" class="editor-panel panel" v-loading="state.loading"
-            element-loading-text="Loading editor and d.ts files">
-            <div class="editor-item editor-middle">
-                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
-                    <span class="title">JavaScript <el-tooltip class="box-item" effect="dark"
-                            content="If your code is ESM,Please checked it" placement="top-start"><el-checkbox v-model="state.esmEnable"
-                                label="ESM" :size="state.size" />
-                        </el-tooltip>
-
-                    </span>
-
-                    <button class="button" @click="runCode">Run</button>
-                    <button class="button" @click="copyCode">Copy</button>
-                    <button class="button" @click="shareUrl">Share</button>
-                    <button class="button" @click="downloadCode">Download</button>
-                    <button class="button" @click="state.libDialogShow = true">Libs</button>
-                    <button class="button">
-                        <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to
-                            Base64</a>
-                    </button>
-                </div>
-                <div ref="editorJSRef" class="editor editor-js" id="editor-js"></div>
+    <div class="main-container flex" :style="state.mainContainerStyle">
+        <div class="aside-container" :class="{ 'slider-dark': state.isDark }">
+            <div class="search-container">
+                <el-input v-model="state.keywords" :size="state.size" style="width: 100%" placeholder="Search Examples"
+                    @input="search" clearable />
             </div>
-            <div class="editor-item editor-small">
-                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
-                    <span class="title">HTML</span>
-                </div>
-                <div ref="editorHTMLRef" class="editor editor-html" id="editor-html"></div>
-            </div>
-            <div class="editor-item  editor-small">
-                <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
-                    <span class="title">CSS</span>
-                </div>
-                <div ref="editorCSSRef" class="editor editor-css" id="editor-css"></div>
+            <div class="example-container">
+                <Example_Tree :data="state.examples"></Example_Tree>
             </div>
         </div>
-        <div id="preview-panel" class="preview-panel panel">
-            <iframe ref="previewRef" class="preview-result"></iframe>
+        <div class="editor-container">
+            <div id="editor-panel" class="editor-panel panel" v-loading="state.loading"
+                element-loading-text="Loading editor and d.ts files">
+                <div class="editor-item editor-middle">
+                    <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                        <span class="title">JavaScript <el-tooltip class="box-item" effect="dark"
+                                content="If your code is ESM,Please checked it" placement="top-start"><el-checkbox
+                                    v-model="state.esmEnable" label="ESM" :size="state.size" />
+                            </el-tooltip>
+
+                        </span>
+
+                        <button class="button" @click="runCode">Run</button>
+                        <button class="button" @click="copyCode">Copy</button>
+                        <button class="button" @click="shareUrl">Share</button>
+                        <button class="button" @click="downloadCode">Download</button>
+                        <button class="button" @click="state.libDialogShow = true">Libs</button>
+                        <button class="button">
+                            <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to
+                                Base64</a>
+                        </button>
+                    </div>
+                    <div ref="editorJSRef" class="editor editor-js" id="editor-js"></div>
+                </div>
+                <div class="editor-item editor-small">
+                    <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                        <span class="title">HTML</span>
+                    </div>
+                    <div ref="editorHTMLRef" class="editor editor-html" id="editor-html"></div>
+                </div>
+                <div class="editor-item  editor-small">
+                    <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
+                        <span class="title">CSS</span>
+                    </div>
+                    <div ref="editorCSSRef" class="editor editor-css" id="editor-css"></div>
+                </div>
+            </div>
+            <div id="preview-panel" class="preview-panel panel">
+                <iframe ref="previewRef" class="preview-result"></iframe>
+            </div>
+            <el-dialog v-model="state.libDialogShow" title="Some libs CDN URL" width="800">
+                <!-- <span>Common Libs</span> -->
+                <el-divider content-position="left">Maptalks Plugins</el-divider>
+                <div v-for="item in state.pluginList" class="flex row">
+                    <div class="label">{{ item.name }}</div>
+                    <div class="value">
+                        <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
+                            placeholder="Please input" />
+                        <button class="button" @click="clipboardText(item.url)">Copy</button>
+                    </div>
+                </div>
+                <el-divider content-position="left">Common Libs</el-divider>
+                <div v-for="item in state.libList" class="flex row">
+                    <div class="label">{{ item.name }}</div>
+                    <div class="value">
+                        <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
+                            placeholder="Please input" />
+                        <button class="button" @click="clipboardText(item.url)">Copy</button>
+                    </div>
+                </div>
+
+
+            </el-dialog>
         </div>
-        <el-dialog v-model="state.libDialogShow" title="Some libs CDN URL" width="800">
-            <!-- <span>Common Libs</span> -->
-            <el-divider content-position="left">Maptalks Plugins</el-divider>
-            <div v-for="item in state.pluginList" class="flex row">
-                <div class="label">{{ item.name }}</div>
-                <div class="value">
-                    <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
-                        placeholder="Please input" />
-                    <button class="button" @click="clipboardText(item.url)">Copy</button>
-                </div>
-            </div>
-            <el-divider content-position="left">Common Libs</el-divider>
-            <div v-for="item in state.libList" class="flex row">
-                <div class="label">{{ item.name }}</div>
-                <div class="value">
-                    <el-input v-model="item.url" :size="state.size" style="width: 540px" disabled
-                        placeholder="Please input" />
-                    <button class="button" @click="clipboardText(item.url)">Copy</button>
-                </div>
-            </div>
-
-
-        </el-dialog>
     </div>
+
 </template>
 <style scoped>
 .flex {
     display: flex;
 }
 
-.editor-container {
-    width: 100%;
+.main-container {
     min-height: 900px;
     height: 900px;
+}
+
+.aside-container {
+    width: 300px;
+    height: 100%;
+    border-right: 1px solid #e9e9e9;
+
+    font-size: 12px;
+    padding: 2px 5px 10px 5px;
+}
+
+.search-container {
+    position: sticky;
+    z-index: 1;
+    top: 0px;
+}
+
+.example-container {
+    height: calc(100% - 25px);
+    overflow-y: scroll;
+}
+
+.editor-container {
+    width: calc(100% - 300px);
+    /* min-height: 900px; */
+    height: 100%;
 
     /* background-color: black; */
     display: flex;
@@ -357,11 +504,11 @@ onUnmounted(() => {
 
 
 .editor-middle {
-    height: 60%;
+    height: 50%;
 }
 
 .editor-small {
-    height: 20%;
+    height: 25%;
 }
 
 .tools {
@@ -399,6 +546,10 @@ onUnmounted(() => {
 }
 </style>
 <style>
+.slider-dark {
+    border-right: 1px solid black !important;
+}
+
 .tools-dark {
     border-bottom: 1px solid black !important;
     border-top: 1px solid black !important;
@@ -418,5 +569,9 @@ onUnmounted(() => {
 .gutter.gutter-horizontal {
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
     cursor: col-resize;
+}
+
+.el-input__wrapper {
+    background-color: transparent !important;
 }
 </style>

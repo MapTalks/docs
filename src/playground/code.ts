@@ -122,6 +122,18 @@ function getDefaultJSCode() {
    `
 }
 
+export function replaceCodeVariable(code: string) {
+    const values: Record<string, string> = {
+        '{res}': '/examples/resources',
+        '{urlTemplate}': 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        '{attribution}': `&copy; <a href='http://osm.org'>OpenStreetMap</a> contributors, &copy; <a href='https://carto.com/'>CARTO</a>`
+    };
+    for (const key in values) {
+        code = code.replaceAll(key, values[key]);
+    }
+    return code;
+}
+
 
 
 export const CDNURL = 'https://cdn.jsdelivr.net/npm/';

@@ -11,12 +11,11 @@ import PostCssPlugin from 'prettier/plugins/postcss';
 import AcornPlugin from 'prettier/plugins/acorn';
 import ESTreePlugin from 'prettier/plugins/estree';
 
-import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs, getMTKImPorts } from './code';
+import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs, getMTKImPorts, replaceCodeVariable } from './code';
 import examplesZH from './../../.vitepress/config/examples/zh';
 import Example_Tree from './Example-Tree.vue';
 import { checkTreeData, locationAchor, searchTree, TreeNode } from './util';
 import { ElLoading } from 'element-plus'
-import { getDefaultHTMLCode } from "./code";
 
 
 const editorJSRef = ref('editorJSRef');
@@ -276,6 +275,7 @@ const hashChange = () => {
         text: `Loading ${path} Example Codes`,
         // background: 'rgba(0, 0, 0, 0.9)',
     })
+    console.log(`load ${path} codes`);
     const htmlUrl = `./../examples/${path}/index.html`;
     const jsUrl = `./../examples/${path}/index.js`;
     const cssUrl = `./../examples/${path}/index.css`;
@@ -307,10 +307,10 @@ const hashChange = () => {
             }).finally(() => {
                 state.esmEnable = true;
                 if (editorJS) {
-                    editorJS.setValue(jsCode);
+                    editorJS.setValue(replaceCodeVariable(jsCode));
                 }
                 if (editorHTML) {
-                    editorHTML.setValue(htmlCode);
+                    editorHTML.setValue(replaceCodeVariable(htmlCode));
                 }
                 if (editorCSS) {
                     editorCSS.setValue(cssCode);
@@ -473,7 +473,7 @@ onUnmounted(() => {
     height: 100%;
     border-right: 1px solid #e9e9e9;
 
-    font-size: 12px;
+    font-size: 13px;
     padding: 2px 5px 10px 5px;
 }
 

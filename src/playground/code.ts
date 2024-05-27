@@ -1,4 +1,5 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
+import { getExampleResourceUrl } from './util';
 
 export function getCode() {
     const params = (new URL(document.location as any)).searchParams;
@@ -124,7 +125,7 @@ function getDefaultJSCode() {
 
 export function replaceCodeVariable(code: string) {
     const values: Record<string, string> = {
-        '{res}': '/examples/resources',
+        '{res}': getExampleResourceUrl(),
         '{urlTemplate}': 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
         '{attribution}': `&copy; <a href='http://osm.org'>OpenStreetMap</a> contributors, &copy; <a href='https://carto.com/'>CARTO</a>`
     };

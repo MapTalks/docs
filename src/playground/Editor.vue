@@ -14,7 +14,7 @@ import ESTreePlugin from 'prettier/plugins/estree';
 import { CDNURL, getCode, createShareUrl, generateHTMLCode, getExtraLibs, getMTKImPorts, replaceCodeVariable } from './code';
 import examplesZH from './../../.vitepress/config/examples/zh';
 import Example_Tree from './Example-Tree.vue';
-import { checkTreeData, locationAchor, searchTree, TreeNode } from './util';
+import { checkTreeData, locationAchor, searchTree, TreeNode, decodeHash } from './util';
 import { ElLoading } from 'element-plus'
 
 
@@ -269,7 +269,7 @@ const hashChange = () => {
     }
     locationAchor({ hash });
 
-    const path = hash.substring(1, Infinity).replaceAll('__', '/');
+    const path = decodeHash(hash);
     const loading = ElLoading.service({
         lock: true,
         text: `Loading ${path} Example Codes`,
@@ -456,7 +456,6 @@ onUnmounted(() => {
             </el-dialog>
         </div>
     </div>
-
 </template>
 <style scoped>
 .flex {

@@ -22,7 +22,7 @@ export function checkTreeData(data: Array<TreeNode>, parentNum = '') {
     item.num = `${parentNum}${index + 1}.`;
     item.label = `${item.num}${item.text}`;
     if (item.link) {
-      const id = item.link.replaceAll('/', '__').substring(1, Infinity);
+      const id = encodeHash(item.link);
       item.id = id;
       item.hash = `#${item.id}`;
     }
@@ -114,7 +114,11 @@ export const searchTree = (keywords: string, data: Array<TreeNode>) => {
     node.searchResult = false;
   });
   const nodes = allNodes.filter(node => {
-    const label = node.label;
+    const label = node.text;
+    if (!label) {
+      return false;
+    }
+    //simple string contains ,If you want a better search experience  https://github.com/krisk/Fuse 
     node.searchResult = label.indexOf(keywords) > -1 || keywords.indexOf(label) > -1;
     return node.searchResult;
   });
@@ -133,4 +137,28 @@ export const locationAchor = (item: any) => {
   if (achor) {
     achor.scrollIntoView(true);
   }
+}
+
+export function encodeHash(code: string) {
+  code = code.replaceAll('/', '__').substring(1, Infinity);
+  const firstChar = parseInt(code[0]);
+  if (0 <= firstChar && firstChar <= 9) {
+    code = `_${code}`;
+  }
+  return code;
+}
+
+export function decodeHash(code: string) {
+  code = code.replaceAll('__', '/').substring(1, Infinity);
+  if (code[0] === '_') {
+    code = code.substring(1, Infinity);
+  }
+  return code;
+}
+
+export function getExampleResourceUrl() {
+  // const { href } = window.location;
+  const a = document.createElement('a');
+  a.href = `./../examples/resources`;
+  return a.href;
 }

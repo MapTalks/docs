@@ -37,7 +37,7 @@ export const zh = defineConfig({
           { text: "参与开发", link: "/guide/developer/intro" },
         ],
       },
-      // { text: "示例", link: "/examples/" },
+      { text: "示例", link: "/examples/" },
       { text: '演练场', link: '/playground/' },
       { text: "价格", link: "/pricing" },
     ],
@@ -45,7 +45,7 @@ export const zh = defineConfig({
     sidebar: {
       "/api/": { items: sidebarAPI(), base: "/api/" },
       "/guide/sdk/": { items: sidebarGuide(), base: "/guide/sdk/" },
-      // "/examples/": { items: examplesZH, base: "/examples/" },
+      "/examples/": { items: examplesZH, base: "/examples/" },
       "/guide/studio/": { items: sidebarStudio(), base: "/guide/studio/" },
       "/guide/designer/": [
         {

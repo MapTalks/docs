@@ -33,6 +33,7 @@ const state = reactive({
     loaded: false,
     isDark: false,
     esmEnable: false,
+    runUrl: '',
     libDialogShow: false,
     imageDialogShow: false,
     examples: [] as Array<TreeNode>,
@@ -154,7 +155,8 @@ const runCode = () => {
     const code = generateHTMLCode(jsCode, htmlCode, cssCode, state.esmEnable);
     const blob = new Blob([code], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    (previewRef.value as any).src = url
+    (previewRef.value as any).src = url;
+    state.runUrl = url;
 }
 
 const copyCode = () => {
@@ -186,6 +188,13 @@ const downloadCode = () => {
     const code = generateHTMLCode(jsCode, htmlCode, cssCode, state.esmEnable);
     const blob = new Blob([code], { type: 'text/html' });
     saveAs(blob, `maptalks-playground-${new Date().getTime()}.html`);
+}
+
+const openInNewWindow = () => {
+    if (!state.runUrl) {
+        return;
+    }
+    window.open(state.runUrl);
 }
 
 let rAFId: number;
@@ -412,6 +421,7 @@ onUnmounted(() => {
                             <a href="https://www.base64encoder.io/image-to-base64-converter/" target="_blank">Image to
                                 Base64</a>
                         </button>
+                        <button v-if="state.runUrl" class="button" @click="openInNewWindow">Open</button>
                     </div>
                     <div ref="editorJSRef" class="editor editor-js" id="editor-js"></div>
                 </div>
@@ -536,7 +546,7 @@ onUnmounted(() => {
 .button {
     background-color: var(--vp-c-brand-1);
     color: white;
-    margin-left: 10px;
+    margin-left: 6px;
     padding: 0px 5px;
 }
 

@@ -18,10 +18,10 @@ import { checkTreeData, locationAchor, searchTree, TreeNode, decodeHash } from '
 import { ElLoading } from 'element-plus'
 
 
-const editorJSRef = ref('editorJSRef');
-const editorHTMLRef = ref('editorHTMLRef');
-const editorCSSRef = ref('editorCSSRef');
-const previewRef = ref('previewRef');
+const editorJSRef = ref(null);
+const editorHTMLRef = ref(null);
+const editorCSSRef = ref(null);
+const previewRef = ref(null);
 
 const allExamples = checkTreeData(examplesZH as Array<TreeNode>);
 
@@ -75,7 +75,9 @@ const bindPrettier = (monaco: any) => {
             id: '', // 菜单项 id
             label: 'Prettier Format Code', // 菜单项名称
             keybindings: [monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF],
-            contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
+            // contextMenuGroupId: '9_cutcopypaste', // 所属菜单的分组
+            contextMenuGroupId: '1_modification', // 所属菜单的分组
+            contextMenuOrder: 4,
             run: () => {
                 const language = editor.getModel().getLanguageId();
                 // console.log(editor.getModel().getLanguageId());

@@ -1,0 +1,13804 @@
+/// <reference types="node" />
+/*!
+ * maptalks v1.0.0-rc.33
+ * LICENSE : BSD-3-Clause
+ * (c) 2016-2024 maptalks.org
+ */
+import { getFunctionTypeResources, hasFunctionDefinition, interpolated, isFunctionDefinition, loadFunctionTypes } from '@maptalks/function-type';
+import * as featureFilter from '@maptalks/feature-filter';
+
+function _mergeNamespaces(n, m) {
+    m.forEach(function (e) {
+        e && typeof e !== 'string' && !Array.isArray(e) && Object.keys(e).forEach(function (k) {
+            if (k !== 'default' && !(k in n)) {
+                var d = Object.getOwnPropertyDescriptor(e, k);
+                Object.defineProperty(n, k, d.get ? d : {
+                    enumerable: true,
+                    get: function () { return e[k]; }
+                });
+            }
+        });
+    });
+    return Object.freeze(n);
+}
+
+/**
+ * global config
+ * idle/worker etc
+ */
+declare const GlobalConfig: {
+    isTest: boolean;
+    idleEnable: boolean;
+    idleLog: boolean;
+    idleTimeRemaining: number;
+    idleForceTimeThreshold: number;
+    idleTimeout: number;
+    workerCount: number;
+    taskCountPerWorkerMessage: number;
+    maxFPS: number;
+};
+//# sourceMappingURL=GlobalConfig.d.ts.map
+
+type ProxyItemType = {
+    target: string;
+    [propName: string]: any;
+};
+type ProxyConfig = {
+    [key: string]: ProxyItemType;
+};
+type SpriteOptionsType = {
+    imgUrl: string;
+    jsonUrl: string;
+    sourceName?: string;
+};
+type SVGOptionsType = {
+    url?: string;
+    symbols?: Array<SVGSymbolElement>;
+    sourceName?: string;
+    fill?: string;
+    stroke?: string;
+};
+declare function loadSprite(options?: SpriteOptionsType): Promise<unknown>;
+declare function loadSvgs(svgs: string | Array<SVGSymbolElement> | SVGOptionsType): Promise<unknown>;
+/**
+ * simple Resouce Proxy implementation
+ *
+ * https://www.webpackjs.com/configuration/dev-server/#devserverproxy
+ */
+declare const ResourceProxy: {
+    host: string;
+    resources: {
+        [key: string]: any;
+    };
+    proxy: ProxyConfig;
+    origin: ProxyConfig;
+    fromJSON(json: string | object): void;
+    toJSON(): {
+        host: string;
+        proxy: ProxyConfig;
+        origin: ProxyConfig;
+    };
+    getResource(name: string): any;
+    /**
+     * remove resource
+     * @param {String} name
+     */
+    removeResource(name: string): void;
+    /**
+     * add resource
+     * @param {String} name
+     * @param {Object} res
+     */
+    addResource(name: string, res: string | ImageBitmap): void;
+    /**
+    * update  resource (remove and add)
+     * @param {String} name
+     * @param {Object} res
+     */
+    updateResource(name: string, res: string | ImageBitmap): void;
+    /**
+     * get all resource [key,value]
+     * @returns {Object} source
+     */
+    allResource(): {
+        [key: string]: any;
+    };
+    loadSprite: typeof loadSprite;
+    loadSvgs: typeof loadSvgs;
+};
+declare function formatResourceUrl(path: string): any;
+declare function parseSVG(str: string): any[];
+
+/**
+ * INTERNAL_LAYER_PREFIX The id prefix of internal layers
+ * @global
+ */
+declare const INTERNAL_LAYER_PREFIX = "_maptalks__internal_layer_";
+declare const GEOMETRY_COLLECTION_TYPES: string[];
+declare const GEOJSON_TYPES: string[];
+/**
+ * Symbol properties containing external resources
+ */
+declare const RESOURCE_PROPERTIES: string[];
+/**
+ * Corresponding size properties for the above resource properties
+ */
+declare const RESOURCE_SIZE_PROPERTIES: string[][];
+/**
+ * numeric symbol properties
+ */
+declare const NUMERICAL_PROPERTIES: {
+    lineWidth: number;
+    lineOpacity: number;
+    lineDx: number;
+    lineDy: number;
+    polygonOpacity: number;
+    markerWidth: number;
+    markerHeight: number;
+    markerDx: number;
+    markerDy: number;
+    markerOpacity: number;
+    markerFillOpacity: number;
+    markerLineWidth: number;
+    markerLineOpacity: number;
+    textSize: number;
+    textOpacity: number;
+    textHaloRadius: number;
+    textWrapWidth: number;
+    textLineSpacing: number;
+    textDx: number;
+    textDy: number;
+};
+/**
+ *  color symbol properties
+ */
+declare const COLOR_PROPERTIES: string[];
+declare const DEFAULT_TEXT_SIZE = 14;
+
+type BrowserType = {
+    IS_NODE: boolean;
+    isTest: boolean;
+    ie: boolean;
+    ielt9: boolean;
+    edge: boolean;
+    webkit: boolean;
+    gecko: boolean;
+    android: boolean;
+    android23: boolean;
+    chrome: boolean;
+    chromeVersion: string;
+    safari: boolean;
+    phantomjs: boolean;
+    ie3d: boolean;
+    webkit3d: boolean;
+    opera12: boolean;
+    gecko3d: boolean;
+    any3d: boolean;
+    iosWeixin: boolean;
+    mobile: boolean;
+    mobileWebkit: boolean;
+    mobileWebkit3d: boolean;
+    mobileOpera: boolean;
+    mobileGecko: boolean;
+    touch: boolean;
+    msPointer: boolean;
+    pointer: boolean;
+    retina: boolean;
+    devicePixelRatio: number;
+    language: string;
+    ie9: boolean;
+    ie10: boolean;
+    webgl: boolean;
+    imageBitMap: boolean;
+    resizeObserver: boolean;
+    btoa: boolean;
+    decodeImageInWorker: boolean;
+    monitorDPRChange: boolean;
+    supportsPassive: boolean;
+    proxy: boolean;
+    requestIdleCallback: boolean;
+    checkDevicePixelRatio: () => boolean;
+};
+declare let Browser: BrowserType;
+//# sourceMappingURL=Browser.d.ts.map
+
+declare function now(): number;
+/**
+ * @classdesc
+ * Utilities methods used internally. It is static and should not be initiated.
+ * @class
+ * @static
+ * @category core
+ * @name Util
+ */
+/**
+ * Merges the properties of sources into destination object.
+ * @param dest
+ * @param source
+ * @return
+ * @module Util
+ */
+declare function extend<T extends {}, U>(dest: T, source: U): T & U;
+declare function extend<T extends {}, U, V>(dest: T, source1: U, source2: V): T & U & V;
+declare function extend<T extends {}, U, V, W>(dest: T, source1: U, source2: V, source3: W): T & U & V & W;
+declare function extend<T extends {}, U, V, W, X>(dest: T, source1: U, source2: V, source3: W, source4: X): T & U & V & W & X;
+declare function extend(dest: object, ...args: Array<any>): any;
+/**
+ * Whether the object is null or undefined.
+ * @param  obj - object
+ * @return
+ * @memberOf Util
+ */
+declare function isNil(obj: Object): obj is null;
+/**
+ * Whether val is a number and not a NaN.
+ * @param  val - val
+ * @return
+ * @memberOf Util
+ */
+declare function isNumber(val: Object): val is number;
+/**
+ * Whether a number is an integer
+ * @param  n
+ * @return
+ * @memberOf Util
+ */
+declare function isInteger(n: number): boolean;
+/**
+ * Whether the obj is a javascript object.
+ * @param obj  - object
+ * @return
+ * @memberOf Util
+ */
+declare function isObject(obj: Object): obj is object;
+/**
+ * Check whether the object is a string
+ * @param obj
+ * @return
+ * @memberOf Util
+ */
+declare function isString(obj: Object): obj is string;
+/**
+ * Check whether the object is a function
+ * @param {Object} obj
+ * @return {Boolean}
+ * @memberOf Util
+ */
+declare function isFunction(obj: Object): obj is Function;
+/**
+ * Check whether the object owns the property.
+ * @param obj - object
+ * @param key - property
+ * @return
+ * @memberOf Util
+ */
+declare function hasOwn(obj: Object, key: string): boolean;
+/**
+ * Join an array, standard or a typed one.
+ * @param  arr       array to join
+ * @param  seperator  seperator
+ * @return  result string
+ * @private
+ * @memberOf Util
+ */
+declare function join(arr: Object[], seperator: string): string;
+/**
+ * Determine if an object has any properties.
+ * @param object The object to check.
+ * @returns The object is empty
+ * @memberOf Util
+ */
+declare function isEmpty(object: Object): boolean;
+declare function toRadian(d: number): number;
+declare function toDegree(r: number): number;
+
+/**
+ * from detect-node
+ * https://github.com/iliakan/detect-node
+ *
+ * @property {boolean} IS_NODE - whether running in nodejs but not on electron,node-webkit
+ * @global
+ * @name IS_NODE
+ */
+declare const IS_NODE: boolean;
+declare function getGlobalThis(): typeof globalThis;
+
+declare let requestAnimFrame: any;
+declare let cancelAnimFrame: typeof clearTimeout;
+
+declare function isSVG(url: string): 0 | 1 | 2;
+/**
+ * Load a image, can be a remote one or a local file. <br>
+ * If in node, a SVG image will be converted to a png file by [svg2img]{@link https://github.com/FuZhenn/node-svg2img}<br>
+ * @param img  - the image object to load.
+ * @param imgDesc - image's descriptor, it's an array. imgUrl[0] is the url string, imgUrl[1] is the width, imgUrl[2] is the height.
+ * @private
+ * @memberOf Util
+ */
+declare function loadImage(img: any, imgDesc: Object[]): void;
+declare function UID(): number;
+declare const GUID: typeof UID;
+/**
+ * Parse a JSON string to a object
+ * @param str   - a JSON string
+ * @return
+ * @memberOf Util
+ */
+declare function parseJSON(str: string): any;
+declare function pushIn<T extends Array<any>>(...args: T[]): number;
+declare function removeFromArray<T>(obj: T, array: T[]): void;
+declare function forEachCoord(arr: any[], fn: Function, context?: any): any;
+declare function getValueOrDefault<T>(v: T, d: T): T;
+/**
+ * Polyfill for Math.sign
+ * @param  x
+ * @return
+ * @memberOf Util
+ */
+declare function sign(x: number): number;
+declare function log2(x: number): number;
+/**
+ * Interpolate between two number.
+ *
+ * @param from
+ * @param to
+ * @param t interpolation factor between 0 and 1
+ * @returns interpolated color
+ */
+declare function interpolate(a: number, b: number, t: number): number;
+/**
+ * constrain n to the given range, via modular arithmetic
+ * @param n value
+ * @param min the minimum value to be returned, inclusive
+ * @param max the maximum value to be returned, inclusive
+ * @returns constrained number
+ * @private
+ */
+declare function wrap(n: number, min: number, max: number): number;
+/**
+ * constrain n to the given range via min + max
+ *
+ * @param n value
+ * @param min the minimum value to be returned
+ * @param max the maximum value to be returned
+ * @returns the clamped value
+ * @private
+ */
+declare function clamp(n: number, min: number, max: number): number;
+/**
+ * Is object an array and not empty.
+ * @param obj
+ * @return true|false
+ * @private
+ * @memberOf Util
+ */
+declare function isArrayHasData(obj: Object): boolean;
+/**
+ * Whether the input string is a valid url.
+ * form: https://github.com/axios/axios/blob/master/lib/helpers/isAbsoluteURL.js
+ * @param url - url to check
+ * @return
+ * @memberOf Util
+ * @private
+ */
+declare function isURL(url: string): boolean;
+declare function isCssUrl(str: string): 0 | 1 | 2 | 3;
+declare function extractCssUrl(str: string): any;
+/**
+ * btoa or a polyfill in old browsers. <br>
+ * Creates a base-64 encoded ASCII string from a String object in which each character in the string is treated as a byte of binary data.<br>
+ * From https://github.com/davidchambers/Base64.js
+ * @param input - input string to convert
+ * @return ascii
+ * @memberOf Util
+ * @example
+ *     const encodedData = Util.btoa(stringToEncode);
+ */
+declare function btoa(input: string): string;
+declare function b64toBlob(b64Data: string, contentType: string): Blob;
+/**
+ * Compute degree bewteen 2 points.
+ * @param  x0
+ * @param  y0
+ * @param  x1
+ * @param  y1
+ * @return    degree between 2 points
+ * @memberOf Util
+ */
+declare function computeDegree(x0: number, y0: number, x1: number, y1: number): number;
+/**
+ * Transparent 1X1 gif image
+ * from https://css-tricks.com/snippets/html/base64-encode-of-1x1px-transparent-gif/
+ * @memberOf Util
+ */
+declare const emptyImageUrl = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+/**
+ * shallow equal
+ * @param  obj1
+ * @param  obj2
+ * @return
+ * @private
+ * @memberOf Util
+ */
+declare function equalMapView(obj1: Object, obj2: Object): boolean;
+/**
+ * Flash something, show and hide by certain internal for times of count.
+ *
+ * @param interval   - interval of flash, in millisecond (ms)
+ * @param count      - flash times
+ * @param cb         - callback function when flash ended
+ * @param context    - callback context
+ * @return this
+ * @private
+ * @memberOf Util
+ */
+declare function flash(interval?: number, count?: number, cb?: Function, context?: any): any;
+declare function _defaults(obj: any, defaults: any): any;
+declare function getPointsResultPts(points?: any[], ptKey?: string): any[];
+declare function getImageBitMap<T>(data: {
+    data: T;
+}, cb: (d: T) => void | any): void;
+declare function getAbsoluteURL(url: string): string;
+declare function calCanvasSize(size: {
+    width: number;
+    height: number;
+}, devicePixelRatio?: number): {
+    cssWidth: string;
+    cssHeight: string;
+    width: number;
+    height: number;
+};
+
+/**
+ * Translate symbol properties to SVG properties
+ * @param s - object with symbol properties
+ * @return  object with SVG properties
+ * @memberOf Util
+ */
+declare function translateToSVGStyles(s: any): {
+    stroke: {
+        stroke: any;
+        'stroke-width': any;
+        'stroke-opacity': any;
+        'stroke-dasharray': any;
+        'stroke-linecap': string;
+        'stroke-linejoin': string;
+    };
+    fill: {
+        fill: any;
+        'fill-opacity': any;
+    };
+};
+/**
+ * Get SVG Base64 String from a marker symbol with (markerType : path)
+ * @param  symbol - symbol with markerType of path
+ * @param  width
+ * @param  height
+ * @return SVG Base64 String
+ * @memberOf Util
+ */
+declare function getMarkerPathBase64(symbol: any, width?: number, height?: number): string;
+/**
+ * Get external resources from the given symbol
+ * @param symbol     - symbol
+ * @param toAbsolute - whether convert url to aboslute
+ * @return resource urls
+ * @memberOf Util
+ */
+declare function getExternalResources(symbol: any, toAbsolute?: boolean): string[];
+/**
+ * Convert symbol's resources' urls from relative path to an absolute path.
+ * @param symbol
+ * @private
+ * @memberOf Util
+ */
+declare function convertResourceUrl(symbol: any): any;
+declare function isImageBitMap(img: any): boolean;
+
+/**
+ * Whether the color is a gradient
+ * @param g - color to test
+ * @return
+ * @memberOf Util
+ */
+declare function isGradient(g: Object): boolean;
+/**
+ * Get stamp of a gradient color object.
+ * @param g gradient color object
+ * @return gradient stamp
+ * @memberOf Util
+ */
+declare function getGradientStamp(g: Object): string;
+declare function getSymbolStamp(symbol: Object, prefix: string): string | number;
+/**
+ * Get stamp of a symbol
+ * @param symbol symbol
+ * @return symbol's stamp
+ * @memberOf Util
+ */
+declare function getSymbolHash(symbol: Object | Object[], prefix?: string): string | number;
+/**
+ * Reduce opacity of the color by ratio
+ * @param symbol symbols to set
+ * @param ratio  ratio of opacity to reduce
+ * @return new symbol or symbols
+ * @memberOf Util
+ */
+declare function lowerSymbolOpacity(symbol: Object | Object[], ratio: number): Object | Object[];
+/**
+ * Merges the properties of sources into the symbol. <br>
+ * @param args - sources
+ * @return merged symbol
+ * @memberOf Util
+ */
+declare function extendSymbol(...args: Object[]): Object | Object[];
+declare function parseStyleRootPath(style: any): any;
+declare function convertStylePath(styles: any[], replacer: any): void;
+declare function parseSymbolPath(symbol: any, replacer: string): void;
+/**
+ * geometry symbol has lineDasharray
+ * @memberOf Util
+ */
+declare function isDashLine(symbolizers?: any[]): boolean;
+
+type CoordinateJson = {
+    x: number;
+    y: number;
+    z?: number;
+};
+type CoordinateArray = [number, number] | [number, number, number];
+type CoordinateLike = Coordinate | CoordinateJson | CoordinateArray;
+/**
+ * 坐标 `Coordinate` 的实现，例如一个地理坐标点（经度，纬度）
+ *
+ * @english
+ *
+ * Represents a coordinate point <br>
+ * e.g. <br>
+ * A geographical point (longitude, latitude)
+ * @example
+ *
+ * ```ts
+ * const coord = new Coordinate(0, 0);
+ * ```
+ * @example
+ *
+ * ```ts
+ * const coord = new Coordinate([ 0, 0 ]);
+ * ```
+ * @example
+ *
+ * ```ts
+ * const coord = new Coordinate({ x : 0, y : 0 });
+ * ```
+ * @category basic types
+ */
+declare class Coordinate extends Position$1 {
+    /**
+     * 将一个或多个坐标对象转换为GeoJSON风格的坐标。
+     *
+     * @english
+     *
+     * Convert one or more Coordinate objects to GeoJSON style coordinates
+     * @param coordinates - coordinates to convert
+     * @example
+     *
+     * ```ts
+     * // result is [[100,0], [101,1]]
+     * const numCoords = Coordinate.toNumberArrays([new Coordinate(100,0), new Coordinate(101,1)]);
+     * ```
+     */
+    static toNumberArrays(coordinates: Coordinate): any;
+    static toNumberArrays(coordinates: Coordinate[]): any;
+    static toNumberArrays(coordinates: Coordinate[][]): any;
+    static toNumberArrays(coordinates: Coordinate[][][]): any;
+    /**
+     * 将一个或多个GeoJSON风格的坐标转换为坐标对象。
+     *
+     * @english
+     *
+     * Convert one or more GeoJSON style coordiantes to Coordinate objects
+     * @param coordinates - coordinates to convert
+     * @example
+     *
+     * ```ts
+     * const coordinates = Coordinate.toCoordinates([[100,0], [101,1]]);
+     * ```
+     */
+    static toCoordinates(coordinates: CoordinateArray | CoordinateArray[] | CoordinateArray[][] | Coordinate | Coordinate[] | Coordinate[][]): Coordinate | Coordinate[] | Coordinate[][];
+    /**
+     * 使用差值与另一个坐标进行比较，判断是否临近
+     *
+     * @english
+     *
+     * Compare with another Coordinate with a delta
+     * @param p
+     * @param delta
+     */
+    closeTo(p: Coordinate, delta?: number): boolean;
+    /**
+     * 返回该坐标的经纬度绝对值的坐标对象（不会改变原始数据）
+     *
+     * @english
+     *
+     * Return abs value of the coordinate
+     * @returns abs Coordinate
+     */
+    abs(): Coordinate;
+    /**
+     * 类似于数学中的四舍五入，对坐标的 x 和 y 进行舍入，返回一个新 Coordinate
+     *
+     * @english
+     *
+     * Like math.round, rounding the coordinate's xy.
+     * @returns rounded coordinate
+     */
+    round(): Coordinate;
+    /**
+     * 对坐标的 x 和 y 向上取整，返回一个新 Coordinate
+     *
+     * @english
+     *
+     * Like math.ceil, ceil the coordinate's xy.
+     * @returns ceiled coordinate
+     */
+    ceil(): Coordinate;
+    /**
+     * 对坐标的 x 和 y 向下取整，返回一个新 Coordinate
+     *
+     * @english
+     *
+     * Like math.floor, floor the coordinate's xy.
+     * @returns floored coordinate
+     */
+    floor(): Coordinate;
+    /**
+     * 返回当前坐标的 copy
+     *
+     * @english
+     *
+     * Returns a copy of the coordinate
+     * @returns copy
+     */
+    copy(): Coordinate;
+    /**
+     * 坐标数字保留指定位数的小数
+     *
+     * @english
+     *
+     * Formats coordinate number using fixed-coordinate notation.
+     * @param n - The number of digits to appear after the decimal coordinate
+     * @returns fixed coordinate
+     */
+    toFixed(n: number): Coordinate;
+    /**
+     * 与传入坐标相加，返回一个新 Coordinate
+     *
+     * @english
+     *
+     * Returns the result of addition of another coordinate.
+     * @param x - coordinate to add
+     * @returns result
+     */
+    add(x: CoordinateLike): Coordinate;
+    /**
+     * 与传入坐标相加，返回一个新 Coordinate
+     *
+     * @english
+     *
+     * Returns the result of addition of another coordinate.
+     * @param x - coordinate to add
+     * @param y - coordinate to add
+     * @returns result
+     */
+    add(x: number, y: number): Coordinate;
+    /**
+     * 与传入坐标相减，返回一个新 Coordinate。
+     *
+     * @english
+     *
+     * Returns the result of subtraction of another coordinate.
+     * @param x - coordinate to add
+     * @returns result
+     */
+    sub(x: CoordinateLike): Coordinate;
+    /**
+     * 与传入坐标相减，返回一个新 Coordinate。
+     *
+     * @english
+     *
+     * Returns the result of subtraction of another coordinate.
+     * @param x - coordinate to add
+     * @param y - coordinate to add
+     * @returns result
+     */
+    sub(x: number, y: number): Coordinate;
+    /**
+     * Returns the result of multiplication of the current coordinate by the given number.
+     * @param ratio - ratio to multi
+     * @returns result
+     */
+    multi(ratio: number): Coordinate;
+    /**
+     * 与另外一个 coordinate 进行比较，以查看它们是否相等
+     *
+     * @english
+     *
+     * Compare with another coordinate to see whether they are equal.
+     * @param c - coordinate to compare
+     */
+    equals(c: Coordinate): boolean;
+}
+
+type WithNull<T> = T | null;
+type WithUndef<T> = T | undefined;
+declare global {
+    interface Window {
+        MSPointerEvent: any;
+        opera: any;
+        DocumentTouch: any;
+    }
+    interface CanvasRenderingContext2D {
+        isHitTesting: boolean;
+    }
+}
+
+type NumberAble = number | string;
+type PositionJson<T> = {
+    x: T;
+    y: T;
+    z?: T;
+};
+type PositionArray<T> = [T, T] | [T, T, T];
+type PositionLike = Point | Coordinate | PositionJson<NumberAble> | PointJson | CoordinateJson;
+/**
+ * `Point` 和 `Coordinate` 的抽象类
+ * @english
+ *
+ * Abstract parent class for Point and Coordinate
+ * @category basic types
+ */
+declare abstract class Position$1 {
+    x: number;
+    y: number;
+    z: WithUndef<number>;
+    constructor(x: PositionLike);
+    constructor(x: PositionArray<NumberAble>);
+    constructor(x: PointArray);
+    constructor(x: CoordinateArray);
+    constructor(x: NumberAble, y: NumberAble, z?: NumberAble);
+    /**
+     * 设置点或坐标的 x、y 值
+     *
+     * @english
+     *
+     * Set point or coordinate's x, y value
+     * @param x - x value
+     * @param y - y value
+     * @param z - z value
+     */
+    set(x: number, y: number, z?: number): this;
+    abstract abs(): Point | Coordinate;
+    /**
+     * 修改原数据的绝对值
+     *
+     * @english
+     * destructive abs
+     */
+    _abs(): this;
+    /**
+     * 对原数据的 x 和 y 四舍五入
+     *
+     * @english
+     * destructive round
+     */
+    _round(): this;
+    abstract round(): Point | Coordinate;
+    /**
+     * 对原数据的 x 和 y 进行向上取整
+     *
+     * @english
+     * destructive ceil
+     */
+    _ceil(): this;
+    abstract ceil(): Point | Coordinate;
+    /**
+     * 返回当前点与给定点之间的距离
+     *
+     * @english
+     *
+     * Returns the distance between the current and the given point.
+     * @param  point - another point
+     * @returns distance
+     */
+    distanceTo(point: Point | Coordinate): number;
+    /**
+     * 返回该点的大小：这是从 0,0 坐标到该点的 x 和 y 坐标的欧几里得距离
+     *
+     * @english
+     *
+     * Return the magnitude of this point: this is the Euclidean
+     * distance from the 0, 0 coordinate to this point's x and y
+     * coordinates.
+     * @returns magnitude
+     */
+    mag(): number;
+    /**
+     * 对原数据的 x 和 y 进行向下取整
+     *
+     * @english
+     * destructive floor
+     */
+    _floor(): this;
+    abstract floor(): Point | Coordinate;
+    abstract copy(): Point | Coordinate;
+    _add(x: PositionLike): this;
+    _add(x: number, y: number): this;
+    abstract add(x: any, y?: number): Point | Coordinate;
+    _sub(x: PositionLike): this;
+    _sub(x: number, y: number): this;
+    /**
+     * `_sub` 方法的别名
+     *
+     * @english
+     *
+     * Alias for _sub
+     *
+     * @param x
+     * @param y
+     */
+    _substract(x: PositionLike | number, y?: number): this;
+    abstract sub(x: any, y?: number): Point | Coordinate;
+    /**
+     * `sub` 方法的别名。
+     *
+     * @english
+     *
+     * Alias for sub
+     * @returns result
+     * @param x
+     * @param y
+     */
+    substract(x: PositionLike | number, y?: number): Coordinate | Point;
+    abstract multi(ratio: number): Point | Coordinate;
+    _multi(ratio: number): this;
+    /**
+     * 返回当前坐标除以给定数字
+     *
+     * @english
+     *
+     * Returns the result of division of the current point by the given number.
+     * @param n - number to div
+     * @returns result
+     */
+    div(n: number): Coordinate | Point;
+    /**
+     * 除以给定的数字
+     *
+     * @english
+     *
+     * div by the given number
+     * @param n
+     */
+    _div(n: number): this;
+    abstract equals(c: Point | Coordinate): boolean;
+    /**
+     * `Coordinate` / `Point`是否是 `NaN`
+     *
+     * @english
+     *
+     * Whether the coordinate is NaN
+     * @returns
+     */
+    _isNaN(): boolean;
+    /**
+     * `Coordinate` / `Point`是否为零
+     *
+     * @english
+     *
+     * Whether the coordinate/point is zero
+     */
+    isZero(): boolean;
+    /**
+     * 转换为数组形式
+     *
+     * @english
+     *
+     * Convert to a number array [x, y]
+     * @returns number array
+     */
+    toArray(): PositionArray<number>;
+    /**
+     * 坐标数字保留指定位数的小数
+     *
+     * @english
+     *
+     * Formats coordinate number using fixed-point notation.
+     * @param n - The number of digits to appear after the decimal point
+     * @returns fixed coordinate
+     */
+    abstract toFixed(n: number): Point | Coordinate;
+    /**
+     * 转换到 json 对象
+     *
+     * @english
+     * Convert to a json object {x : .., y : ..}
+     * @returns json
+     */
+    toJSON(): PositionJson<number>;
+}
+
+type PointJson = {
+    x: number;
+    y: number;
+    z?: number;
+};
+type PointArray = [number, number] | [number, number, number];
+type PointLike = Point | PointJson | PointArray;
+/**
+ * 2D 点实现
+ * @english
+ * Represents a 2d point.<br>
+ * Can be created in serveral ways:
+ *
+ * @example
+ *
+ * ```ts
+ *
+ * var point = new Point(1000, 1000);
+ *
+ * var point = new Point([1000, 1000]);
+ *
+ * var point = new Point({ x:1000, y:1000 });
+ * ```
+ *
+ * @category basic types
+ */
+declare class Point extends Position$1 {
+    /**
+     * 使用差值与另一个点进行比较，判断是否临近
+     *
+     * @english
+     *
+     * Compare with another point with a delta
+     * @param p
+     * @param delta
+     */
+    closeTo(p: Point, delta?: number): boolean;
+    /**
+     * 计算对应的单位向量
+     * 这意味着计算点到[0, 0]坐标的距离将等于1，并且从计算点到[0, 0]坐标的角度与之前相同
+     * @english
+     *
+     * Calculate this point but as a unit vector from 0, 0, meaning
+     * that the distance from the resulting point to the 0, 0
+     * coordinate will be equal to 1 and the angle from the resulting
+     * point to the 0, 0 coordinate will be the same as before.
+     * @returns unit vector point
+     */
+    unit(): Point;
+    _unit(): this;
+    /**
+     * 计算一个垂直点，其中新的y坐标是旧的x坐标，而新的x坐标是旧的y坐标乘以-1。
+     *
+     * @english
+     *
+     * Compute a perpendicular point, where the new y coordinate
+     * is the old x coordinate and the new x coordinate is the old y
+     * coordinate multiplied by -1
+     * @returns perpendicular point
+     */
+    perp(): Point;
+    _perp(): this;
+    /**
+     * 获取这个点与另一个点之间的角度，单位为弧度
+     *
+     * @english
+     *
+     * Get the angle between this point and another point, in radians
+     * from mapbox/point-geometry
+     * @param b - the other point
+     * @returns angle
+     */
+    angleWith(b: Point): number;
+    /**
+     * 找到两个向量之间的角度
+     *
+     * @english
+     *
+     * Find the angle of the two vectors, solving the formula for
+     * the cross product a x b = |a||b|sin(θ) for θ.
+     * from mapbox/point-geometry
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @returns the angle in radians
+     */
+    angleWithSep(x: number, y: number): number;
+    _rotate(angle: number): this;
+    /**
+     * 围绕0,0原点旋转这个点，旋转角度a以弧度为单位
+     *
+     * @english
+     *
+     * Rotate this point around the 0, 0 origin by an angle a,
+     * given in radians
+     * from mapbox/point-geometry
+     *
+     * @param a angle to rotate around, in radians
+     * @returns output point
+     */
+    rotate(a: number): Point;
+    /**
+     * 返回该点绝对值的 `Point` 对象（不会改变原始数据）
+     *
+     * @english
+     *
+     * Return abs value of the point
+     * @returns abs point
+     */
+    abs(): Point;
+    /**
+     * 类似于数学中的四舍五入，对点的 x 和 y 坐标进行舍入，返回一个新 Point
+     *
+     * @english
+     *
+     * Like math.round, rounding the point's xy.
+     * @returns rounded point
+     */
+    round(): Point;
+    /**
+     * 对点的 x 和 y 坐标向上取整，返回一个新 Point
+     *
+     * @english
+     *
+     * Like math.ceil, ceil the point's xy.
+     * @returns ceiled point
+     */
+    ceil(): Point;
+    /**
+     * 对点的 x 和 y 坐标向下取整，返回一个新 Point
+     *
+     * @english
+     *
+     * Like math.floor, floor the point's xy.
+     * @returns floored point
+     */
+    floor(): Point;
+    /**
+     * 返回当前点的 copy
+     *
+     * @english
+     *
+     * Returns a copy of the point
+     * @returns copy
+     */
+    copy(): Point;
+    /**
+     * 坐标数字保留指定位数的小数
+     *
+     * @english
+     *
+     * Formats point number using fixed-point notation.
+     * @param n - The number of digits to appear after the decimal point
+     * @returns fixed point
+     */
+    toFixed(n: number): Point;
+    /**
+     * 与传入坐标相加，返回一个新 Point
+     *
+     * @english
+     *
+     * Returns the result of addition of another coordinate.
+     * @param x - point to add
+     * @returns result
+     */
+    add(x: PointLike): Point;
+    /**
+     * 与传入坐标相加，返回一个新 Point
+     *
+     * @english
+     *
+     * Returns the result of addition of another coordinate.
+     * @param x - point to add
+     * @param y - point to add
+     * @returns result
+     */
+    add(x: number, y: number): Point;
+    /**
+     * 与传入坐标相减，返回一个新 Point。
+     *
+     * @english
+     *
+     * Returns the result of subtraction of another point.
+     * @param x - point to add
+     * @returns result
+     */
+    sub(x: PointLike): Point;
+    /**
+     * 与传入坐标相减，返回一个新 Point。
+     *
+     * @english
+     *
+     * Returns the result of subtraction of another point.
+     * @param x - point to add
+     * @param y - point to add
+     * @returns result
+     */
+    sub(x: number, y: number): Point;
+    /**
+     * Returns the result of multiplication of the current coordinate by the given number.
+     * @param ratio - ratio to multi
+     * @returns result
+     */
+    multi(ratio: number): Point;
+    /**
+     * 与另外一个 point 进行比较，以查看它们是否相等
+     *
+     * @english
+     *
+     * Compare with another point to see whether they are equal.
+     * @param c - point to compare
+     */
+    equals(c: Point): boolean;
+}
+
+type JsonSize = {
+    width: number;
+    height: number;
+};
+type ArraySize = [number, number];
+/**
+ * A {@link Size} object
+ *
+ * @category basic types
+ *
+ * @example
+ * ```ts
+ * let size1 = new Size(100, 100);
+ * let size2 = [100，100];
+ * let size3 = { width: 100, height: 100 };
+ * ```
+ */
+type SizeLike = Size | JsonSize;
+/**
+ * 表示一个大小的实现类
+ *
+ * @english
+ * Represents a size.
+ * @category basic types
+ *
+ * @example
+ *
+ * ```ts
+ * const a1 = new Size(1, 2);
+ * const a2 = new Size([1, 2]);
+ * const a3 = new Size({ width: 1, height: 2 });
+ * const a4 = new Size(a3);
+ * ```
+ */
+declare class Size {
+    width: number;
+    height: number;
+    /**
+     * @param width - width value
+     */
+    constructor(width: SizeLike);
+    /**
+     * @param width - width value
+     */
+    constructor(width: ArraySize);
+    /**
+     * @param width - width value
+     * @param height - height value
+     */
+    constructor(width: number, height: number);
+    /**
+     * 返回 `Size` 的拷贝
+     * @english
+     * Returns a copy of the size
+     */
+    copy(): Size;
+    /**
+     * @overload
+     *
+     * 返回当前`Size` 与另一个 `Size` 相加的结果
+     *
+     * @english
+     * Returns the result of addition of another size.
+     * @param x - Size
+     * @returns result
+     */
+    add(x: Size): Size;
+    /**
+     * @overload
+     *
+     * 返回当前`Size` 的 xy 与传入的 xy 相加的结果
+     *
+     * @english
+     * Returns the result of addition of another size.
+     * @param x - x
+     * @param y - y
+     * @returns result
+     */
+    add(x: number, y: number): Size;
+    /**
+     * 与另一个 `Size` 进行比较，以判断它们是否相等。
+     *
+     * @english
+     * Compare with another size to see whether they are equal.
+     * @param size - size to compare
+     */
+    equals(size: Size): boolean;
+    /**
+     * 返回当前大小与给定数字相乘的结果，返回一个新的 Size 对象
+     * @english
+     * Returns the result of multiplication of the current size by the given number.
+     * @param ratio - ratio to multi
+     * @returns result
+     */
+    multi(ratio: number): Size;
+    /**
+     * 返回当前大小与给定数字相乘的结果
+     * @english
+     * Returns the result of multiplication of the current size by the given number.
+     * @param ratio - ratio to multi
+     * @returns result
+     */
+    _multi(ratio: number): this;
+    _round(): this;
+    /**
+     * 将当前 `Size` 对象转为一个点对象 {@link Point}
+     * @english
+     * Converts the size object to a {@link Point}
+     * @returns point
+     */
+    toPoint(): Point;
+    /**
+     * 将 `Size` 对象转换为数组
+     * @english
+     * Converts the size object to an array [width, height]
+     */
+    toArray(): ArraySize;
+    /**
+     * 将 `Size` 实例对象转换为 包含 `width` 和 `height` 的 json 对象
+     * @english
+     * Convert the size object to a json object {width : ., height : .}
+     * @returns json
+     */
+    toJSON(): JsonSize;
+}
+
+/**
+ * @classdesc
+ * Utilities methods for Strings used internally. It is static and should not be initiated.
+ * @class
+ * @static
+ * @category core
+ * @name StringUtil
+ */
+declare const EMPTY_STRING = "";
+/**
+ * Trim the string
+ * @param str
+ * @return
+ * @memberOf StringUtil
+ */
+declare function trim(str: string): string;
+declare function replaceAll(str: string, key: string, value: string): string;
+/**
+ * Escape special characters from string.
+ * Including: \b \t \r \v \f
+ * @param str string to escape
+ * @return
+ * @memberOf StringUtil
+ */
+declare function escapeSpecialChars(str: string): string;
+/**
+ * Split string by specified char
+ * @param chr - char to split
+ * @return
+ * @memberOf StringUtil
+ */
+declare function splitWords(chr: string): string[];
+/**
+ * Gets width of the text with a certain font.
+ * More performant than stringLength.
+ * @param text - text to measure
+ * @param font - font of the text, same as the CSS font.
+ * @return
+ * @memberOf StringUtil
+ */
+declare function stringWidth(text: string, font?: string): number;
+/**
+ * Gets size in pixel of the text with a certain font.
+ * @param text - text to measure
+ * @param font - font of the text, same as the CSS font.
+ * @return
+ * @memberOf StringUtil
+ */
+declare function stringLength(text: string, font: string, size?: number): Size;
+/**
+ * Split text content by dom.
+ * @param content - content to split
+ * @param font - font of the text, same as the CSS font.
+ * @return wrapWidth - width to wrap
+ * @return {String[]}
+ * @memberOf StringUtil
+ */
+declare function splitContent(content: string, font: string, wrapWidth: number, textWidth: number): any[];
+/**
+ * Replace variables wrapped by square brackets ({foo}) with actual values in props.
+ * @example
+ *     // will returns 'John is awesome'
+ *     const actual = replaceVariable('{foo} is awesome', {'foo' : 'John'});
+ * @param str      - string to replace
+ * @param props    - variable value properties
+ * @return
+ * @memberOf StringUtil
+ */
+declare function replaceVariable(str: string, props: Object): string;
+/**
+ * Generate text descriptors according to symbols
+ * @return {Object} text descriptor
+ * @memberOf StringUtil
+ */
+declare function describeText(textContent: any, symbol: any): {
+    total: number;
+    size: Size;
+    rows: any[];
+    rawSize: Size;
+};
+/**
+ * Gets text's align point according to the horizontalAlignment and verticalAlignment
+ * @param  {Size} size                  - text size
+ * @param  {String} horizontalAlignment - horizontalAlignment: left/middle/right
+ * @param  {String} verticalAlignment   - verticalAlignment: top/middle/bottom
+ * @return {Point}
+ * @memberOf StringUtil
+ */
+declare function getAlignPoint(size: Size, horizontalAlignment: string, verticalAlignment: string): Point;
+declare const DEFAULT_FONT = "sans-serif";
+declare const DEFAULT_TEXTSIZE = 14;
+/**
+ * Returns CSS Font from a symbol with text styles.
+ * @param  {Object} style symbol with text styles
+ * @return {String}       CSS Font String
+ * @memberOf StringUtil
+ */
+declare function getFont(style: any): any;
+/**
+ * Split a text to multiple rows according to the style.
+ * @param {String} text     - text to split
+ * @param {Object} style    - text style
+ * @return {Object[]} the object's structure: { rowNum: rowNum, textSize: textSize, rows: textRows, rawSize : rawSize }
+ * @memberOf StringUtil
+ */
+declare function splitTextToRow(text: string, style: Object): {
+    total: number;
+    size: Size;
+    rows: any[];
+    rawSize: Size;
+};
+declare function hashCode(s: string): number;
+
+declare const strings_d_DEFAULT_FONT: typeof DEFAULT_FONT;
+declare const strings_d_DEFAULT_TEXTSIZE: typeof DEFAULT_TEXTSIZE;
+declare const strings_d_EMPTY_STRING: typeof EMPTY_STRING;
+declare const strings_d_describeText: typeof describeText;
+declare const strings_d_escapeSpecialChars: typeof escapeSpecialChars;
+declare const strings_d_getAlignPoint: typeof getAlignPoint;
+declare const strings_d_getFont: typeof getFont;
+declare const strings_d_hashCode: typeof hashCode;
+declare const strings_d_replaceAll: typeof replaceAll;
+declare const strings_d_replaceVariable: typeof replaceVariable;
+declare const strings_d_splitContent: typeof splitContent;
+declare const strings_d_splitTextToRow: typeof splitTextToRow;
+declare const strings_d_splitWords: typeof splitWords;
+declare const strings_d_stringLength: typeof stringLength;
+declare const strings_d_stringWidth: typeof stringWidth;
+declare const strings_d_trim: typeof trim;
+declare namespace strings_d {
+  export { strings_d_DEFAULT_FONT as DEFAULT_FONT, strings_d_DEFAULT_TEXTSIZE as DEFAULT_TEXTSIZE, strings_d_EMPTY_STRING as EMPTY_STRING, strings_d_describeText as describeText, strings_d_escapeSpecialChars as escapeSpecialChars, strings_d_getAlignPoint as getAlignPoint, strings_d_getFont as getFont, strings_d_hashCode as hashCode, strings_d_replaceAll as replaceAll, strings_d_replaceVariable as replaceVariable, strings_d_splitContent as splitContent, strings_d_splitTextToRow as splitTextToRow, strings_d_splitWords as splitWords, strings_d_stringLength as stringLength, strings_d_stringWidth as stringWidth, strings_d_trim as trim };
+}
+
+type Matrix4 = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number];
+type Matrix4InOut = Matrix4 | number[];
+type Vector3 = [number, number, number];
+type Vector4 = [number, number, number, number];
+type Vector = Vector3 | Vector4;
+declare function perspective(out: Matrix4InOut, fovy: number, aspect: number, near: number, far: number): Matrix4InOut;
+declare function translate(out: Matrix4InOut, a: Matrix4InOut, v: Vector): Matrix4InOut;
+declare function scale(out: Matrix4InOut, a: Matrix4InOut, v: Vector): Matrix4InOut;
+declare function rotateX(out: Matrix4InOut, a: Matrix4InOut, rad: number): Matrix4InOut;
+declare function rotateZ(out: Matrix4InOut, a: Matrix4InOut, rad: number): Matrix4InOut;
+declare function multiply(out: Matrix4InOut, a: Matrix4InOut, b: Matrix4InOut): Matrix4InOut;
+declare function invert(out: Matrix4InOut, a: Matrix4InOut): Matrix4InOut;
+/**
+ * Set a mat4 to the identity matrix
+ * @ignore
+ * @param out the receiving matrix
+ * @returns out
+ */
+declare function identity(out: Matrix4InOut): Matrix4InOut;
+/**
+ * Copy the values from one mat4 to another
+ * @ignore
+ * @param out the receiving matrix
+ * @param a the source matrix
+ * @returns out
+ */
+declare function copy(out: Matrix4InOut, a: Matrix4InOut): Matrix4InOut;
+
+//# sourceMappingURL=index.d.ts.map
+
+declare const index_d$7_DEFAULT_FONT: typeof DEFAULT_FONT;
+declare const index_d$7_DEFAULT_TEXTSIZE: typeof DEFAULT_TEXTSIZE;
+declare const index_d$7_EMPTY_STRING: typeof EMPTY_STRING;
+declare const index_d$7_GUID: typeof GUID;
+declare const index_d$7_IS_NODE: typeof IS_NODE;
+type index_d$7_Matrix4 = Matrix4;
+type index_d$7_Matrix4InOut = Matrix4InOut;
+declare const index_d$7_UID: typeof UID;
+type index_d$7_Vector = Vector;
+type index_d$7_Vector3 = Vector3;
+type index_d$7_Vector4 = Vector4;
+declare const index_d$7__defaults: typeof _defaults;
+declare const index_d$7_b64toBlob: typeof b64toBlob;
+declare const index_d$7_btoa: typeof btoa;
+declare const index_d$7_calCanvasSize: typeof calCanvasSize;
+declare const index_d$7_cancelAnimFrame: typeof cancelAnimFrame;
+declare const index_d$7_clamp: typeof clamp;
+declare const index_d$7_computeDegree: typeof computeDegree;
+declare const index_d$7_convertResourceUrl: typeof convertResourceUrl;
+declare const index_d$7_convertStylePath: typeof convertStylePath;
+declare const index_d$7_copy: typeof copy;
+declare const index_d$7_describeText: typeof describeText;
+declare const index_d$7_emptyImageUrl: typeof emptyImageUrl;
+declare const index_d$7_equalMapView: typeof equalMapView;
+declare const index_d$7_escapeSpecialChars: typeof escapeSpecialChars;
+declare const index_d$7_extend: typeof extend;
+declare const index_d$7_extendSymbol: typeof extendSymbol;
+declare const index_d$7_extractCssUrl: typeof extractCssUrl;
+declare const index_d$7_flash: typeof flash;
+declare const index_d$7_forEachCoord: typeof forEachCoord;
+declare const index_d$7_getAbsoluteURL: typeof getAbsoluteURL;
+declare const index_d$7_getAlignPoint: typeof getAlignPoint;
+declare const index_d$7_getExternalResources: typeof getExternalResources;
+declare const index_d$7_getFont: typeof getFont;
+declare const index_d$7_getGlobalThis: typeof getGlobalThis;
+declare const index_d$7_getGradientStamp: typeof getGradientStamp;
+declare const index_d$7_getImageBitMap: typeof getImageBitMap;
+declare const index_d$7_getMarkerPathBase64: typeof getMarkerPathBase64;
+declare const index_d$7_getPointsResultPts: typeof getPointsResultPts;
+declare const index_d$7_getSymbolHash: typeof getSymbolHash;
+declare const index_d$7_getSymbolStamp: typeof getSymbolStamp;
+declare const index_d$7_getValueOrDefault: typeof getValueOrDefault;
+declare const index_d$7_hasOwn: typeof hasOwn;
+declare const index_d$7_hashCode: typeof hashCode;
+declare const index_d$7_identity: typeof identity;
+declare const index_d$7_interpolate: typeof interpolate;
+declare const index_d$7_invert: typeof invert;
+declare const index_d$7_isArrayHasData: typeof isArrayHasData;
+declare const index_d$7_isCssUrl: typeof isCssUrl;
+declare const index_d$7_isDashLine: typeof isDashLine;
+declare const index_d$7_isEmpty: typeof isEmpty;
+declare const index_d$7_isFunction: typeof isFunction;
+declare const index_d$7_isGradient: typeof isGradient;
+declare const index_d$7_isImageBitMap: typeof isImageBitMap;
+declare const index_d$7_isInteger: typeof isInteger;
+declare const index_d$7_isNil: typeof isNil;
+declare const index_d$7_isNumber: typeof isNumber;
+declare const index_d$7_isObject: typeof isObject;
+declare const index_d$7_isSVG: typeof isSVG;
+declare const index_d$7_isString: typeof isString;
+declare const index_d$7_isURL: typeof isURL;
+declare const index_d$7_join: typeof join;
+declare const index_d$7_loadImage: typeof loadImage;
+declare const index_d$7_log2: typeof log2;
+declare const index_d$7_lowerSymbolOpacity: typeof lowerSymbolOpacity;
+declare const index_d$7_multiply: typeof multiply;
+declare const index_d$7_now: typeof now;
+declare const index_d$7_parseJSON: typeof parseJSON;
+declare const index_d$7_parseStyleRootPath: typeof parseStyleRootPath;
+declare const index_d$7_parseSymbolPath: typeof parseSymbolPath;
+declare const index_d$7_perspective: typeof perspective;
+declare const index_d$7_pushIn: typeof pushIn;
+declare const index_d$7_removeFromArray: typeof removeFromArray;
+declare const index_d$7_replaceAll: typeof replaceAll;
+declare const index_d$7_replaceVariable: typeof replaceVariable;
+declare const index_d$7_requestAnimFrame: typeof requestAnimFrame;
+declare const index_d$7_rotateX: typeof rotateX;
+declare const index_d$7_rotateZ: typeof rotateZ;
+declare const index_d$7_scale: typeof scale;
+declare const index_d$7_sign: typeof sign;
+declare const index_d$7_splitContent: typeof splitContent;
+declare const index_d$7_splitTextToRow: typeof splitTextToRow;
+declare const index_d$7_splitWords: typeof splitWords;
+declare const index_d$7_stringLength: typeof stringLength;
+declare const index_d$7_stringWidth: typeof stringWidth;
+declare const index_d$7_toDegree: typeof toDegree;
+declare const index_d$7_toRadian: typeof toRadian;
+declare const index_d$7_translate: typeof translate;
+declare const index_d$7_translateToSVGStyles: typeof translateToSVGStyles;
+declare const index_d$7_trim: typeof trim;
+declare const index_d$7_wrap: typeof wrap;
+declare namespace index_d$7 {
+  export { index_d$7_DEFAULT_FONT as DEFAULT_FONT, index_d$7_DEFAULT_TEXTSIZE as DEFAULT_TEXTSIZE, index_d$7_EMPTY_STRING as EMPTY_STRING, index_d$7_GUID as GUID, index_d$7_IS_NODE as IS_NODE, type index_d$7_Matrix4 as Matrix4, type index_d$7_Matrix4InOut as Matrix4InOut, index_d$7_UID as UID, type index_d$7_Vector as Vector, type index_d$7_Vector3 as Vector3, type index_d$7_Vector4 as Vector4, index_d$7__defaults as _defaults, index_d$7_b64toBlob as b64toBlob, index_d$7_btoa as btoa, index_d$7_calCanvasSize as calCanvasSize, index_d$7_cancelAnimFrame as cancelAnimFrame, index_d$7_clamp as clamp, index_d$7_computeDegree as computeDegree, index_d$7_convertResourceUrl as convertResourceUrl, index_d$7_convertStylePath as convertStylePath, index_d$7_copy as copy, index_d$7_describeText as describeText, index_d$7_emptyImageUrl as emptyImageUrl, index_d$7_equalMapView as equalMapView, index_d$7_escapeSpecialChars as escapeSpecialChars, index_d$7_extend as extend, index_d$7_extendSymbol as extendSymbol, index_d$7_extractCssUrl as extractCssUrl, index_d$7_flash as flash, index_d$7_forEachCoord as forEachCoord, index_d$7_getAbsoluteURL as getAbsoluteURL, index_d$7_getAlignPoint as getAlignPoint, index_d$7_getExternalResources as getExternalResources, index_d$7_getFont as getFont, index_d$7_getGlobalThis as getGlobalThis, index_d$7_getGradientStamp as getGradientStamp, index_d$7_getImageBitMap as getImageBitMap, index_d$7_getMarkerPathBase64 as getMarkerPathBase64, index_d$7_getPointsResultPts as getPointsResultPts, index_d$7_getSymbolHash as getSymbolHash, index_d$7_getSymbolStamp as getSymbolStamp, index_d$7_getValueOrDefault as getValueOrDefault, index_d$7_hasOwn as hasOwn, index_d$7_hashCode as hashCode, index_d$7_identity as identity, index_d$7_interpolate as interpolate, index_d$7_invert as invert, index_d$7_isArrayHasData as isArrayHasData, index_d$7_isCssUrl as isCssUrl, index_d$7_isDashLine as isDashLine, index_d$7_isEmpty as isEmpty, index_d$7_isFunction as isFunction, index_d$7_isGradient as isGradient, index_d$7_isImageBitMap as isImageBitMap, index_d$7_isInteger as isInteger, index_d$7_isNil as isNil, index_d$7_isNumber as isNumber, index_d$7_isObject as isObject, index_d$7_isSVG as isSVG, index_d$7_isString as isString, index_d$7_isURL as isURL, index_d$7_join as join, index_d$7_loadImage as loadImage, index_d$7_log2 as log2, index_d$7_lowerSymbolOpacity as lowerSymbolOpacity, index_d$7_multiply as multiply, index_d$7_now as now, index_d$7_parseJSON as parseJSON, index_d$7_parseStyleRootPath as parseStyleRootPath, index_d$7_parseSymbolPath as parseSymbolPath, index_d$7_perspective as perspective, index_d$7_pushIn as pushIn, index_d$7_removeFromArray as removeFromArray, index_d$7_replaceAll as replaceAll, index_d$7_replaceVariable as replaceVariable, index_d$7_requestAnimFrame as requestAnimFrame, index_d$7_rotateX as rotateX, index_d$7_rotateZ as rotateZ, index_d$7_scale as scale, index_d$7_sign as sign, index_d$7_splitContent as splitContent, index_d$7_splitTextToRow as splitTextToRow, index_d$7_splitWords as splitWords, index_d$7_stringLength as stringLength, index_d$7_stringWidth as stringWidth, index_d$7_toDegree as toDegree, index_d$7_toRadian as toRadian, index_d$7_translate as translate, index_d$7_translateToSVGStyles as translateToSVGStyles, index_d$7_trim as trim, index_d$7_wrap as wrap };
+}
+
+/**
+ * DOM utilities used internally.
+ * Learned a lot from Leaflet.DomUtil
+ * @class
+ * @category core
+ */
+
+/**
+ * Vendor-prefixed fransform style name (e.g. `'webkitTransform'` for WebKit).
+ * @property {String} TRANSFORM
+ */
+declare const TRANSFORM: string;
+/**
+ * Vendor-prefixed tfransform-origin name (e.g. `'webkitTransformOrigin'` for WebKit).
+ * @property {String} TRANSFORMORIGIN
+ */
+declare const TRANSFORMORIGIN: string;
+/**
+ * Vendor-prefixed transition name (e.g. `'WebkitTransition'` for WebKit).
+ * @property {String} TRANSITION
+ */
+declare const TRANSITION: string;
+/**
+ * Vendor-prefixed filter name (e.g. `'WebkitFilter'` for WebKit).
+ * @property {String} FILTER
+ */
+declare const CSSFILTER: string;
+/**
+ * Create a html element.
+ * @param tagName
+ * @param className
+ * @returns
+ */
+declare function createEl(tagName: string, className?: string): HTMLElement;
+/**
+ * Create a html element on the specified container
+ * @param tagName
+ * @param style - css styles
+ * @param container
+ * @return
+ */
+declare function createElOn(tagName: string, style: string, container: HTMLElement): HTMLElement;
+/**
+ * Removes a html element.
+ * @param node
+ */
+declare function removeDomNode(node?: HTMLElement): any;
+/**
+ * Adds a event listener to the dom element.
+ * @param  obj     - dom element to listen on
+ * @param  typeArr      - event types, seperated by space
+ * @param  handler    - listener function
+ * @param  context      - function context
+ */
+declare function addDomEvent(obj: HTMLElement | Document, typeArr: string, handler: Function, context?: Object): any;
+/**
+ * Removes event listener from a dom element
+ * @param  obj         - dom element
+ * @param  typeArr          - event types, separated by space
+ * @param  handler        - listening function
+ */
+declare function removeDomEvent(obj: HTMLElement | Document, typeArr: string, handler: Function): any;
+/**
+ * Check if event type of the dom is listened by the handler
+ * @param  obj     - dom element to check
+ * @param  typeArr      - event
+ * @param  handler    - the listening function
+ * @return {Number} - the handler's index in the listener chain, returns -1 if not.
+ */
+declare function listensDomEvent(obj: HTMLElement | Document, type: string, handler: Function): number;
+/**
+ * Prevent default behavior of the browser. <br/>
+ * preventDefault Cancels the event if it is cancelable, without stopping further propagation of the event.
+ * @param {Event} event - browser event
+ */
+declare function preventDefault(event: Event): any;
+/**
+ * Stop browser event propagation
+ * @param   e - browser event.
+ */
+declare function stopPropagation(e: Event): any;
+declare function preventSelection(dom: any): any;
+/**
+ * Get the dom element's current position or offset its position by offset
+ * @param  dom - HTMLElement
+ * @param  offset - position to set.
+ * @return  dom element's current position if offset is null.
+ */
+declare function offsetDom(dom: HTMLElement, offset?: Point): Point;
+/**
+ * Compute dom's position
+ * @param  dom
+ * @return
+ */
+declare function computeDomPosition(dom: HTMLElement): number[];
+/**
+ * Get event's position from the top-left corner of the dom container
+ * @param ev    event
+ * @return
+ */
+declare function getEventContainerPoint(ev: MouseEvent, dom: HTMLElement): Point;
+/**
+ * set css style to the dom element
+ * @param dom dom element
+ * @param strCss css text
+ */
+declare function setStyle(dom: HTMLElement, strCss: string): any;
+/**
+ * Whether the dom has the given css class.
+ * @param el HTML Element
+ * @param name css class
+ */
+declare function hasClass(el: HTMLElement, name: string): boolean;
+/**
+ * add css class to dom element
+ * @param el HTML Element
+ * @param name css class
+ */
+declare function addClass(el: HTMLElement, name: string): any;
+/**
+ * Set dom's css class
+ * @param el HTML Element
+ * @param name css class
+ */
+declare function setClass(el: HTMLElement, name: string): any;
+/**
+ * Get dom's css class
+ * @param name css class
+ * @retrun class字符串
+ */
+declare function getClass(el: HTMLElement): string;
+declare function setOpacity(el: HTMLElement, value: string): any;
+/**
+ * Resets the 3D CSS transform of `el` so it is translated by `offset` pixels
+ * @param el
+ * @param offset
+ */
+declare function setTransform(el: HTMLElement, offset: Point): any;
+declare function setTransformMatrix(el: any, m: any): any;
+declare function removeTransform(el: any): any;
+declare function isHTML(str: string): boolean;
+declare function measureDom(parentTag: any, dom: any): Size;
+declare function getDomRuler(tag: any): any;
+/**
+ * Alias for [addDomEvent]{@link DomUtil.addDomEvent}
+ * @param {HTMLElement} obj     - dom element to listen on
+ * @param {String} typeArr      - event types, seperated by space
+ * @param {Function} handler    - listener function
+ * @param {Object} context      - function context
+ * @static
+ * @function
+ * @return {DomUtil}
+ */
+declare const on: typeof addDomEvent;
+/**
+ * Alias for [removeDomEvent]{@link DomUtil.removeDomEvent}
+ * @param {HTMLElement} obj         - dom element
+ * @param {String} typeArr          - event types, separated by space
+ * @param {Function} handler        - listening function
+ * @static
+ * @function
+ * @return {DomUtil}
+ */
+declare const off: typeof removeDomEvent;
+declare function isMoveEvent(type?: string): boolean;
+declare const MOUSEMOVE_THROTTLE_TIME = 48;
+declare function isMousemoveEventBlocked(target: HTMLElement | any, mousemoveThrottleTime: number): boolean;
+
+declare const dom_d_CSSFILTER: typeof CSSFILTER;
+declare const dom_d_MOUSEMOVE_THROTTLE_TIME: typeof MOUSEMOVE_THROTTLE_TIME;
+declare const dom_d_TRANSFORM: typeof TRANSFORM;
+declare const dom_d_TRANSFORMORIGIN: typeof TRANSFORMORIGIN;
+declare const dom_d_TRANSITION: typeof TRANSITION;
+declare const dom_d_addClass: typeof addClass;
+declare const dom_d_addDomEvent: typeof addDomEvent;
+declare const dom_d_computeDomPosition: typeof computeDomPosition;
+declare const dom_d_createEl: typeof createEl;
+declare const dom_d_createElOn: typeof createElOn;
+declare const dom_d_getClass: typeof getClass;
+declare const dom_d_getDomRuler: typeof getDomRuler;
+declare const dom_d_getEventContainerPoint: typeof getEventContainerPoint;
+declare const dom_d_hasClass: typeof hasClass;
+declare const dom_d_isHTML: typeof isHTML;
+declare const dom_d_isMousemoveEventBlocked: typeof isMousemoveEventBlocked;
+declare const dom_d_isMoveEvent: typeof isMoveEvent;
+declare const dom_d_listensDomEvent: typeof listensDomEvent;
+declare const dom_d_measureDom: typeof measureDom;
+declare const dom_d_off: typeof off;
+declare const dom_d_offsetDom: typeof offsetDom;
+declare const dom_d_on: typeof on;
+declare const dom_d_preventDefault: typeof preventDefault;
+declare const dom_d_preventSelection: typeof preventSelection;
+declare const dom_d_removeDomEvent: typeof removeDomEvent;
+declare const dom_d_removeDomNode: typeof removeDomNode;
+declare const dom_d_removeTransform: typeof removeTransform;
+declare const dom_d_setClass: typeof setClass;
+declare const dom_d_setOpacity: typeof setOpacity;
+declare const dom_d_setStyle: typeof setStyle;
+declare const dom_d_setTransform: typeof setTransform;
+declare const dom_d_setTransformMatrix: typeof setTransformMatrix;
+declare const dom_d_stopPropagation: typeof stopPropagation;
+declare namespace dom_d {
+  export { dom_d_CSSFILTER as CSSFILTER, dom_d_MOUSEMOVE_THROTTLE_TIME as MOUSEMOVE_THROTTLE_TIME, dom_d_TRANSFORM as TRANSFORM, dom_d_TRANSFORMORIGIN as TRANSFORMORIGIN, dom_d_TRANSITION as TRANSITION, dom_d_addClass as addClass, dom_d_addDomEvent as addDomEvent, dom_d_computeDomPosition as computeDomPosition, dom_d_createEl as createEl, dom_d_createElOn as createElOn, dom_d_getClass as getClass, dom_d_getDomRuler as getDomRuler, dom_d_getEventContainerPoint as getEventContainerPoint, dom_d_hasClass as hasClass, dom_d_isHTML as isHTML, dom_d_isMousemoveEventBlocked as isMousemoveEventBlocked, dom_d_isMoveEvent as isMoveEvent, dom_d_listensDomEvent as listensDomEvent, dom_d_measureDom as measureDom, dom_d_off as off, dom_d_offsetDom as offsetDom, dom_d_on as on, dom_d_preventDefault as preventDefault, dom_d_preventSelection as preventSelection, dom_d_removeDomEvent as removeDomEvent, dom_d_removeDomNode as removeDomNode, dom_d_removeTransform as removeTransform, dom_d_setClass as setClass, dom_d_setOpacity as setOpacity, dom_d_setStyle as setStyle, dom_d_setTransform as setTransform, dom_d_setTransformMatrix as setTransformMatrix, dom_d_stopPropagation as stopPropagation };
+}
+
+declare function loadGeoSymbol(symbol: any, geo: any): any;
+
+var index_d$6 = /*#__PURE__*/_mergeNamespaces({
+    __proto__: null,
+    getFunctionTypeResources: getFunctionTypeResources,
+    hasFunctionDefinition: hasFunctionDefinition,
+    interpolated: interpolated,
+    isFunctionDefinition: isFunctionDefinition,
+    loadFunctionTypes: loadFunctionTypes,
+    loadGeoSymbol: loadGeoSymbol
+}, [featureFilter]);
+
+type runFunction = () => any;
+type TaskCreateItem = runFunction | {
+    count?: number;
+    run: runFunction;
+};
+/**
+ *
+ * @param {Object|Function} task  - a micro task(Promise)
+ * @param {Number} task.count - task run count
+ * @param {Function} task.run - task run function
+ * @return {Promise}
+ * @example
+ * const run =()=>{
+ * //do some things
+ * };
+ * runTaskAsync({count:4,run}).then(result=>{})
+ * runTaskAsync(run).then(result=>{})
+ */
+declare function runTaskAsync(task: TaskCreateItem): Promise<any>;
+declare function startTasks(): void;
+declare function pushLoopHook(func: any): void;
+
+declare const MicroTask_d_pushLoopHook: typeof pushLoopHook;
+declare const MicroTask_d_runTaskAsync: typeof runTaskAsync;
+declare const MicroTask_d_startTasks: typeof startTasks;
+declare namespace MicroTask_d {
+  export { MicroTask_d_pushLoopHook as pushLoopHook, MicroTask_d_runTaskAsync as runTaskAsync, MicroTask_d_startTasks as startTasks };
+}
+
+/**
+ * from mapbox-gl-js
+ * A [least-recently-used cache](http://en.wikipedia.org/wiki/Cache_algorithms)
+ * with hash lookup made possible by keeping a list of keys in parallel to
+ * an array of dictionary of values
+ *
+ * @public
+ */
+declare class ArrayLRUCache {
+    max: number;
+    onRemove: Function;
+    data: any;
+    order: any[];
+    /**
+     * @param max number of permitted values
+     * @param onRemove callback called with items when they expire
+     */
+    constructor(max: number, onRemove: Function);
+    /**
+     * Clear the cache
+     *
+     * @returns this cache
+     */
+    reset(): this;
+    clear(): void;
+    /**
+     * Add a key, value combination to the cache, trimming its size if this pushes
+     * it over max length.
+     *
+     * @param key lookup key for the item
+     * @param data any value
+     * @returns this cache
+     */
+    add(key: string, data: any): this;
+    /**
+     * Determine whether the value attached to `key` is present
+     *
+     * @param key the key to be looked-up
+     * @returns whether the cache has this value
+     */
+    has(key: string): boolean;
+    /**
+     * List all keys in the cache
+     *
+     * @returns an array of keys in this cache.
+     */
+    keys(): string[];
+    /**
+     * Get the value attached to a specific key and remove data from cache.
+     * If the key is not found, returns `null`
+     *
+     * @param key the key to look up
+     * @returns the data, or null if it isn't found
+     */
+    getAndRemove(key: string): any;
+    /**
+     * Get the value attached to a specific key without removing data
+     * from the cache. If the key is not found, returns `null`
+     *
+     * @param key the key to look up
+     * @returns the data, or null if it isn't found
+     */
+    get(key: string): any;
+    /**
+     * Remove a key/value combination from the cache.
+     *
+     * @param key the key for the pair to delete
+     * @returns this cache
+     */
+    remove(key: string): this;
+    /**
+     * Change the max size of the cache.
+     *
+     * @param max the max size of the cache
+     * @returns this cache
+     */
+    setMaxSize(max: number): this;
+}
+declare const LRUCache: any;
+
+type Callback$1 = (...params: any[]) => any;
+/**
+ * @classdesc
+ * Ajax Utilities. It is static and should not be initiated.
+ * @class
+ * @static
+ * @category core
+ */
+declare const Ajax: {
+    /**
+     * Get JSON data by jsonp
+     * from https://gist.github.com/gf3/132080/110d1b68d7328d7bfe7e36617f7df85679a08968
+     * @param url - resource url
+     * @param callback  - callback function when completed
+     */
+    jsonp: (url: string, callback: Callback$1) => any;
+    /**
+     * Fetch remote resource by HTTP "GET" method
+     * @param  {String}   url - resource url
+     * @param  {Object}   [options=null] - request options
+     * @param  {Object}   [options.headers=null] - HTTP headers
+     * @param  {String}   [options.responseType=null] - responseType
+     * @param  {String}   [options.credentials=null]  - if with credentials, set it to "include"
+     * @param  {Function} cb  - callback function when completed
+     * @return {Ajax}  Ajax
+     * @example
+     * maptalks.Ajax.get(
+     *     'url/to/resource',
+     *     (err, data) => {
+     *         if (err) {
+     *             throw new Error(err);
+     *         }
+     *         // do things with data
+     *     }
+     * );
+     */
+    get: (url: string, options?: any, cb?: any) => any;
+    /**
+     * Fetch remote resource by HTTP "POST" method
+     * @param  {String}   url - resource url
+     * @param  {Object}   options - request options
+     * @param  {String|Object}  options.postData - post data
+     * @param  {Object}   [options.headers=null]  - HTTP headers
+     * @param  {Function} cb  - callback function when completed
+     * @return {Ajax}  Ajax
+     * @example
+     * maptalks.Ajax.post(
+     *   'url/to/post',
+     *   {
+     *     postData : {
+     *       'param0' : 'val0',
+     *       'param1' : 1
+     *     }
+     *   },
+     *   (err, data) => {
+     *     if (err) {
+     *       throw new Error(err);
+     *     }
+     *     // do things with data
+     *   }
+     * );
+     */
+    post: (url: string, options?: any, cb?: Callback$1) => any;
+    _wrapCallback: (client: any, cb: Callback$1) => () => void;
+    _getClient: (cb: Callback$1) => any;
+    /**
+     * Fetch resource as arraybuffer.
+     * @param {String} url    - url
+     * @param {Object} [options=null] - options, same as Ajax.get
+     * @param {Function} cb   - callback function when completed.
+     * @example
+     * maptalks.Ajax.getArrayBuffer(
+     *     'url/to/resource.bin',
+     *     (err, data) => {
+     *         if (err) {
+     *             throw new Error(err);
+     *         }
+     *         // data is a binary array
+     *     }
+     * );
+     */
+    getArrayBuffer(url: string, options: any, cb: Callback$1): any;
+    getImage(img: any, url: string, options: any): any;
+    getJSON: (url: string, options?: any, cb?: Callback$1) => any;
+};
+
+type BBOX = [number, number, number, number];
+
+/**
+ * 表示二维表面上的边界框，即具有最小点和最大点的矩形区域。 <br>
+ * 有多种方法可以创建 PointExtent：
+ *
+ * @english
+ * Represent a bounding box on 2d surface , a rectangular area with minimum and maximum points. <br>
+ * There are serveral ways to create a PointExtent:
+ * @category basic types
+ * @example
+ *
+ * ```ts
+ * // with 4 numbers
+ * var extent = new PointExtent(100, 10, 120, 20);
+ *
+ * // with 2 points
+ * var extent = new PointExtent(new Point(100, 10), new Point(120, 20));
+ *
+ * // with a json object containing xmin, ymin, xmax and ymax
+ * var extent = new PointExtent({xmin : 100, ymin: 10, xmax: 120, ymax:20});
+ *
+ * var extent1 = new PointExtent(100, 10, 120, 20);
+ * // with another extent
+ * var extent2 = new PointExtent(extent1);
+ * ```
+ */
+declare class PointExtent extends Extent {
+    constructor(p1?: WithNull<ExtentLike>, p?: Projection);
+    constructor(p1: Position, p2: Position, p?: Projection);
+    constructor(p1: number, p2: number, p3: number, p4: number, p?: Projection);
+}
+//# sourceMappingURL=PointExtent.d.ts.map
+
+type Projection = any;
+type Position = Point | Coordinate;
+type ArrayExtent = [number, number, number, number];
+type JsonExtent = {
+    xmin: number;
+    xmax: number;
+    ymin: number;
+    ymax: number;
+};
+type ExtentLike = Extent | JsonExtent | ArrayExtent;
+/**
+ * 表示地图上的边界框，即具有最小和最大坐标的矩形地理区域。 <br>
+ * 有多种方法可以创建范围：
+ *
+ * @english
+ *
+ * Represent a bounding box on the map, a rectangular geographical area with minimum and maximum coordinates. <br>
+ * There are serveral ways to create a extent:
+ * @category basic types
+ * @example
+ *
+ * ```ts
+ * //with 4 numbers: xmin, ymin, xmax and ymax
+ * var extent = new Extent(100, 10, 120, 20);
+ *
+ * //with 2 coordinates
+ * var extent = new Extent(new Coordinate(100, 10), new Coordinate(120, 20));
+ *
+ * //with a json object containing xmin, ymin, xmax and ymax
+ * var extent = new Extent({xmin : 100, ymin: 10, xmax: 120, ymax:20});
+ *
+ * var extent1 = new Extent(100, 10, 120, 20);
+ * //with another extent
+ * var extent2 = new Extent(extent1);
+ * ```
+ */
+declare class Extent {
+    _clazz: typeof Coordinate | typeof Point;
+    _dirty: boolean;
+    projection: any;
+    xmin: WithNull<number>;
+    xmax: WithNull<number>;
+    ymin: WithNull<number>;
+    ymax: WithNull<number>;
+    pxmin: number;
+    pxmax: number;
+    pymin: number;
+    pymax: number;
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
+    constructor(p1?: WithNull<ExtentLike>, p?: Projection);
+    constructor(p1: Position, p2: Position, p?: Projection);
+    constructor(p1: number, p2: number, p3: number, p4: number, p?: Projection);
+    _initialize(p1: WithNull<ExtentLike>): void;
+    _initialize(p1: Position, p2: Position): void;
+    _initialize(p1: number, p2: number, p3: number, p4: number): void;
+    /**
+     * 与坐标或点相加, 会改变原数据
+     *
+     * @english
+     *
+     * Add the extent with a coordinate or a point.
+     * @returns a new extent
+     * @param p
+     */
+    _add(p: Extent): this;
+    _add(p: PointExtent): this;
+    _add(p: Position): this;
+    _add(p: number[]): this;
+    /**
+     * 与坐标或点相加, 返回一个新的 extent
+     *
+     * @english
+     *
+     * Add the extent with a coordinate or a point.
+     * @returns a new extent
+     * @param p
+     */
+    add(p: Extent): this;
+    add(p: PointExtent): this;
+    add(p: Position): this;
+    add(p: number[]): this;
+    /**
+     * 缩放当前 extent
+     *
+     * @english
+     *
+     * scale extent
+     *
+     * @param s
+     */
+    _scale(s: number): this;
+    /**
+     * 当前范围减去 coordinate、point 或者 extent（改变原数据）
+     *
+     * @english
+     *
+     * Substract the extent with a coordinate or a point.
+     * @param p
+     */
+    _sub(p: [number, number]): this;
+    _sub(p: Position): this;
+    _sub(p: Extent | PointExtent): this;
+    /**
+     * _sub 的别名
+     *
+     * @english
+     *
+     * Alias for _sub
+     * @param p
+     */
+    _substract(p: [number, number]): this;
+    _substract(p: Position): this;
+    _substract(p: Extent | PointExtent): this;
+    /**
+     * 当前范围减去 coordinate 或者 point
+     *
+     * @english
+     *
+     * Substract the extent with a coordinate or a point.
+     * @returns a new extent
+     * @param p
+     */
+    sub(p: [number, number]): this;
+    sub(p: Position): this;
+    sub(p: Extent | PointExtent): this;
+    /**
+     * sub 的别名
+     *
+     * @english
+     *
+     * Alias for sub
+     * @returns a new extent
+     * @param p
+     */
+    substract(p: [number, number]): this;
+    substract(p: Position): this;
+    substract(p: Extent | PointExtent): this;
+    /**
+     * 对 Extent 边界值进行四舍五入，返回一个新的 Extent
+     *
+     * @english
+     *
+     * Round the extent
+     * @returns rounded extent
+     */
+    round(): PointExtent | Extent;
+    /**
+     * 对当前 Extent 边界值进行四舍五入
+     *
+     * @english
+     *
+     * Round the extent
+     * @returns rounded extent
+     */
+    _round(): this;
+    /**
+     * 获取 Extent 的最小点
+     *
+     * @english
+     * Get the minimum point
+     * @params [out=undefined] - optional point to receive result
+     */
+    getMin(out?: Point): Point;
+    getMin(out?: Coordinate): Coordinate;
+    /**
+     * 获取 Extent 的最大点
+     *
+     * @english
+     * Get the maximum point
+     * @params [out=undefined] - optional point to receive result
+     */
+    getMax(out?: Point): Point;
+    getMax(out?: Coordinate): Coordinate;
+    /**
+     * 获取 Extent 的中心点
+     *
+     * @english
+     * Get center of the extent.
+     * @params [out=undefined] - optional point to receive result
+     */
+    getCenter(out?: Position): Position;
+    /**
+     * 检查 Extent 是否有效
+     *
+     * @english
+     * Whether the extent is valid
+     * @protected
+     */
+    isValid(): boolean;
+    /**
+     * 与另一个 extent 进行比较它们是否相等
+     *
+     * @english
+     *
+     * Compare with another extent to see whether they are equal.
+     * @param ext2 - extent to compare
+     */
+    equals(ext2: Extent | PointExtent): boolean;
+    /**
+     * 是否与另一个范围相交
+     * @english
+     *
+     * Whether it intersects with another extent
+     * @param ext2 - another extent
+     */
+    intersects(ext2: Extent | PointExtent): boolean;
+    /**
+     * 判断当前 extent 是否在其他 extent 范围内
+     * @english
+     *
+     * Whether the extent is within another extent
+     * @param extent - another extent
+     */
+    within(extent: Extent | PointExtent): boolean;
+    /**
+     * 该范围是否包含输入点
+     * @english
+     * Whether the extent contains the input point.
+     * @param c - input point
+     */
+    contains(c: CoordinateLike): boolean;
+    /**
+     * 获取Extent的宽度
+     *
+     * @english
+     * Get the width of the Extent
+     */
+    getWidth(): number;
+    /**
+     * 获取Extent的高度
+     *
+     * @english
+     * Get the height of the Extent
+     */
+    getHeight(): number;
+    /**
+     * 获取Extent的大小 - 高度和宽度构造的 Size 对象
+     *
+     * @english
+     * Get size of the Extent
+     */
+    getSize(): Size;
+    /**
+     * 设置 extent 的边界值
+     *
+     * @english
+     *
+     * set extent value
+     *
+     * @param xmin
+     * @param ymin
+     * @param xmax
+     * @param ymax
+     */
+    set(xmin: WithNull<number>, ymin: WithNull<number>, xmax: WithNull<number>, ymax: WithNull<number>): this;
+    __combine(extent: Position | Extent | PointExtent): number[];
+    /**
+     * 与其他 extent 合并
+     * @english
+     * Combine it with another extent to a larger extent.
+     * @param extent - extent/coordinate/point to combine into
+     * @returns extent combined
+     */
+    _combine(extent: Position | Extent | PointExtent): this;
+    /**
+     * 与其他 extent 合并到一个更大的 extent，返回一个新 extent
+     * @english
+     * Combine it with another extent to a larger extent.
+     * @param extent - extent/coordinate/point to combine into
+     * @returns extent combined
+     */
+    combine(extent: Position | Extent | PointExtent): any;
+    /**
+     * 获取当前 extent 与另一个 extent 的交集范围
+     *
+     * @english
+     *
+     * Gets the intersection extent of this and another extent.
+     * @param extent - another extent
+     * @returns intersection extent
+     */
+    intersection(extent: Extent | PointExtent): any;
+    /**
+     * 扩大 extent，返回一个新 Extent
+     * @english
+     *
+     * Expand the extent by distance
+     * @param distance  - distance to expand
+     * @returns a new extent expanded from
+     */
+    expand(distance: number | Size): PointExtent | Extent;
+    /**
+     * 扩大 extent
+     * @english
+     * Expand the extent by distance
+     * @param distance  - distance to expand
+     */
+    _expand(distance: number | Size): this;
+    /**
+     * 获取 extent 的 JSON 对象。
+     *
+     * @english
+     * Get extent's JSON object.
+     * @returns jsonObject
+     * @example
+     *
+     * ```ts
+     * // {xmin : 100, ymin: 10, xmax: 120, ymax:20}
+     * var json = extent.toJSON();
+     * ```
+     */
+    toJSON(): JsonExtent;
+    /**
+     * 获取extent矩形区域的坐标数组，包含5个坐标，第一个坐标与最后一个坐标相等。
+     * @english
+     * Get a coordinate array of extent's rectangle area, containing 5 coordinates in which the first equals with the last.
+     * @returns coordinates array
+     */
+    toArray(out?: Position[]): Position[];
+    /**
+     * 获取 extent 的 xmin、ymin、xmax、ymax 组成的字符串
+     *
+     * @english
+     *
+     * Get the string consisting of xmin, ymin, xmax, and ymax of extent
+     */
+    toString(): string;
+    /**
+     * 复制 extent
+     *
+     * @english
+     *
+     * Get a copy of the extent.
+     * @returns copy
+     */
+    copy(): PointExtent | Extent;
+    /**
+     * 转换到新的 extent
+     *
+     * @english
+     *
+     * Convert to a new extent
+     * @param fn convert function on each point
+     * @param out temp out
+     */
+    convertTo(fn: (p: Point) => Point, out?: Extent | PointExtent): Extent | PointExtent;
+    convertTo(fn: (p: Coordinate) => Coordinate, out?: Extent | PointExtent): Extent | PointExtent;
+    /**
+     * 计算给定 Extent 的投影范围
+     *
+     * @english
+     *
+     * Calculate the projected range of the given Extent
+     * @param ext extent
+     */
+    _project(ext: Extent | PointExtent): void;
+}
+
+type Ctx = CanvasRenderingContext2D;
+declare const Canvas: {
+    getCanvas2DContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D;
+    setHitTesting(testing: boolean): void;
+    createCanvas(width: number, height: number, canvasClass?: any): any;
+    prepareCanvasFont(ctx: Ctx, style: any): void;
+    /**
+     * Set canvas's fill and stroke style
+     * @param {CanvasRenderingContext2D} ctx
+     * @param {Object} style
+     * @param {Object} resources
+     * @param {Boolean} testing  - paint for testing, ignore stroke and fill patterns
+     */
+    prepareCanvas(ctx: Ctx, style: any, resources: any, testing?: boolean): void;
+    _createGradient(ctx: Ctx, g: any, extent: Extent): any;
+    _setStrokePattern(ctx: Ctx, strokePattern: string, strokeWidth: number, linePatternOffset: number, resources: any): void;
+    clearRect(ctx: Ctx, x1: number, y1: number, x2: number, y2: number): void;
+    fillCanvas(ctx: Ctx, fillOpacity: number, x?: number, y?: number): void;
+    getRgba(color: any, op: number): any;
+    normalizeColorToRGBA(fill: number[], opacity?: number): string;
+    image(ctx: Ctx, img: CanvasImageSource, x: number, y: number, width?: number, height?: number): void;
+    text(ctx: Ctx, text: any, pt: any, style: any, textDesc: any): BBOX;
+    _textOnMultiRow(ctx: Ctx, texts: any[], style: any, point: any, splitTextSize: Size, textSize: Size): BBOX;
+    _textOnLine(ctx: Ctx, text: any, pt: any, textHaloRadius: number, textHaloFill: any, textHaloAlpha: number): void;
+    fillText(ctx: any, text: any, pt: any, rgba?: any): void;
+    _stroke(ctx: any, strokeOpacity: any, x?: any, y?: any): void;
+    _path(ctx: any, points: any, lineDashArray?: any, lineOpacity?: any, ignoreStrokePattern?: any): void;
+    path(ctx: any, points: any, lineOpacity: any, fillOpacity?: any, lineDashArray?: any): void;
+    _multiClip(ctx: any, points: any): void;
+    polygon(ctx: any, points: any, lineOpacity: any, fillOpacity: any, lineDashArray?: any, smoothness?: any): void;
+    _ring(ctx: any, ring: any, lineDashArray: any, lineOpacity: any, ignorePattern?: any): void;
+    paintSmoothLine(ctx: any, points: any, lineOpacity: any, smoothValue: any, close: any, tailIdx?: any, tailRatio?: any): void;
+    /**
+     * draw an arc from p1 to p2 with degree of (p1, center) and (p2, center)
+     * @param  {Context} ctx    canvas context
+     * @param  {Point} p1      point 1
+     * @param  {Point} p2      point 2
+     * @param  {Number} degree arc degree between p1 and p2
+     */
+    _arcBetween(ctx: CanvasRenderingContext2D, p1: any, p2: any, degree: any): any[];
+    _lineTo(ctx: CanvasRenderingContext2D, p: any): void;
+    bezierCurveAndFill(ctx: CanvasRenderingContext2D, points: any, lineOpacity: any, fillOpacity: any): void;
+    _bezierCurveTo(ctx: CanvasRenderingContext2D, p1: any, p2: any, p3: any): void;
+    ellipse(ctx: CanvasRenderingContext2D, pt: any, width: any, heightTop: any, heightBottom: any, lineOpacity: any, fillOpacity: any): void;
+    rectangle(ctx: CanvasRenderingContext2D, pt: any, size: any, lineOpacity: any, fillOpacity: any): void;
+    sector(ctx: CanvasRenderingContext2D, pt: any, size: any, angles: any, lineOpacity: any, fillOpacity: any): void;
+    _isPattern(style: any): boolean;
+    drawCross(ctx: CanvasRenderingContext2D, x: number, y: number, lineWidth: number, color: string | CanvasGradient | CanvasPattern): void;
+    copy(canvas: HTMLCanvasElement, c?: HTMLCanvasElement): HTMLCanvasElement;
+    pixelRect(ctx: CanvasRenderingContext2D, point: number[], lineOpacity: number, fillOpacity: number): void;
+};
+
+type ClassOptions = Record<string, any>;
+/**
+ *
+ * 基类（Class）
+ * 该库中所有的类都继承于该基类。
+ * 该类提供了定义新类时常用的工具方法，如管理配置options，添加 init hooks 等。
+ *
+ * @english
+ * This library uses ES2015 class system.
+ * Class is the root class of class hierachy.
+ * It provides utility methods to make it easier to manage configration options, merge mixins and add init hooks.
+ *
+ * @example
+ * const defaultOptions = {
+ *     'foo' : 'bar'
+ * };
+ * class Foo extends maptalks.Class {
+ *     constructor(id, options) {
+ *         super(options);
+ *         this.setId(id);
+ *     }
+ *
+ *     setId(id) {
+ *         this.id = id;
+ *     }
+ *
+ *     whenCreated() {
+ *         // .....
+ *     }
+ * }
+ *
+ * Foo.mergeOptions(defaultOptions);
+ *
+ * Foo.addInitHook('whenCreated');
+ * @category core
+ */
+declare class Class {
+    _isUpdatingOptions?: boolean;
+    _initHooksCalled?: boolean;
+    _initHooks?: Function[];
+    options?: ClassOptions;
+    /**
+     *
+     * @english
+     * Create an object, set options if given and call all the init hooks.<br />
+     * Options is where the object manages its configuration. Options passed to the object will be merged with parent's instead of overriding it.
+     *
+     * @param options - options to set
+     */
+    constructor(options?: ClassOptions);
+    proxyOptions(): this;
+    /**
+     * 遍历并执行该类或父类用 addInitHook 添加的 init hooks
+     *
+     * @english
+     * Visit and call all the init hooks defined on Class and its parents.
+     */
+    callInitHooks(): this;
+    /**
+     * 设置新的配置 options
+     *
+     * @english
+     * Merges options with the default options of the object.
+     * @param options - options to set
+     */
+    setOptions(options: ClassOptions): this;
+    /**
+     *
+     * 更新options中指定的配置项。
+     * 1. 如果没有提供参数，则返回options配置对象
+     * 2. 如果配置项有对应的handler，handler会被启用或停用，例如draggable
+     *
+     * @english
+     * 1. Return object's options if no parameter is provided. <br/>
+     * 2. update an option and enable/disable the handler if a handler with the same name existed.
+     *
+     * @example
+     * // Get marker's options;
+     * const options = marker.config();
+     * // Set map's option "draggable" to false and disable map's draggable handler.
+     * map.config('draggable', false);
+     * // You can update more than one options like this:
+     * map.config({
+     *     'scrollWheelZoom' : false,
+     *     'doubleClickZoom' : false
+     * });
+     * @param conf - config to update
+     * @return
+     */
+    config(conf?: string | ClassOptions, value?: any): ClassOptions | this;
+    /**
+     * options被更新时的回调函数
+     *
+     * @english
+     * Default callback when config is called
+     *
+     * @param conf - updated options
+     */
+    onConfig(conf: ClassOptions): void;
+    _visitInitHooks(proto: any): void;
+    /**
+     * 添加一个初始化钩子（init hook）方法，实例化时会被调用。
+     * 该方法一般用于插件开发，利用初始化钩子，子类无需重载父类的构造函数（constructor），就可以在实例化时执行一些必要的逻辑
+     *
+     * @english
+     * Add an init hook, which will be called when the object is initiated. <br>
+     * It is useful in plugin developing to do things when creating objects without changing class's constructor.
+     * @param fn - a hook function or name of the hook function
+     * @param args - arguments for the init hook function
+     */
+    static addInitHook(fn: Function | string, ...args: any[]): typeof Class;
+    /**
+     * 将一个或多个，sources中定义的方法或属性，mixin到该类的prototype中
+     *
+     * @english
+     * Mixin the specified objects into the class as prototype properties or methods.
+     * @param sources - objects to mixin
+     */
+    static include(...sources: any[]): typeof Class;
+    /**
+     * 用参数中的options定义扩展默认的options
+     *
+     * @english
+     * Mixin options with the class's default options.
+     * @param options - options to merge.
+     */
+    static mergeOptions(options: ClassOptions): typeof Class;
+}
+
+type MixinConstructor = new (...args: any[]) => {};
+
+type HandlerContext = {
+    handler: HandlerFn;
+    context: any;
+};
+type EventRecords = Record<string, HandlerFn>;
+type BaseEventParamsType = {
+    type?: string;
+    target?: any;
+    [propName: string]: any;
+};
+type HandlerFnResultType = {
+    type: string;
+    target: any;
+    [propName: string]: any;
+};
+type HandlerFn = (result?: HandlerFnResultType) => void | boolean;
+declare function export_default$3<T extends MixinConstructor>(Base: T): {
+    new (...args: any[]): {
+        _eventMap?: Record<string, HandlerContext[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        /**
+         * 注册事件的监听
+         *
+         * @english
+         * Register a handler function to be called whenever this event is fired.
+         *
+         * @param eventsOn           - event types to register, seperated by space if more than one.
+         * @param handler            - handler function to be called
+         * @param context            - the context of the handler
+         * @example
+         * foo.on('mousedown mousemove mouseup', onMouseEvent, foo);
+         */
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): this;
+        /**
+         * on方法的alias
+         *
+         * @english
+         * Alias for [on]{@link Eventable.on}
+         *
+         * @param eventTypes     - event types to register, seperated by space if more than one.
+         * @param handler        - handler function to be called
+         * @param context        - the context of the handler
+         */
+        addEventListener(...args: any[]): this;
+        /**
+         * 与on方法作用类似，但监听方法只会执行一次
+         *
+         * @english
+         * Same as on, except the listener will only get fired once and then removed.
+         *
+         * @param eventTypes         - event types to register, seperated by space if more than one.
+         * @param handler            - listener handler
+         * @param context            - the context of the handler
+         * @example
+         * foo.once('mousedown mousemove mouseup', onMouseEvent, foo);
+         */
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        /**
+         *
+         * 取消对事件的监听
+         *
+         * @english
+         * Unregister the event handler for the specified event types.
+         *
+         * @param eventsOff         - event types to unregister, seperated by space if more than one.
+         * @param handler           - listener handler
+         * @param context           - the context of the handler
+         * @example
+         * foo.off('mousedown mousemove mouseup', onMouseEvent, foo);
+         */
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        /**
+         * off方法的别名 alias
+         *
+         * @english
+         * Alias for [off]{@link Eventable.off}
+         *
+         * @param eventTypes       - event types to unregister, seperated by space if more than one.
+         * @param handler          - listener handler
+         * @param context          - the context of the handler
+         */
+        removeEventListener(...args: any[]): any;
+        /**
+         * 是否监听了指定的事件
+         *
+         * @english
+         * Returns listener's count registered for the event type.
+         *
+         * @param eventType       - an event type
+         * @param hanlder         - listener function
+         * @param context         - the context of the handler
+         */
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        /**
+         * 返回所有监听的事件
+         * @english
+         * Get all the listening event types
+         */
+        getListeningEvents(): string[];
+        /**
+         * 把事件监听拷贝给给定的目标对象
+         * @english
+         * Copy all the event listener to the target object
+         * @param target - target object to copy to.
+         */
+        copyEventListeners(target: any): any;
+        /**
+         * 触发一个事件，并执行所有监听该事件的handler方法
+         *
+         * @english
+         * Fire an event, causing all handlers for that event name to run.
+         *
+         * @param  eventType - an event type to fire
+         * @param  param     - parameters for the listener function.
+         */
+        fire(eventType: string, param?: BaseEventParamsType): this;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        /**
+         * 设置一个事件父级对象，用来代替执行所有的事件监听
+         *
+         * @english
+         * Set a event parent to handle all the events
+         * @param parent - event parent
+         * @private
+         */
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & T;
+
+declare class Base$1 {
+}
+declare const GlobalEventable_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Base$1;
+declare class GlobalEventable extends GlobalEventable_base {
+}
+declare const GlobalEvent: GlobalEventable;
+
+/**
+ * A helper mixin for JSON serialization.
+ * @mixin JSONAble
+ */
+declare function export_default$2<Class extends MixinConstructor>(Base: Class): {
+    new (...args: any[]): {
+        _jsonType?: string;
+        /**
+         * 返回该类的JSON type
+         * @english
+         * Get object's JSON Type
+         */
+        getJSONType(): string;
+    };
+    /**
+     * 静态方法，用于将该类注册用于JSON序列化与反序列化
+     *
+     * @english
+     * It is a static method. <br>
+     * Register class for JSON serialization and assign a JSON type.
+     * @param  type - JSON type
+     */
+    registerJSONType(type: string): void;
+    /**
+     * 静态方法，返回type对应的注册类
+     * @english
+     * It is a static method. <br>
+     * Get class of input JSON type
+     * @param  type - JSON type
+     */
+    getJSONClass(type: string): Class | null;
+} & Class;
+
+/**
+ * 碰撞检测的实现思路：
+ * 1. 选择 collsionIndex
+ *    1.1 如果 collision scope 是 layer，则在layer上创建
+ *    1.2 如果 collision scope 是 map, 则直接使用map的collisionIndex
+ * 2. painter中查询collisionIndex中是否有命中
+ *   2.1 如果有，则从 elements 中删除当前item
+ *   2.2 如果没有，如果需要的，insert到collisionIndex中
+ */
+declare class CollisionIndex {
+    _tree: any;
+    constructor();
+    /**
+     * Test if given box is collided with any other
+     * @param {Number[]} box - [minx, miny, maxx, maxy]
+     * @returns {Boolean}
+     */
+    collides(box: any): any;
+    /**
+     * Insert box in collision index
+     * @param {Number[]} box - [minx, miny, maxx, maxy]
+     * @returns {CollisionIndex} this
+     */
+    insertBox(box: any): this;
+    /**
+     * Bulk insert boxes in collision index
+     * Powered by rbush, it will perform better in subsquent query
+     * @param {Number[][]} boxes - [[minx, miny, maxx, maxy], ...]
+     * @returns {CollisionIndex} this
+     */
+    bulkInsertBox(boxes: any): this;
+    /**
+     * Clear the collision index
+     * @returns {CollisionIndex} this
+     */
+    clear(): this;
+}
+
+declare class Base {
+}
+declare const Handler_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any; /**
+             * 启用Handler
+             *
+             * @english
+             * Enables the handler
+             */
+        }[]>; /**
+         * 检查Handler是否启用
+         *
+         * @english
+         * Returns true if the handler is enabled.
+         */
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Base;
+/**
+ * 所有交互Handler类的基类
+ *
+ * @english
+ * Base class for all the interaction handlers
+ * @category handler
+ * @abstract
+ * @protected
+ */
+declare abstract class Handler extends Handler_base {
+    target: any;
+    dom?: HTMLElement;
+    _enabled: boolean;
+    constructor(target: any);
+    abstract addHooks(): void;
+    abstract removeHooks(): void;
+    /**
+     * 启用Handler
+     *
+     * @english
+     * Enables the handler
+     */
+    enable(): this;
+    /**
+     * 停用Handler
+     *
+     * @english
+     * Disables the handler
+     */
+    disable(): this;
+    /**
+     * 检查Handler是否启用
+     *
+     * @english
+     * Returns true if the handler is enabled.
+     */
+    enabled(): boolean;
+    /**
+     * 从target上移除Handler
+     *
+     * @english
+     * remove handler from target
+     */
+    remove(): void;
+}
+//# sourceMappingURL=Handler.d.ts.map
+
+/**
+ * A mixin, to enable a class with [interaction handlers]{@link Handler}
+ * @protected
+ * @category handler
+ * @mixin Handlerable
+ */
+declare function export_default$1<T extends MixinConstructor>(Base: T): {
+    new (...args: any[]): {
+        _handlers?: Handler[];
+        /**
+         * Register a handler
+         * @param {String} name       - name of the handler
+         * @param {Handler}           - handler class
+         * @return {*} this
+         * @protected
+         * @function Handerable.addHandler
+         */
+        addHandler(name: any, handlerClass: any): any;
+        /**
+         * Removes a handler
+         * @param {String} name       - name of the handler
+         * @return {*} this
+         * @protected
+         * @function Handerable.removeHandler
+         */
+        removeHandler(name: any): any;
+        _clearHandlers(): void;
+    };
+} & T;
+
+/**
+ * Drag handler
+ * @category handler
+ * @protected
+ * @extends Handler
+ */
+declare class DragHandler extends Handler {
+    options: DragOptionsType;
+    _onMouseDown: (e: any) => any;
+    moved: boolean;
+    startPos: Point;
+    interupted: boolean;
+    addHooks(): void;
+    removeHooks(): void;
+    constructor(dom: HTMLElement, options?: DragOptionsType);
+    enable(): this;
+    disable(): this;
+    onMouseDown(event: DragEventType): void;
+    onMouseMove(event: DragEventType): void;
+    onMouseUp(event: DragEventType): void;
+    _offEvents(): void;
+}
+
+type DragOptionsType = {
+    rightclick?: boolean;
+    cancelOn?: (e: DragEventType) => boolean;
+    ignoreMouseleave?: boolean;
+};
+type DragEventType = MouseEvent | TouchEvent;
+//# sourceMappingURL=Drag.d.ts.map
+
+/**
+ * 表示由 [GeoJSON](http://geojson.org/geojson-spec.html#coordinate-reference-system-objects)定义的 CRS
+ * @english
+ *
+ * Represent CRS defined by [GeoJSON]{@link http://geojson.org/geojson-spec.html#coordinate-reference-system-objects}
+ *
+ * @category geo
+ */
+declare class CRS {
+    type: string;
+    properties: any;
+    /**
+     * @param type type of the CRS
+     * @param properties CRS's properties
+     */
+    constructor(type: string, properties: Record<string, any>);
+    /**
+     * 使用 maptalks 创建 [proj4](https://github.com/OSGeo/proj.4) 形式的 CRS
+     * @english
+     * Create a [proj4](https://github.com/OSGeo/proj.4) style CRS used by maptalks <br>
+     * @example
+     * {
+     *     "type"       : "proj4",
+     *     "properties" : {
+     *         "proj"   : "+proj=longlat +datum=WGS84 +no_defs"
+     *     }
+     * }
+     * var crs_wgs84 = CRS.createProj4("+proj=longlat +datum=WGS84 +no_defs");
+     * @param proj a proj4 projection string.
+     */
+    static createProj4(proj: string): CRS;
+    /**
+     * 使用 maptalks 创建 [epsg](https://spatialreference.org/ref/epsg/) 形式的 CRS
+     * @english
+     * Create a [epsg](https://spatialreference.org/ref/epsg/) style CRS used by maptalks <br>
+     * @example
+     * var crs_wgs84 = CRS.createProj4("EPSG:4326");
+     * @param code a proj4 projection string.
+     */
+    static fromProjectionCode(code: string): WithNull<CRS>;
+    /**
+     * 预定义的WGS84坐标参考系统（也称为EPSG:4326）。
+     * @english
+     * Predefined CRS of well-known WGS84 (aka EPSG:4326)
+     */
+    static WGS84: CRS;
+    /**
+     * CRS.WGS84 的别名
+     * @english
+     * Alias for CRS.WGS84
+     */
+    static EPSG4326: CRS;
+    /**
+     * 谷歌地图使用的投影坐标系统具有以下别名：'EPSG:3785'、'GOOGLE'、'EPSG:900913'。
+     * @english
+     * Projected Coordinate System used by google maps that has the following alias: 'EPSG:3785', 'GOOGLE', 'EPSG:900913'
+     */
+    static EPSG3857: CRS;
+    /**
+     * 一个代表简单的笛卡尔坐标系统。<br>
+     * 它直接映射x、y坐标，对于平面地图（例如室内地图、游戏地图）非常有用。
+     *
+     * @english
+     * A CRS represents a simple Cartesian coordinate system. <br>
+     * Maps x, y directly, is useful for maps of flat surfaces (e.g. indoor maps, game maps).
+     */
+    static IDENTITY: CRS;
+    /**
+     * 中国官方坐标系统（即EPSG:4490），在大多数情况下，可以认为与WGS84相同。
+     *
+     * @english
+     * Official coordinate system in China (aka EPSG:4490), in most cases, it can be considered the same with WGS84.
+     * @see  [7408](http://spatialreference.org/ref/sr-org/7408/)
+     */
+    static CGCS2000: CRS;
+    /**
+     * CRS.CGCS2000 的别名
+     *
+     * @english
+     * Alias for CRS.CGCS2000
+     */
+    static EPSG4490: CRS;
+    /**
+     * 百度地图使用的投影坐标系统。
+     *
+     * @english
+     * Projection used by [Baidu Map](http://map.baidu.com), a popular web map service in China.
+     */
+    static BD09LL: CRS;
+    /**
+     * 中国的大多数在线地图服务中所使用一种加密的坐标参考系统（CRS）。
+     *
+     * @english
+     * A encrypted CRS usded in the most online map services in China.
+     * @see [Restrictions_on_geographic_data_in_China](https://en.wikipedia.org/wiki/Restrictions_on_geographic_data_in_China)
+     */
+    static GCJ02: CRS;
+}
+//# sourceMappingURL=CRS.d.ts.map
+
+/**
+ * 投影坐标和基础二维点系统之间的转换。
+ * 内部使用的核心类，用于将地图（通常是地理）坐标映射到 2d 点
+ *
+ * @english
+ * Transformation between projected coordinates and base 2d point system.
+ * A core class used internally for mapping map's (usually geographical) coordinates to 2d points.<br>
+ *
+ * @category geo
+ * @protected
+ */
+declare class Transformation {
+    matrix: number[];
+    /**
+     * The base 2d point system is a fixed system that is consistent with HTML coordinate system: on X-Axis, left is smaller and right is larger; on Y-Axis, top is smaller and bottom is larger. <br>
+     * As map's coordinates may not be in the same order(e.g. on a mercator projected earth, top is larger and bottom is smaller), <br>
+     * transformation provides mapping functions to map arbitrary coordinates system to the fixed 2d point system. <br>
+     * How to transform is decided by the constructor parameters which is a 4 number array [a, b, c, d]:<br>
+     * a : the order scale of X-axis values 1 means right is larger and -1 means the reverse, left is larger;<br>
+     * b : the order scale of Y-axis values 1 means bottom is larger and -1 means the reverse, top is larger;<br>
+     * c : x of the origin point of the projected coordinate system <br>
+     * d : y of the origin point of the projected coordinate system <br>
+     * e.g.: Transformation parameters for Google map: [1, -1, -20037508.34, 20037508.34] <br>
+     * @param  matrix transformation array
+     */
+    constructor(matrix: number[]);
+    /**
+     * 将投影坐标变换为二维点，
+     * 变换/非变换方法中的参数scale用于在地图的不同缩放级别上缩放结果2d点。
+     *
+     * @english
+     * Transform a projected coordinate to a 2d point. <br>
+     * Parameter scale in transform/untransform method is used to scale the result 2d points on map's different zoom levels.
+     * @param coordinates - projected coordinate to transform
+     * @param scale - transform scale
+     * @param out - tmp point
+     * @returns 2d point.
+     */
+    transform(coordinates: Coordinate, scale: number, out?: Point): Point;
+    /**
+     * 将 2d 点变换为投影坐标。
+     *
+     * @english
+     *
+     * Transform a 2d point to a projected coordinate.
+     * @param point - 2d point
+     * @param scale - transform scale
+     * @param out tmp coordinates
+     * @returns projected coordinate.
+     */
+    untransform(point: Point, scale: number, out?: Coordinate): Coordinate;
+}
+//# sourceMappingURL=Transformation.d.ts.map
+
+declare const CommonProjection: {
+    code: string;
+    is(code: string): boolean;
+    /**
+     * 将地理坐标投影到投影坐标（二维坐标）
+     * @english
+     * Project a geographical coordinate to a projected coordinate (2d coordinate)
+     * @param p - coordinate to project
+     * @function projection.Common.project
+     */
+    project(p: Coordinate): Coordinate;
+    /**
+     * 将投影坐标转到地理坐标（二维坐标）
+     *
+     * @english
+     * Unproject a projected coordinate to a geographical coordinate (2d coordinate)
+     * @param p - coordinate to project
+     * @function projection.Common.unproject
+     */
+    unproject(p: Coordinate): Coordinate;
+    /**
+     * 批量将地理坐标投影到投影坐标
+     *
+     * @english
+     * Project a group of geographical coordinates to projected coordinates.
+     * @param coordinates - coordinates to project
+     * @function projection.Common.projectCoords
+     */
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    /**
+     * 批量将投影坐标转到地理坐标
+     *
+     * @english
+     * Unproject a group of projected coordinates to geographical coordinates.
+     * @param projCoords - projected coordinates to unproject
+     * @function projection.Common.unprojectCoords
+     */
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    /**
+     * 投影是否为球面
+     *
+     * @english
+     * Whether the projection is spherical
+     */
+    isSphere(): boolean;
+    /**
+     * 判断传入的投影坐标是否超出椭球体范围
+     *
+     * @english
+     * If the projected coord out of the sphere
+     * @param pcoord projected coord
+     * @return {Boolean}
+     */
+    isOutSphere(pcoord: Coordinate): boolean;
+    /**
+     * 限制投影坐标在球体中
+     *
+     * @english
+     * Wrap the projected coord in the sphere
+     * @param pcoord projected coord
+     * @returns wrapped projected coord
+     */
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+};
+type CommonProjectionType = typeof CommonProjection;
+
+declare const extended: {
+    /**
+     * the code of the measurer
+     */
+    measure: string;
+    /**
+     * 计算两个坐标之间的距离
+     *
+     * @english
+     * Measure the length between 2 coordinates.
+     * @param c1
+     * @param c2
+     */
+    measureLenBetween: (c1: Coordinate | CoordinateJson, c2: Coordinate | CoordinateJson) => number;
+    /**
+     * 测量给定闭合坐标的面积
+     *
+     * @english
+     * Measure the area closed by the given coordinates.
+     * @param coordinates
+     */
+    measureArea: (coordinates: (Coordinate | CoordinateJson)[]) => number;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c
+     * @param xDist
+     * @param yDist
+     * @param out
+     */
+    locate: (c: Coordinate | CoordinateJson, xDist: number, yDist: number, out?: Coordinate) => any;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标（这是一个私有方法）
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c     - source coordinate
+     * @param xDist     - x-axis distance
+     * @param yDist     - y-axis distance
+     * @private
+     */
+    _locate: (c: Coordinate, xDist: number, yDist: number) => WithNull<Coordinate>;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     *
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     */
+    rotate: (c: Coordinate | CoordinateJson, pivot: Coordinate, angle: number) => any;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     *
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     * @private
+     */
+    _rotate: (c: Coordinate, pivot: Coordinate, angle: number) => Coordinate;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+type IdentityMeasurerType = typeof extended;
+
+type CoordsLike = Coordinate | CoordinateJson;
+/**
+ * 具有 Sphere 通用测量方法的辅助类。
+ *
+ * @english
+ * A helper class with common measure methods for Sphere.
+ * @group measurer
+ * @private
+ */
+declare class Sphere {
+    radius: number;
+    /**
+     * @param radius Sphere's radius
+     */
+    constructor(radius: number);
+    /**
+     * 计算两个坐标之间的距离
+     *
+     * @english
+     * Measure the length between 2 coordinates.
+     * @param c1
+     * @param c2
+     */
+    measureLenBetween(c1: CoordsLike, c2: CoordsLike): number;
+    /**
+     * 测量给定闭合坐标的面积
+     *
+     * @english
+     * Measure the area closed by the given coordinates.
+     * @param coordinates
+     */
+    measureArea(coordinates: CoordsLike[]): number;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c
+     * @param xDist
+     * @param yDist
+     * @param out
+     */
+    locate(c: CoordsLike, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c     - source coordinate
+     * @param xDist     - x-axis distance
+     * @param yDist     - y-axis distance
+     * @private
+     */
+    _locate(c: Coordinate, xDist: number, yDist: number): WithNull<Coordinate>;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     */
+    rotate(c: CoordsLike, pivot: Coordinate, angle: number): Coordinate;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     * @private
+     */
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+}
+/**
+ * WGS84 椭球球体
+ * @english
+ * WGS84 Sphere measurer.
+ * @category geo
+ * @protected
+ * @group measurer
+ * @module WGS84Sphere
+ * {@inheritDoc measurer.Common}
+ */
+declare const WGS84Sphere: {
+    measure: string;
+    sphere: Sphere;
+    /**
+     * 计算两个坐标之间的距离
+     *
+     * @english
+     * Measure the length between 2 coordinates.
+     * @param c1
+     * @param c2
+     */
+    measureLenBetween(c1: CoordsLike, c2: CoordsLike): number;
+    /**
+     * 计算给定闭合坐标的面积
+     *
+     * @english
+     * Measure the area closed by the given coordinates.
+     * @param coordinates
+     */
+    measureArea(coordinates: Coordinate[]): number;
+    _locate(c: CoordsLike, xDist: number, yDist: number): any;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标。
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c - source coordinate
+     * @param xDist - x-axis distance
+     * @param yDist - y-axis distance
+     * @param out - out
+     */
+    locate(c: CoordsLike, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     */
+    rotate(c: CoordsLike, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+/**
+ * 百度地图所使用的椭球体
+ *
+ * @english
+ * Baidu sphere measurer
+ * @category geo
+ * @protected
+ * @group measurer
+ * @module BaiduSphere
+ * {@inheritDoc measurer.Common}
+ */
+declare const BaiduSphere: {
+    measure: string;
+    sphere: Sphere;
+    /**
+     * 计算两个坐标之间的距离
+     *
+     * @english
+     * Measure the length between 2 coordinates.
+     * @param c1
+     * @param c2
+     */
+    measureLenBetween(c1: CoordsLike, c2: CoordsLike): number;
+    /**
+     * 计算给定闭合坐标的面积
+     *
+     * @english
+     * Measure the area closed by the given coordinates.
+     * @param coordinates
+     */
+    measureArea(coordinates: CoordsLike[]): number;
+    _locate(c: Coordinate, xDist: number, yDist: number): any;
+    /**
+     * 使用 x 轴距离和 y 轴距离从给定源坐标定位坐标。
+     * @english
+     * Locate a coordinate from the given source coordinate with a x-axis distance and a y-axis distance.
+     * @param c - source coordinate
+     * @param xDist - x-axis distance
+     * @param yDist - y-axis distance
+     * @param out - out
+     */
+    locate(c: CoordsLike, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    /**
+     * 绕枢轴旋转给定角度的坐标
+     * @english
+     * Rotate a coordinate of given angle around pivot
+     * @param c  - source coordinate
+     * @param pivot - pivot
+     * @param angle - angle in degree
+     */
+    rotate(c: CoordsLike, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+type BaiduSphereType = typeof BaiduSphere;
+type WGS84SphereType = typeof WGS84Sphere;
+
+/**
+ * 默认 measurer, [WGS84Sphere]{@link WGS84Sphere}
+ * @english
+ * Default measurer, [WGS84Sphere]{@link WGS84Sphere}
+ *
+ * @category geo
+ * @protected
+ * @group measurer
+ * @module DEFAULT
+ * {@inheritDoc measurer.WGS84Sphere}
+ */
+declare const DEFAULT$1: {
+    measure: string;
+    sphere: {
+        radius: number;
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+        _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+    };
+    measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+    measureArea(coordinates: Coordinate[]): number;
+    _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+    locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+/**
+ * 带有测量功能的方法，不能直接初始化。
+ * Measurer提供了地理计算的方法，例如长度和面积测量等。
+ *
+ * @english
+ * Utilities with measurers. It is static and should not be initiated.<br>
+ * Measurer provides methods for geographical computations such as length and area measuring, etc.
+ * @module Measurer
+ * @group measurer
+ * @category geo
+ */
+declare const Measurer: {
+    /**
+     * 获取量测计算的实例
+     *
+     * @english
+     * Get a measurer instance.
+     * @param name - code of the measurer: 'EPSG:4326', 'Identity', 'BAIDU'
+     * @returns a measurer object
+     * @function Measurer.getInstance
+     */
+    getInstance(name?: string): IdentityMeasurerType | WGS84SphereType | BaiduSphereType;
+};
+
+declare const index_d$5_BaiduSphere: typeof BaiduSphere;
+type index_d$5_BaiduSphereType = BaiduSphereType;
+type index_d$5_IdentityMeasurerType = IdentityMeasurerType;
+declare const index_d$5_Measurer: typeof Measurer;
+declare const index_d$5_WGS84Sphere: typeof WGS84Sphere;
+type index_d$5_WGS84SphereType = WGS84SphereType;
+declare namespace index_d$5 {
+  export { index_d$5_BaiduSphere as BaiduSphere, type index_d$5_BaiduSphereType as BaiduSphereType, DEFAULT$1 as DEFAULT, extended as Identity, type index_d$5_IdentityMeasurerType as IdentityMeasurerType, index_d$5_Measurer as Measurer, index_d$5_WGS84Sphere as WGS84Sphere, type index_d$5_WGS84SphereType as WGS84SphereType };
+}
+
+declare const EPSG3857Projection: {
+    /**
+     * "EPSG:3857", Code of the projection
+     * @constant
+     */
+    code: string;
+    rad: number;
+    metersPerDegree: number;
+    maxLatitude: number;
+    project: (lnglat: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (pLnglat: Coordinate, out?: Coordinate) => Coordinate;
+};
+type EPSG3857ProjectionType = CommonProjectionType & typeof EPSG3857Projection & WGS84SphereType;
+/**
+ * Google 地图或 OSM 地图使用的常规投影，又名墨卡托投影。<br>
+ * 这是地图的默认投影。
+ *
+ * @english
+ * Well-known projection used by Google maps or Open Street Maps, aka Mercator Projection.<br>
+ * It is map's default projection.
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @name EPSG3857
+ * {@inheritDoc projection.Common}
+ * {@inheritDoc measurer.WGS84Sphere}
+ */
+declare const _default$5: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    /**
+     * "EPSG:3857", Code of the projection
+     * @constant
+     */
+    code: string;
+    rad: number;
+    metersPerDegree: number;
+    maxLatitude: number;
+    project: (lnglat: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (pLnglat: Coordinate, out?: Coordinate) => Coordinate;
+} & {
+    measure: string;
+    sphere: {
+        radius: number;
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+        _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+    };
+    measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+    measureArea(coordinates: Coordinate[]): number;
+    _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+    locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+
+declare const EPSG4326Projection: {
+    /**
+     * "EPSG:4326", Code of the projection
+     * @constant
+     */
+    code: string;
+    aliases: string[];
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+};
+type EPSG4326ProjectionType = CommonProjectionType & typeof EPSG4326Projection & WGS84SphereType;
+/**
+ * GIS 中常见的 CRS。 使用简单的等距矩形投影
+ *
+ * @english
+ * A common CRS among GIS enthusiasts. Uses simple Equirectangular projection.
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @name EPSG4326
+ * {@inheritDoc projection.Common}
+ * {@inheritDoc measurer.WGS84Sphere}
+ */
+declare const _default$4: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    /**
+     * "EPSG:4326", Code of the projection
+     * @constant
+     */
+    code: string;
+    aliases: string[];
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+} & {
+    measure: string;
+    sphere: {
+        radius: number;
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+        _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+    };
+    measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+    measureArea(coordinates: Coordinate[]): number;
+    _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+    locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+
+interface EPSG9807ProjectionParams {
+    falseEasting: number;
+    falseNorthing: number;
+    scaleFactor: number;
+    centralMeridian: number;
+    latitudeOfOrigin: number;
+    startLongtitude: number;
+    startLatitude: number;
+}
+declare const EPSG9807Projection: {
+    code: string;
+    aliases: string[];
+    centralMeridian: number;
+    create(params: Partial<EPSG9807ProjectionParams>): {
+        code: string;
+        is(code: string): boolean;
+        project(p: Coordinate): Coordinate;
+        unproject(p: Coordinate): Coordinate;
+        projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        isSphere(): boolean;
+        isOutSphere(pcoord: Coordinate): boolean;
+        wrapCoord(pcoord: Coordinate): Coordinate;
+        getCircum(): Record<string, number>;
+        getSphereExtent(): Extent;
+    } & {
+        /**
+         * "EPSG:9807", Code of the projection
+         * @type {String}
+         * @constant
+         */
+        code: string;
+        aliases: string[];
+        centralMeridian: number;
+        project: (p: Coordinate, out?: Coordinate) => Coordinate;
+        unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+    } & {
+        measure: string;
+        sphere: {
+            radius: number;
+            measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+            measureArea(coordinates: (CoordinateJson | Coordinate)[]): number; /**
+             * "EPSG:9807", Code of the projection
+             * @type {String}
+             * @constant
+             */
+            locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+            _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+            rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+            _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        };
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: Coordinate[]): number;
+        _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+    } & {
+        measureLength: (c1: Coordinate, c2: Coordinate) => number;
+    };
+};
+type EPSG9807ProjectionType = CommonProjectionType & typeof EPSG9807Projection;
+/**
+ * 横轴墨卡托投影
+ *
+ * @english
+ * Traverse Mercator Projection
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @name EPSG9807
+ * {@inheritDoc projection.Common}
+ * {@inheritDoc measurer.WGS84Sphere}
+ */
+declare const _default$3: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    code: string;
+    aliases: string[];
+    centralMeridian: number;
+    create(params: Partial<EPSG9807ProjectionParams>): {
+        code: string;
+        is(code: string): boolean;
+        project(p: Coordinate): Coordinate;
+        unproject(p: Coordinate): Coordinate;
+        projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        isSphere(): boolean;
+        isOutSphere(pcoord: Coordinate): boolean;
+        wrapCoord(pcoord: Coordinate): Coordinate;
+        getCircum(): Record<string, number>;
+        getSphereExtent(): Extent;
+    } & {
+        /**
+         * "EPSG:9807", Code of the projection
+         * @type {String}
+         * @constant
+         */
+        code: string;
+        aliases: string[];
+        centralMeridian: number;
+        project: (p: Coordinate, out?: Coordinate) => Coordinate;
+        unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+    } & {
+        measure: string;
+        sphere: {
+            radius: number;
+            measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+            measureArea(coordinates: (CoordinateJson | Coordinate)[]): number; /**
+             * "EPSG:9807", Code of the projection
+             * @type {String}
+             * @constant
+             */
+            locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+            _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+            rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+            _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        };
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: Coordinate[]): number;
+        _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+    } & {
+        measureLength: (c1: Coordinate, c2: Coordinate) => number;
+    };
+};
+
+declare const ProjectionMethods: {
+    EARTHRADIUS: number;
+    MCBAND: number[];
+    LLBAND: number[];
+    MC2LL: number[][];
+    LL2MC: number[][];
+    convertMC2LL: (cB: Coordinate, out?: Coordinate) => Coordinate;
+    convertLL2MC: (T: Coordinate, out?: Coordinate) => Coordinate;
+    convertor: (cC: Coordinate, cD: number, out?: Coordinate) => Coordinate;
+    toRadians: (T: number) => number;
+    toDegrees: (T: number) => number;
+    getRange: (cC: number, cB: number, T: number) => number;
+    getLoop: (cC: number, cB: number, T: number) => number;
+};
+declare const BAIDUProjection: {
+    /**
+     * "BAIDU", Code of the projection
+     * @constant
+     */
+    code: string;
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+};
+type BAIDUProjectionType = CommonProjectionType & typeof BAIDUProjection & BaiduSphereType & typeof ProjectionMethods;
+/**
+ * 百度地图所使用的投影 [Baidu Map]{@link http://map.baidu.com}
+ *
+ * @english
+ * Projection used by [Baidu Map]{@link http://map.baidu.com}
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @name BAIDU
+ * {@inheritDoc projection.Common}
+ * {@inheritDoc BaiduSphere}
+ */
+declare const _default$2: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    /**
+     * "BAIDU", Code of the projection
+     * @constant
+     */
+    code: string;
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+} & {
+    measure: string;
+    sphere: {
+        radius: number;
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+        _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+    };
+    measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+    measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+    _locate(c: Coordinate, xDist: number, yDist: number): any;
+    locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+} & {
+    EARTHRADIUS: number;
+    MCBAND: number[];
+    LLBAND: number[];
+    MC2LL: number[][];
+    LL2MC: number[][];
+    convertMC2LL: (cB: Coordinate, out?: Coordinate) => Coordinate;
+    convertLL2MC: (T: Coordinate, out?: Coordinate) => Coordinate;
+    convertor: (cC: Coordinate, cD: number, out?: Coordinate) => Coordinate;
+    toRadians: (T: number) => number;
+    toDegrees: (T: number) => number;
+    getRange: (cC: number, cB: number, T: number) => number;
+    getLoop: (cC: number, cB: number, T: number) => number;
+};
+
+interface UTMProjectionParams {
+    zone: string;
+    south: boolean;
+}
+declare const UTMProjection: {
+    /**
+     * "EPSG:4490", Code of the projection
+     * @constant
+     */
+    code: string;
+    aliases: any[];
+    create(params: Partial<UTMProjectionParams>): {
+        code: string;
+        is(code: string): boolean;
+        project(p: Coordinate): Coordinate;
+        unproject(p: Coordinate): Coordinate;
+        projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        isSphere(): boolean;
+        isOutSphere(pcoord: Coordinate): boolean;
+        wrapCoord(pcoord: Coordinate): Coordinate;
+        getCircum(): Record<string, number>;
+        getSphereExtent(): Extent;
+    } & {
+        code: string;
+        aliases: string[];
+        centralMeridian: number;
+        project: (p: Coordinate, out?: Coordinate) => Coordinate;
+        unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+    } & {
+        measure: string;
+        sphere: {
+            radius: number;
+            measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+            measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+            locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+            _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+            rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+            _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        };
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: Coordinate[]): number;
+        _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+    } & {
+        measureLength: (c1: Coordinate, c2: Coordinate) => number;
+    };
+};
+type UTMProjectionType = EPSG9807ProjectionType & typeof UTMProjection;
+/**
+ * Universal Traverse Mercator projection
+ *
+ * @class
+ * @category geo
+ * @protected
+ * @memberOf projection
+ * @name EPSG4490
+ * {@inheritDoc projection.EPSG9807}
+ */
+declare const _default$1: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    code: string;
+    aliases: string[];
+    centralMeridian: number;
+    create(params: Partial<EPSG9807ProjectionParams>): {
+        code: string;
+        is(code: string): boolean;
+        project(p: Coordinate): Coordinate;
+        unproject(p: Coordinate): Coordinate;
+        projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        isSphere(): boolean;
+        isOutSphere(pcoord: Coordinate): boolean;
+        wrapCoord(pcoord: Coordinate): Coordinate;
+        getCircum(): Record<string, number>;
+        getSphereExtent(): Extent;
+    } & {
+        code: string;
+        aliases: string[];
+        centralMeridian: number;
+        project: (p: Coordinate, out?: Coordinate) => Coordinate;
+        unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+    } & {
+        measure: string;
+        sphere: {
+            radius: number;
+            measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+            measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+            locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+            _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+            rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+            _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        };
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: Coordinate[]): number;
+        _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+    } & {
+        measureLength: (c1: Coordinate, c2: Coordinate) => number;
+    };
+} & {
+    /**
+     * "EPSG:4490", Code of the projection
+     * @constant
+     */
+    code: string;
+    aliases: any[];
+    create(params: Partial<UTMProjectionParams>): {
+        code: string;
+        is(code: string): boolean;
+        project(p: Coordinate): Coordinate;
+        unproject(p: Coordinate): Coordinate;
+        projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+        isSphere(): boolean;
+        isOutSphere(pcoord: Coordinate): boolean;
+        wrapCoord(pcoord: Coordinate): Coordinate;
+        getCircum(): Record<string, number>;
+        getSphereExtent(): Extent;
+    } & {
+        code: string;
+        aliases: string[];
+        centralMeridian: number;
+        project: (p: Coordinate, out?: Coordinate) => Coordinate;
+        unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+    } & {
+        measure: string;
+        sphere: {
+            radius: number;
+            measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+            measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+            locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+            _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+            rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+            _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        };
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: Coordinate[]): number;
+        _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+    } & {
+        measureLength: (c1: Coordinate, c2: Coordinate) => number;
+    };
+};
+
+declare const IdentityProjection: {
+    /**
+     * "IDENTITY", Code of the projection
+     * @constant
+     */
+    code: string;
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+};
+type IdentityProjectionType = CommonProjectionType & typeof IdentityProjection & IdentityMeasurerType;
+/**
+ * 基于笛卡尔坐标系的投影。<br>
+ * 该投影直接映射 x、y，常用于平面地图（例如室内地图、游戏地图）。
+ *
+ * @english
+ * A projection based on Cartesian coordinate system.<br>
+ * This projection maps x, y directly, it is useful for maps of flat surfaces (e.g. indoor maps, game maps).
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @name IDENTITY
+ * {@inheritDoc projection.Common}
+ * {@inheritDoc measurer.Identity}
+ */
+declare const _default: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    /**
+     * "IDENTITY", Code of the projection
+     * @constant
+     */
+    code: string;
+    project: (p: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (p: Coordinate, out?: Coordinate) => Coordinate;
+} & {
+    measure: string;
+    measureLenBetween: (c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate) => number;
+    measureArea: (coordinates: (CoordinateJson | Coordinate)[]) => number;
+    locate: (c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate) => any;
+    _locate: (c: Coordinate, xDist: number, yDist: number) => Coordinate;
+    rotate: (c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number) => any;
+    _rotate: (c: Coordinate, pivot: Coordinate, angle: number) => Coordinate;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+
+type ProjectionType = EPSG3857ProjectionType | EPSG4326ProjectionType | EPSG9807ProjectionType | BAIDUProjectionType | UTMProjectionType | IdentityProjectionType;
+/**
+ * 默认投影, [EPSG3857]{@link projection.EPSG3857}
+ * @english
+ * Default projection, [EPSG3857]{@link projection.EPSG3857}
+ *
+ * @category geo
+ * @protected
+ * @group projection
+ * @module DEFAULT
+ * {@inheritDoc projection.EPSG3857}
+ */
+declare const DEFAULT: {
+    code: string;
+    is(code: string): boolean;
+    project(p: Coordinate): Coordinate;
+    unproject(p: Coordinate): Coordinate;
+    projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+    isSphere(): boolean;
+    isOutSphere(pcoord: Coordinate): boolean;
+    wrapCoord(pcoord: Coordinate): Coordinate;
+    getCircum(): Record<string, number>;
+    getSphereExtent(): Extent;
+} & {
+    code: string;
+    rad: number;
+    metersPerDegree: number;
+    maxLatitude: number;
+    project: (lnglat: Coordinate, out?: Coordinate) => Coordinate;
+    unproject: (pLnglat: Coordinate, out?: Coordinate) => Coordinate;
+} & {
+    measure: string;
+    sphere: {
+        radius: number;
+        measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+        measureArea(coordinates: (CoordinateJson | Coordinate)[]): number;
+        locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): Coordinate;
+        _locate(c: Coordinate, xDist: number, yDist: number): Coordinate;
+        rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): Coordinate;
+        _rotate(c: Coordinate, pivot: Coordinate, angle: number): Coordinate;
+    };
+    measureLenBetween(c1: CoordinateJson | Coordinate, c2: CoordinateJson | Coordinate): number;
+    measureArea(coordinates: Coordinate[]): number;
+    _locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number): any;
+    locate(c: CoordinateJson | Coordinate, xDist: number, yDist: number, out?: Coordinate): any;
+    _rotate(c: Coordinate, pivot: Coordinate, angle: number): any;
+    rotate(c: CoordinateJson | Coordinate, pivot: Coordinate, angle: number): any;
+} & {
+    measureLength: (c1: Coordinate, c2: Coordinate) => number;
+};
+
+type index_d$4_BAIDUProjectionType = BAIDUProjectionType;
+type index_d$4_CommonProjectionType = CommonProjectionType;
+declare const index_d$4_DEFAULT: typeof DEFAULT;
+type index_d$4_EPSG3857ProjectionType = EPSG3857ProjectionType;
+type index_d$4_EPSG4326ProjectionType = EPSG4326ProjectionType;
+type index_d$4_EPSG9807ProjectionParams = EPSG9807ProjectionParams;
+type index_d$4_EPSG9807ProjectionType = EPSG9807ProjectionType;
+type index_d$4_IdentityProjectionType = IdentityProjectionType;
+type index_d$4_ProjectionType = ProjectionType;
+type index_d$4_UTMProjectionParams = UTMProjectionParams;
+type index_d$4_UTMProjectionType = UTMProjectionType;
+declare namespace index_d$4 {
+  export { _default$2 as BAIDU, type index_d$4_BAIDUProjectionType as BAIDUProjectionType, CommonProjection as Common, type index_d$4_CommonProjectionType as CommonProjectionType, index_d$4_DEFAULT as DEFAULT, _default$5 as EPSG3857, type index_d$4_EPSG3857ProjectionType as EPSG3857ProjectionType, _default$4 as EPSG4326, type index_d$4_EPSG4326ProjectionType as EPSG4326ProjectionType, _default$3 as EPSG9807, type index_d$4_EPSG9807ProjectionParams as EPSG9807ProjectionParams, type index_d$4_EPSG9807ProjectionType as EPSG9807ProjectionType, _default as IDENTITY, type index_d$4_IdentityProjectionType as IdentityProjectionType, type index_d$4_ProjectionType as ProjectionType, _default$1 as UTM, type index_d$4_UTMProjectionParams as UTMProjectionParams, type index_d$4_UTMProjectionType as UTMProjectionType };
+}
+
+type Callback = (...params: any[]) => any;
+/**
+ * @classdesc
+ * Easing functions for anmation, from openlayers 3
+ * @class
+ * @category animation
+ * @memberof animation
+ * @protected
+ */
+declare const Easing: {
+    outExpo(x: number): number;
+    outQuint(x: number): number;
+    /**
+     * Start slow and speed up.
+     * @param {number} t Input between 0 and 1.
+     * @return {number} Output between 0 and 1.
+     */
+    in(t: number): number;
+    /**
+     * Start fast and slow down.
+     * @param {number} t Input between 0 and 1.
+     * @return {number} Output between 0 and 1.
+     */
+    out(t: number): number;
+    /**
+     * Start slow, speed up, and then slow down again.
+     * @param {number} t Input between 0 and 1.
+     * @return {number} Output between 0 and 1.
+     */
+    inAndOut(t: number): number;
+    /**
+     * Maintain a constant speed over time.
+     * @param {number} t Input between 0 and 1.
+     * @return {number} Output between 0 and 1.
+     */
+    linear(t: number): number;
+    /**
+     * Start slow, speed up, and at the very end slow down again.  This has the
+     * same general behavior as {@link inAndOut}, but the final slowdown
+     * is delayed.
+     * @param {number} t Input between 0 and 1.
+     * @return {number} Output between 0 and 1.
+     */
+    upAndDown(t: number): number;
+};
+/**
+ * Animation Frame used internally in animation player.
+ * @category animation
+ * @memberof animation
+ * @protected
+ */
+declare class Frame {
+    state: any;
+    styles: any;
+    /**
+     * Create an animation frame.
+     * @param {Object} state  - animation state
+     * @param {Object} styles - styles to animate
+     */
+    constructor(state: any, styles: any);
+    get playState(): any;
+    get symbol(): any;
+}
+/**
+ * An [Web Animation API]{@link https://developer.mozilla.org/zh-CN/docs/Web/API/Animation} style animation player
+ * @category animation
+ * @memberof animation
+ */
+declare class Player {
+    _animation: Callback;
+    options: AnimationOptionsPrivateType;
+    _onFrame: (frame: Frame) => void;
+    playState: string;
+    ready: boolean;
+    finished: boolean;
+    target: any;
+    duration: number;
+    _framer: (cb: Callback) => void;
+    currentTime: number;
+    startTime: number;
+    _playStartTime: number;
+    /**
+     * Create an animation player
+     * @param {Function} animation - animation [framing]{@link framing} function
+     * @param {Object} options     - animation options
+     * @param {Function} onFrame  - callback function for animation steps
+     */
+    constructor(animation: Callback, options: object, onFrame: Callback, target: object);
+    _prepare(): void;
+    /**
+     * Start or resume the animation
+     * @return {Player} this
+     */
+    play(): this;
+    /**
+     * Pause the animation
+     * @return {Player} this
+     */
+    pause(): this;
+    /**
+     * Cancel the animation play and ready to play again
+     * @return {Player} this
+     */
+    cancel(): this;
+    /**
+     * Finish the animation play, and can't be played any more.
+     * @return {Player} this
+     */
+    finish(): this;
+    reverse(): void;
+    _run(): void;
+}
+/**
+ * @classdesc
+ * Utilities for animation
+ * @class
+ * @category animation
+ * @memberof animation
+ */
+declare const Animation: {
+    /**
+     * @property {Object} speed         - predefined animation speed
+     * @property {Number} speed.slow    - 2000ms
+     * @property {Number} speed.normal  - 1000ms
+     * @property {Number} speed.fast    - 500ms
+     */
+    speed: {
+        slow: number;
+        normal: number;
+        fast: number;
+    };
+    /**
+     * resolve styles for animation, get a style group of start style, styles to animate and end styles.
+     * @param  {Object} styles - styles to resolve
+     * @return {Object[]}  styles resolved
+     * @private
+     */
+    _resolveStyles(styles: any): {}[];
+    /**
+     * Generate a framing function
+     * @param  {Object[]} styles        - animation style group
+     * @param  {Object} [options=null]  - options
+     * @param  {Object} [options.easing=null]  - animation easing
+     * @return {Function} framing function helps to generate animation frames.
+     */
+    framing(styles: any[], options?: any): (elapsed: number, duration: number) => Frame;
+    _requestAnimFrame(fn: Callback): void;
+    _a(): void;
+    _run(): void;
+    /**
+     * Create an animation player
+     * @param  {Object} styles  - styles to animate
+     * @param  {Object} options - animation options
+     * @param  {Function} step  - callback function for animation steps
+     * @return {Player} player
+     */
+    animate(styles: any, options: any, step: Callback, target: any): Player;
+    _frameFn: () => void;
+};
+declare const animate: (styles: any, options: any, step: Callback, target: any) => Player;
+
+type EasingType = 'outExpo' | 'outQuint' | 'in' | 'out' | 'inAndOut' | 'linear' | 'upAndDown';
+type AnimationOptionsType = {
+    duration?: number;
+    easing?: EasingType;
+    repeat?: boolean;
+};
+type AnimationOptionsPrivateType = {
+    speed?: number;
+    framer?: () => void;
+    startTime?: number;
+} & AnimationOptionsType;
+
+declare const Animation_d_Animation: typeof Animation;
+type Animation_d_AnimationOptionsType = AnimationOptionsType;
+type Animation_d_Callback = Callback;
+declare const Animation_d_Easing: typeof Easing;
+type Animation_d_EasingType = EasingType;
+type Animation_d_Frame = Frame;
+declare const Animation_d_Frame: typeof Frame;
+type Animation_d_Player = Player;
+declare const Animation_d_Player: typeof Player;
+declare const Animation_d_animate: typeof animate;
+declare namespace Animation_d {
+  export { Animation_d_Animation as Animation, type Animation_d_AnimationOptionsType as AnimationOptionsType, type Animation_d_Callback as Callback, Animation_d_Easing as Easing, type Animation_d_EasingType as EasingType, Animation_d_Frame as Frame, Animation_d_Player as Player, Animation_d_animate as animate };
+}
+
+declare class MessageBatch {
+    _limit: number;
+    _messages: Message[];
+    buffers: ArrayBuffer[];
+    constructor(limit?: number);
+    addMessage(msg: Message, buffers: ArrayBuffer[]): void;
+    isFull(): boolean;
+    getMessage(): {
+        messageType: string;
+        messages: Message[];
+    };
+}
+/**
+ * Worker Pool
+ * contains code from [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js)
+ * @private
+ */
+declare class WorkerPool {
+    active: {
+        [key: number]: boolean;
+    };
+    workerCount: number;
+    _messages: MessageBatch[][];
+    _messageBuffers: ArrayBuffer[];
+    workers: Worker[];
+    constructor();
+    acquire(id: number): Worker[];
+    release(id: number): void;
+    addMessage(workerId: number, data: any, buffers: ArrayBuffer[]): void;
+    commit(): void;
+    getWorkers(): Worker[];
+    broadcastIdleMessage(): this;
+}
+
+type Message<T = any> = {
+    command: "broadcast" | 'send';
+    data: T;
+    buffers: ArrayBuffer[];
+    cb: Function;
+    workerId?: number;
+};
+/**
+ * An actor to exchange data from main-thread to workers
+ * contains code from [mapbox-gl-js](https://github.com/mapbox/mapbox-gl-js)
+ * @category core
+ * @memberof worker
+ * @example
+ *  const workerKey = 'test_worker_key';
+    maptalks.registerWorkerAdapter(workerKey, function (exports, global) {
+      //will be called only for once when loaded in worker thread
+      exports.initialize = function () {
+        console.log('[worker] initialized');
+      };
+      //to receive message from main thread sent by maptalks.worker.Actor
+      exports.onmessage = function (message, postResponse) {
+        const data = message.data;
+        console.log(`[worker] received data : ` + data);
+        //send message back to main thread
+        //the parameters:
+        //error, data, buffers (arraybuffers in data)
+        postResponse(null, 'message from worker thread', null);
+      };
+    });
+
+    const MyActor = class extends maptalks.worker.Actor {
+      test(info, cb) {
+        //send data to worker thread
+        this.send(info, null, cb);
+      }
+    }
+
+    //must be same with workerKey for maptalks.registerWorkerAdapter
+    const actor = new MyActor(workerKey);
+    actor.test('hi', (err, data) => {
+      //received data from worker thread
+      console.log(data);
+    });
+ */
+declare class Actor {
+    _delayMessages: Message[];
+    initializing: boolean;
+    workerKey: string;
+    workerPool: WorkerPool;
+    currentActor: number;
+    actorId: number;
+    workers: Worker[];
+    callbacks: {
+        [key: string]: Function;
+    };
+    callbackID: number;
+    receiveFn: any;
+    constructor(workerKey: string);
+    created(): void;
+    /**
+     * If the actor is active
+     * @returns
+     */
+    isActive(): boolean;
+    /**
+     * Broadcast a message to all Workers.
+     * @param {Object} data - data to send to worker thread
+     * @param {ArrayBuffer[]} buffers - arraybuffers in data as transferables
+     * @param {Function} cb - callback function when received message from worker thread
+     */
+    broadcast<T = any>(data: T, buffers: ArrayBuffer[], cb: Function): this;
+    /**
+     * Sends a message from a main-thread to a Worker and call callback when response received.
+     *
+     * @param {Object} data - data to send to worker thread
+     * @param {ArrayBuffer[]} buffers - arraybuffers in data as transferables
+     * @param {Function} cb - callback function when received message from worker thread
+     * @param {Number} [workerId=undefined] - Optional, a particular worker id to which to send this message.
+     */
+    send<T = any>(data: T, buffers: ArrayBuffer[], cb: Function, workerId?: number): this;
+    /**
+     * A listener callback for incoming message from worker thread.
+     * SHOULD NOT BE OVERRIDED only if you know what you are doing.
+     * @param {Object} message - response message from worker thread
+     */
+    receive(message: Message): void;
+    /**
+     * Remove the actor
+     */
+    remove(): void;
+    /**
+     * Send a message to a Worker.
+     * @param {Object} data - data to send
+     * @param {ArrayBuffer[]} buffers   - arraybuffers in data
+     * @param {Number} targetID The ID of the Worker to which to send this message. Omit to allow the dispatcher to choose.
+     * @returns {Number} The ID of the worker to which the message was sent.
+     */
+    post(data: any, buffers: ArrayBuffer[], targetID: number): number;
+    /**
+     * Get a dedicated worker in a round-robin fashion
+     */
+    getDedicatedWorker(): number;
+}
+
+type TileRenderingCanvas = {
+    gl?: TileRenderingContext;
+    texture?: TileImageTexture;
+    _parentTileTimestamp?: number;
+} & HTMLCanvasElement;
+type TileRenderingContext = {
+    program: TileRenderingProgram;
+    wrap: () => TileRenderingContext;
+} & (WebGLRenderingContext | WebGL2RenderingContext);
+type TileRenderingProgram = {
+    fragmentShader: string;
+    vertexShader: string;
+} & WebGLProgram;
+type ImageType$1 = HTMLImageElement | ImageBitmap | HTMLCanvasElement;
+type TileImageType = {
+    glBuffer?: TileImageBuffer;
+    texture?: TileImageTexture;
+} & ImageType$1;
+type TileImageBuffer = {
+    width?: number;
+    height?: number;
+    type?: string;
+} & WebGLBuffer;
+type TileImageTexture = WebGLTexture;
+type VertexAttrib = [name: string, stride: number, type?: string];
+
+declare class ResourceWorkerConnection extends Actor {
+    constructor();
+    fetchImage(url: string, cb: Function): void;
+}
+/**
+ * 在 HTMLCanvasElement 上渲染图层的基类
+ * @english
+ * Base Class to render layer on HTMLCanvasElement
+ * @abstract
+ * @protected
+ * @memberOf renderer
+ * @extends Class
+ */
+declare class CanvasRenderer$1 extends Class {
+    layer: any;
+    resources: ResourceCache;
+    context: CanvasRenderingContext2D;
+    canvas: TileRenderingCanvas;
+    gl: TileRenderingContext;
+    middleWest: Point;
+    canvasExtent2D: Extent;
+    _extent2D: Extent;
+    _maskExtent: Extent;
+    _painted: boolean;
+    _drawTime: number;
+    _frameTime: number;
+    _resWorkerConn: ResourceWorkerConnection;
+    _toRedraw: boolean;
+    _loadingResource: boolean;
+    _renderComplete: boolean;
+    _canvasUpdated: boolean;
+    _renderZoom: number;
+    _errorThrown: boolean;
+    __zoomTransformMatrix: number[];
+    drawOnInteracting?(...args: any[]): void;
+    checkResources?(): any[];
+    getImageData?(): ImageData;
+    draw?(...args: any[]): void;
+    /**
+     * @param  {Layer} layer the layer to render
+     */
+    constructor(layer: any);
+    /**
+     * Render the layer.
+     * Call checkResources
+     */
+    render(framestamp?: number): void;
+    getFrameTimestamp(): number;
+    checkAndDraw(drawFn: any, ...args: any[]): void;
+    /**
+     * Check if has any external resources to load
+     * If yes, load the resources before calling draw method
+     * @abstract
+     * @method checkResources
+     * @instance
+     * @returns {Array[]} an array of resource arrays [ [url1, width, height], [url2, width, height], [url3, width, height] .. ]
+     * @memberOf renderer.CanvasRenderer
+     */
+    /**
+     * a required abstract method to implement
+     * draw the layer when map is not interacting
+     * @abstract
+     * @instance
+     * @method draw
+     * @memberOf renderer.CanvasRenderer
+     */
+    /**
+     * an optional abstract method to implement
+     * draw the layer when map is interacting (moving/zooming/dragrotating)
+     * @abstract
+     * @instance
+     * @method drawOnInteracting
+     * @param {Object} eventParam event parameters
+     * @memberOf renderer.CanvasRenderer
+     */
+    /**
+     * @private
+     */
+    testIfNeedRedraw(): boolean;
+    /**
+     * Ask whether the layer renderer needs to redraw
+     */
+    needToRedraw(): boolean;
+    /**
+     * A callback for overriding when drawOnInteracting is skipped due to low fps
+     */
+    onSkipDrawOnInteracting(): void;
+    isLoadingResource(): boolean;
+    isRenderComplete(): boolean;
+    /**
+     * Whether must call render instead of drawOnInteracting when map is interacting
+     */
+    mustRenderOnInteracting(): boolean;
+    /**
+     * Set to redraw, ask map to call draw/drawOnInteracting to redraw the layer
+     */
+    setToRedraw(): this;
+    /**
+     *  Mark layer's canvas updated
+     */
+    setCanvasUpdated(): this;
+    /**
+     * Only called by map's renderer to check whether the layer's canvas is updated
+     * @protected
+     * @return {Boolean}
+     */
+    isCanvasUpdated(): boolean;
+    /**
+     * Remove the renderer, will be called when layer is removed
+     */
+    remove(): void;
+    onRemove(): void;
+    onAdd(): void;
+    /**
+     * Get map
+     */
+    getMap(): any;
+    /**
+     * Get renderer's Canvas image object
+     */
+    getCanvasImage(): any;
+    /**
+     * Clear canvas
+     */
+    clear(): void;
+    /**
+     * A method to help improve performance.
+     * If you are sure that layer's canvas is blank, returns true to save unnecessary layer works of maps.
+     */
+    isBlank(): boolean;
+    /**
+     * Show the layer
+     */
+    show(): void;
+    /**
+     * Hide the layer
+     */
+    hide(): void;
+    /**
+     * Set z-index of layer
+     */
+    setZIndex(_z?: number): void;
+    /**
+     * Detect if there is anything painted on the given point
+     * @param point containerPoint
+     */
+    hitDetect(point: Point): boolean;
+    /**
+     * loadResource from resourceUrls
+     * @param  {String[]} resourceUrls    - Array of urls to load
+     * @returns {Promise[]}
+     */
+    loadResources(resourceUrls: string[][]): Promise<any>;
+    /**
+     * Prepare rendering
+     * Set necessary properties, like this._renderZoom/ this.canvasExtent2D, this.middleWest
+     * @private
+     */
+    prepareRender(): void;
+    /**
+     * Create renderer's Canvas
+     */
+    createCanvas(): void;
+    onCanvasCreate(): void;
+    createContext(): void;
+    resetCanvasTransform(): void;
+    /**
+     * Resize the canvas
+     * @param canvasSize the size resizing to
+     */
+    resizeCanvas(canvasSize?: SizeLike): void;
+    /**
+     * Clear the canvas to blank
+     */
+    clearCanvas(): void;
+    /**
+     * @english
+     * Prepare the canvas for rendering. <br>
+     * 1. Clear the canvas to blank. <br>
+     * 2. Clip the canvas by mask if there is any and return the mask's extent
+     * @return {PointExtent} mask's extent of current zoom's 2d point.
+     */
+    prepareCanvas(): any;
+    clipCanvas(context: CanvasRenderingContext2D & {
+        isMultiClip: boolean;
+        isClip: boolean;
+    }): boolean;
+    /**
+     * Get renderer's current view extent in 2d point
+     * @return {Object} view.extent, view.maskExtent, view.zoom, view.middleWest
+     */
+    getViewExtent(): {
+        extent: Extent;
+        maskExtent: Extent;
+        zoom: number;
+        middleWest: Point;
+    };
+    /**
+     * call when rendering completes, this will fire necessary events and call setCanvasUpdated
+     */
+    completeRender(): void;
+    /**
+     * Get renderer's event map registered on the map
+     * @return {Object} events
+     */
+    getEvents(): {
+        _zoomstart: (param: any) => void;
+        _zooming: (param: any) => void;
+        _zoomend: (param: any) => void;
+        _resize: (param: any) => void;
+        _movestart: (param: any) => void;
+        _moving: (param: any) => void;
+        _moveend: (param: any) => void;
+        _dragrotatestart: (param: any) => void;
+        _dragrotating: (param: any) => void;
+        _dragrotateend: (param: any) => void;
+        _spatialreferencechange: (param: any) => void;
+    };
+    /**
+     * onZoomStart
+     * @param  {Object} param event parameters
+     */
+    onZoomStart(param: any): void;
+    /**
+    * onZoomEnd
+    * @param  {Object} param event parameters
+    */
+    onZoomEnd(param: any): void;
+    /**
+    * onZooming
+    * @param  {Object} param event parameters
+    */
+    onZooming(param: any): void;
+    /**
+    * onMoveStart
+    * @param  {Object} param event parameters
+    */
+    onMoveStart(param: any): void;
+    /**
+    * onMoving
+    * @param  {Object} param event parameters
+    */
+    onMoving(param: any): void;
+    /**
+    * onMoveEnd
+    * @param  {Object} param event parameters
+    */
+    onMoveEnd(param: any): void;
+    /**
+    * onResize
+    * @param  {Object} param event parameters
+    */
+    onResize(param: any): void;
+    /**
+    * onDragRotateStart
+    * @param  {Object} param event parameters
+    */
+    onDragRotateStart(param: any): void;
+    /**
+    * onDragRotating
+    * @param  {Object} param event parameters
+    */
+    onDragRotating(param: any): void;
+    /**
+    * onDragRotateEnd
+    * @param  {Object} param event parameters
+    */
+    onDragRotateEnd(param: any): void;
+    /**
+    * onSpatialReferenceChange
+    * @param  {Object} param event parameters
+    */
+    onSpatialReferenceChange(param: any): void;
+    /**
+     * Get ellapsed time of previous drawing
+     * @return {Number}
+     */
+    getDrawTime(): number;
+    _tryToDraw(framestamp: any): void;
+    _drawAndRecord(framestamp: number): void;
+    _promiseResource(url: any): (resolve: any) => void;
+    _cacheResource(url: [string, number | string, string | number], img: ImageType$1): void;
+}
+
+type ResourceUrl = string | string[];
+declare class ResourceCache {
+    resources: any;
+    private _errors;
+    constructor();
+    addResource(url: [string, number | string, number | string], img: any): void;
+    isResourceLoaded(url: ResourceUrl, checkSVG?: boolean): boolean;
+    login(url: string): void;
+    logout(url: string): void;
+    getImage(url: ResourceUrl): any;
+    markErrorResource(url: ResourceUrl): void;
+    merge(res: any): this;
+    forEach(fn: Function): this;
+    _getImgUrl(url: ResourceUrl): string;
+    remove(): void;
+}
+
+/**
+ * symbolilzers的基础类,所有的symbolilzers都继承于此
+ * 抽象类,不可实例化
+ *
+ * @english
+ * @classdesc
+ * Base class for all the symbolilzers
+ * @class
+ * @extends Class
+ * @abstract
+ * @private
+ */
+declare abstract class Symbolizer {
+    bbox: BBOX;
+    geometry: Geometry;
+    painter: Painter;
+    style: any;
+    constructor();
+    _setBBOX(ctx: CanvasRenderingContext2D, x1?: number | BBOX, y1?: number, x2?: number, y2?: number): Symbolizer;
+    _bufferBBOX(ctx: CanvasRenderingContext2D, bufferSize: number): Symbolizer;
+    getMap(): Map;
+    getPainter(): Painter;
+    isDynamicSize(): boolean;
+    isVisible(): boolean;
+    /**
+     * 测试该属性是否是与着色相关的属性
+     *
+     * @english
+     * Test if the property is a property related with coloring
+     * @param  prop - property name to test
+     * @static
+     * @function
+     * @memberof symbolizer.Symbolizer
+     */
+    static testColor(prop: string): boolean;
+}
+//# sourceMappingURL=Symbolizer.d.ts.map
+
+/**
+ *所有基于 HTML5 Canvas2D 的symbolizer类
+ *
+ * @english
+ * @classdesc
+ * Base symbolizer class for all the symbolizers base on HTML5 Canvas2D
+ * @abstract
+ * @class
+ * @private
+ * @memberOf symbolizer
+ * @name CanvasSymbolizer
+ * @extends {Symbolizer}
+ */
+declare abstract class CanvasSymbolizer extends Symbolizer {
+    symbol: any;
+    _opacityFn: any;
+    _prepareContext(ctx: CanvasRenderingContext2D): void;
+    prepareCanvas(ctx: CanvasRenderingContext2D, style: any, resources?: ResourceCache): void;
+    remove(): void;
+    setZIndex(): void;
+    show(): void;
+    hide(): void;
+    _defineStyle(style: any): any;
+}
+//# sourceMappingURL=CanvasSymbolizer.d.ts.map
+
+/**
+ * 所有点类型符号样式的symbolizer基类
+ *
+ * @english
+ * @classdesc
+ * Base symbolizer class for all the point type symbol styles.
+ * @abstract
+ * @class
+ * @private
+ * @memberOf symbolizer
+ * @name PointSymbolizer
+ * @extends {symbolizer.CanvasSymbolizer}
+ */
+declare abstract class PointSymbolizer extends CanvasSymbolizer {
+    style: any;
+    symbol: any;
+    geometry: Geometry;
+    painter: Painter;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    get2DExtent(): PointExtent;
+    isDynamicSize(): boolean;
+    _rotateExtent(fixedExtent: PointExtent, angle: number): PointExtent;
+    _getRenderPoints(): Point[][];
+    /**
+     * 获取容器内的点用于绘制
+     *
+     * @english
+     * Get container points to draw on Canvas
+     */
+    _getRenderContainerPoints(ignoreAltitude?: boolean): Point[];
+    getPlacement(): any;
+    getRotation(): number;
+    getDxDy(): Point;
+    _getRotationAt(i: number): number;
+    _rotate(ctx: CanvasRenderingContext2D, origin: Point, rotation: number): Point | null;
+}
+//# sourceMappingURL=PointSymbolizer.d.ts.map
+
+declare class DebugSymbolizer extends PointSymbolizer {
+    getPlacement(): string;
+    getDxDy(): Point;
+    symbolize(ctx: CanvasRenderingContext2D): void;
+}
+
+declare class ImageMarkerSymbolizer extends PointSymbolizer {
+    _url: [string, string | number, string | number];
+    _fixedExtent: PointExtent;
+    static test(symbol: any): boolean;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    symbolize(ctx: CanvasRenderingContext2D, resources: ResourceCache): void;
+    _getImage(resources: ResourceCache): any;
+    getFixedExtent(resources: ResourceCache): PointExtent;
+    translate(): any;
+}
+
+/**
+ * A mixin providing image support in WebGL env
+ * @mixin ImageGLRenderable
+ * @protected
+ */
+declare const ImageGLRenderable: <T extends MixinConstructor>(Base: T) => {
+    new (...args: any[]): {
+        gl: TileRenderingContext;
+        canvas: TileRenderingCanvas;
+        canvas2?: TileRenderingCanvas;
+        _debugInfoCanvas?: TileRenderingCanvas;
+        program?: TileRenderingProgram;
+        _layerAlt: number;
+        _layerAltitude: number;
+        layer?: any;
+        texBuffer?: TileImageBuffer;
+        _debugBuffer?: TileImageBuffer;
+        posBuffer?: TileImageBuffer;
+        _imageBuffers?: TileImageBuffer[];
+        _buffers?: TileImageBuffer[];
+        _textures?: TileImageTexture[];
+        getMap?(): Map;
+        /**
+         * 绘制图片数据
+         *
+         * @english
+         * Draw an image at x, y at map's gl zoom
+         * @param image
+         * @param x x at map's gl zoom
+         * @param y y at map's gl zoom
+         * @param w width at map's gl zoom
+         * @param h height at map's gl zoom
+         * @param scale scale at map's gl zoom
+         * @param opacity
+         * @param debugInfo
+         * @param baseColor
+         */
+        drawGLImage(image: TileImageType, x: number, y: number, w: number, h: number, scale: number, opacity: number, debugInfo?: string, baseColor?: number[]): void;
+        /**
+         * 绘制 debug 信息，包括边线和行列号
+         * @param uMatrix
+         * @param x
+         * @param y
+         * @param w
+         * @param h
+         * @param debugInfo
+         */
+        drawDebug(uMatrix: Matrix4InOut, x: number, y: number, w: number, h: number, debugInfo: string): void;
+        /**
+         * 构建瓦片顶点数据
+         * @param x
+         * @param y
+         * @param w
+         * @param h
+         * @param buffer
+         */
+        bufferTileData(x: number, y: number, w: number, h: number, buffer?: TileImageBuffer): TileImageBuffer;
+        /**
+         * 对于需要两个 canvas 来绘制的图层我们需要重新创建一个 canvas
+         * @english
+         * Create another GL canvas to draw gl images
+         * For layer renderer that needs 2 seperate canvases for 2d and gl
+         */
+        createCanvas2(): void;
+        /**
+         * 创建 webgl 实例，优先使用 canvas2
+         * @english
+         * Get webgl context(this.gl). It prefers canvas2, and will change to this.canvas if canvas2 is not created
+         */
+        createGLContext(): void;
+        /**
+         * Resize GL canvas with renderer's 2D canvas
+         */
+        resizeGLCanvas(): void;
+        /**
+         * Clear gl canvas
+         */
+        clearGLCanvas(): void;
+        disposeImage(image: TileImageType): void;
+        _createTexture(image: TileImageType): TileImageTexture;
+        /**
+         * Get a texture from cache or create one if cache is empty
+         */
+        getTexture(): WithNull<TileImageTexture>;
+        /**
+         * Save a texture to the cache
+         */
+        saveTexture(texture: TileImageTexture): void;
+        /**
+         * Load image into a text and bind it with WebGLContext
+         * @param image
+         */
+        loadTexture(image: TileImageType): TileImageTexture;
+        /**
+         * Get a texture from cache or create one if cache is empty
+         */
+        getImageBuffer(): WithNull<TileImageBuffer>;
+        /**
+         * Save a texture to the cache
+         * @param buffer
+         */
+        saveImageBuffer(buffer: TileImageBuffer): void;
+        /**
+         * Load image into a text and bind it with WebGLContext
+         * @returns
+         */
+        loadImageBuffer(data: Float32Array | Int16Array, glBuffer: TileImageBuffer): TileImageBuffer;
+        createImageBuffer(): TileImageBuffer;
+        /**
+         * remove all the resources and remove gl canvas
+         */
+        removeGLCanvas(): void;
+        /**
+         * Create a WebGL buffer
+         * @returns {WebGLBuffer}
+         */
+        createBuffer(): TileImageBuffer;
+        /**
+         * Enable vertex attributes
+         * @params attributes
+         * @example
+         * rendererr.enableVertexAttrib(['a_position', 3, 'FLOAT']);
+         */
+        enableVertexAttrib(attributes: VertexAttrib): void;
+        /**
+         * Create the linked program object
+         * @param vert a vertex shader program (string)
+         * @param frag a fragment shader program (string)
+         * @return created program object, or null if the creation has failed
+         */
+        createProgram(vert: string, frag: string): TileRenderingProgram;
+        /**
+         * use the given program
+         * @param {WebGLProgram} program
+         */
+        useProgram(program: TileRenderingProgram): any;
+        /**
+         * 启用纹理采样器
+         * Enable a sampler, and set texture
+         * @param sampler
+         * @param texIdx id
+         */
+        enableSampler(sampler: string, texIdx?: number): WebGLUniformLocation;
+        _initUniforms(program: TileRenderingProgram, uniforms: string[]): void;
+        _getUniform(program: TileRenderingProgram, uniformName: string): WebGLUniformLocation;
+        set8(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Float32Array;
+        set8Int(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Int16Array;
+    };
+} & T;
+
+/**
+ * @classdesc
+ * A class internally used by tile layer helps to descibe tile system used by different tile services.<br>
+ *
+ * @class
+ * @category layer
+ * @example
+ * var ts = new TileSystem([1, -1, -20037508.34, 20037508.34]);
+ */
+declare class TileSystem {
+    scale: {
+        x: number;
+        y: number;
+    };
+    origin: {
+        x: number;
+        y: number;
+    };
+    /**
+     * Similar with [transformation]{@link Transformation}, it contains 4 numbers: sx, sy, ox, oy.<br>
+     * @see {@link http://wiki.osgeo.org/wiki/Tile_Map_Service_Specification}
+     * @param sx the order of X-axis tile index, 1 means right is larger and -1 means the reverse, left is larger;
+     * @param sy the order of Y-axis tile index, 1 means bottom is larger and -1 means the reverse, top is larger;
+     * @param ox x of the origin point of the world's projected coordinate system
+     * @param oy y of the origin point of the world's projected coordinate system
+     */
+    constructor(sx: number | number[], sy?: number, ox?: number, oy?: number);
+    /**
+     * Get the default tile system's code for the projection.
+     * @param projection      - a projection object
+     * @return tile system code
+     */
+    static getDefault(projection: any): string | number[];
+}
+//# sourceMappingURL=TileSystem.d.ts.map
+
+/**
+ * Tile config for tile layers, an utilities class for tile layers to render tiles
+ * @class
+ * @category layer
+ * @private
+ */
+declare class TileConfig {
+    map: Map;
+    tileSize: Size;
+    fullExtent: Extent;
+    private _xScale;
+    private _yScale;
+    private _pointOrigin;
+    private _glRes;
+    tileSystem: TileSystem;
+    transformation: Transformation;
+    private _tileFullIndex;
+    /**
+     * @param tileSystem  - tileSystem
+     * @param fullExtent      - fullExtent of the tile layer
+     * @param tileSize          - tile size
+     */
+    constructor(map: Map, tileSystem: TileSystem, fullExtent: Extent, tileSize: Size);
+    prepareTileInfo(tileSystem: TileSystem, fullExtent: Extent): void;
+    /**
+     * Get index of point's tile
+     * @param point - transformed point, this.transformation.transform(pCoord)
+     * @param res  - current resolution
+     * @return       tile index
+     */
+    _getTileNum(point: Point, res: number): {
+        x: number;
+        y: number;
+    };
+    /**
+     * Get tile index and offset from tile's northwest
+     * @param pCoord   - projected coordinate
+     * @param res - current resolution
+     * @return   tile index and offset
+     */
+    getTileIndex(pCoord: Coordinate, res: number, repeatWorld: any): TileIndex;
+    /**
+     * Get neibor's tile index
+     * @param tileX
+     * @param tileY
+     * @param offsetX
+     * @param offsetY
+     * @param zoomLevel
+     * @return  tile's neighbor index
+     */
+    getNeighorTileIndex(tileX: number, tileY: number, offsetX: number, offsetY: number, res: number, repeatWorld: any): TileIndex;
+    _getTileFullIndex(res: number): Extent;
+    /**
+     * Get tile's north west's projected coordinate
+     * @param tileX
+     * @param tileY
+     * @param res
+     * @return
+     */
+    getTilePrjNW(tileX: number, tileY: number, res: number, out?: any): Coordinate;
+    getTilePointNW(tileX: number, tileY: number, res: number, out?: any): Point;
+    /**
+     * Get tile's south east's projected coordinate
+     * @param tileX
+     * @param tileY
+     * @param res
+     * @return
+     */
+    getTilePrjSE(tileX: number, tileY: number, res: number, out?: any): Coordinate;
+    getTilePointSE(tileX: number, tileY: number, res: number, out?: any): Point;
+    /**
+     * Get tile's projected extent
+     * @param tileX
+     * @param tileY
+     * @param res
+     * @return
+     */
+    getTilePrjExtent(tileX: number, tileY: number, res: number): Extent;
+}
+
+type TileIndex = {
+    x: number;
+    y: number;
+    idx: number;
+    idy: number;
+    out: any;
+};
+//# sourceMappingURL=TileConfig.d.ts.map
+
+type FullExtent = {
+    top: number;
+    left: number;
+    bottom: number;
+    right: number;
+};
+type SpatialReferenceType = {
+    projection: string | ProjectionType;
+    resolutions?: number[];
+    fullExtent?: FullExtent | JsonExtent;
+};
+/**
+ * 空间参考类
+ *
+ * @english
+ * SpatialReference Class
+ */
+declare class SpatialReference {
+    options: SpatialReferenceType;
+    _projection: ProjectionType;
+    isEPSG: boolean;
+    _resolutions: number[];
+    _pyramid: boolean;
+    _fullExtent: Extent;
+    _transformation: Transformation;
+    json: SpatialReferenceType;
+    constructor(options?: SpatialReferenceType);
+    static registerPreset(name: string, value: SpatialReferenceType): void;
+    static getPreset(preset: string): SpatialReferenceType;
+    static getAllPresets(): string[];
+    static loadArcgis(url: string, cb: (_: any, spatialRef?: any) => void, options: any): typeof SpatialReference;
+    static loadWMTS(url: string, cb: (_: any, spatialRef?: any) => void, options: any): typeof SpatialReference;
+    /**
+     * 获取投影类实例对象
+     *
+     * @english
+     * get Projection Class instance
+     * @param projection
+     * @returns
+     */
+    static getProjectionInstance(projection?: string | ProjectionType): any;
+    static equals(sp1: SpatialReferenceType, sp2: SpatialReferenceType): boolean;
+    _initSpatialRef(): void;
+    getResolutions(): number[];
+    getResolution(zoom: number): number;
+    getProjection(): ProjectionType;
+    getFullExtent(): Extent;
+    getTransformation(): Transformation;
+    getMinZoom(): number;
+    getMaxZoom(): number;
+    getZoomDirection(): number;
+    toJSON(): SpatialReferenceType;
+    isPyramid(): boolean;
+}
+
+declare class TileHashset {
+    private _table;
+    constructor();
+    add(key: string | number): void;
+    has(key: string | number): any;
+    reset(): void;
+}
+/**
+ * A layer used to display tiled map services, such as [google maps](http://maps.google.com), [open street maps](http://www.osm.org)
+ * @category layer
+ * @example
+ *  new TileLayer("tile",{
+        urlTemplate : 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        subdomains:['a','b','c']
+    })
+ */
+declare class TileLayer extends Layer {
+    tileInfoCache: ArrayLRUCache;
+    _tileSize: Size;
+    _coordCache: Record<string, Point>;
+    _disablePyramid: boolean;
+    _hasOwnSR: boolean;
+    _tileFullExtent: PointExtent;
+    _rootNodes: any;
+    _visitedTiles: TileHashset;
+    _zScale: number;
+    _sr: SpatialReference;
+    _srMinZoom: number;
+    _srMaxZoom: number;
+    _defaultTileConfig: TileConfig;
+    _tileConfig: TileConfig;
+    _polygonOffset: number;
+    _renderer: TileLayerCanvasRenderer;
+    options: TileLayerOptionsType;
+    /**
+     *
+     * @param id - tile layer's id
+     * @param options - options defined in TileLayerOptionsType
+     */
+    constructor(id: string, options?: TileLayerOptionsType);
+    /**
+     * Reproduce a TileLayer from layer's profile JSON.
+     * @param layerJSON - layer's profile JSON
+     * @return
+     * @static
+     * @protected
+     * @function
+     */
+    static fromJSON(layerJSON: Record<string, any>): TileLayer;
+    /**
+     * force Reload tilelayer.
+     * Note that this method will clear all cached tiles and reload them. It shouldn't be called frequently for performance reason.
+
+     * @return this
+     */
+    forceReload(): this;
+    /**
+     * Get tile size of the tile layer
+     * @return
+     */
+    getTileSize(id?: string): Size;
+    getTiles(z: number, parentLayer: Layer): any;
+    _isPyramidMode(): boolean;
+    _getTileFullExtent(): Extent;
+    _getRootNodes(offset0: TileOffsetType): TileRootType;
+    createTileNode(x: number, y: number, z: number, idx: number, idy: number, res: number, error: number, parentId?: string, extent2d?: PointExtent, tileId?: string): TileNodeType;
+    _getRootError(): number;
+    _getPyramidTiles(z: number, layer: Layer): TilesType;
+    isParentTile(z: number, maxZoom: number, tile: TileNodeType): boolean;
+    _splitNode(node: TileNodeType, projectionView: Matrix4, queue: TileNodeType[], tiles: TileNodeType[], gridExtent: PointExtent, maxZoom: number, offset: TileOffsetType, parentRenderer: any, glRes: number): void;
+    _createChildNode(node: TileNodeType, dx: number, dy: number, offset?: TileOffsetType, tileId?: string): TileNodeType;
+    _isTileVisible(node: TileNodeType, projectionView: Matrix4, glScale: number, maxZoom: number, offset: TileOffsetType): 0 | 1 | -1;
+    private _isTileInFrustum;
+    /**
+     * Compute tile's SSE
+     * from Cesium
+     * 与cesium不同的是，我们用boundingVolume顶面的四个顶点中的最小值作为distanceToCamera
+     */
+    private _getScreenSpaceError;
+    /**
+     * Get tiles at zoom z (or current zoom)
+     * @param z - zoom
+     * @return tile descriptors
+     */
+    private _getCascadeTiles;
+    /**
+     * Get tile's url
+     * @param x
+     * @param y
+     * @param z
+     * @returns url
+     */
+    getTileUrl(x: number, y: number, z: number): string;
+    /**
+     * Clear the layer
+     * @return this
+     */
+    clear(): this;
+    /**
+     * Export the tile layer's profile json. <br>
+     * Layer's profile is a snapshot of the layer in JSON format. <br>
+     * It can be used to reproduce the instance by [fromJSON]{@link Layer#fromJSON} method
+     * @return layer's profile JSON
+     */
+    toJSON(): LayerJSONType;
+    /**
+     * Get tilelayer's spatial reference.
+     * @returns spatial reference
+     */
+    getSpatialReference(): SpatialReference;
+    getMinZoom(): number;
+    getMaxZoom(): number;
+    _getTileZoom(zoom: number): number;
+    /**
+     * Get tileLayer's max available zoom, either options['maxAvailableZoom'] or spatialReference's maxZoom
+     *
+     * @returns
+     **/
+    getMaxAvailableZoom(): number;
+    _getTiles(tileZoom: number, containerExtent: PointExtent, cascadeLevel: number, parentRenderer: any, ignoreMinZoom?: boolean): TileGridType;
+    _convertToExtent2d(containerExtent: PointExtent): PointExtent | Extent;
+    _splitTiles(frustumMatrix: Matrix4, tiles: TileNodeType[], renderer: any, tileIdx: TileNodeType, z: number, res: number, tileExtent: PointExtent, dx?: number, dy?: number, tileOffsets?: Record<string, TileOffsetType>): void;
+    _checkAndAddTile(frustumMatrix: Matrix4, renderer: any, idx: number, idy: number, x: number, y: number, z: number, res: number, i: number, j: number, w: number, h: number, corner: Point, glScale: number, tileOffsets: Record<string, TileOffsetType>): TileNodeType;
+    _getTileOffset(...params: number[]): TileOffsetType;
+    getTileId(x: number, y: number, zoom: number, id: string): string;
+    _getTileId(x: number, y: number, zoom: number, id?: string): string;
+    _project(pcoord: Coordinate, out: Point): Coordinate;
+    _unproject(pcoord: Coordinate, out: Point): Coordinate;
+    /**
+     * initialize [tileConfig]{@link TileConfig} for the tilelayer
+     * @private
+     */
+    _initTileConfig(): void;
+    _getTileConfig(): TileConfig;
+    _bindMap(args?: any): any;
+    _isTileInExtent(frustumMatrix: Matrix4, tileExtent: PointExtent, offset: TileOffsetType, glScale: number): any;
+    _isSplittedTileInExtent(frustumMatrix: any, tileExtent: PointExtent, offset: TileOffsetType, glScale: number): boolean;
+    getEvents(): {
+        spatialreferencechange: () => void;
+    };
+    _onSpatialReferenceChange(): void;
+    /**
+     * Get layer's polygonOffset count
+     * @return
+     */
+    getPolygonOffsetCount(): number;
+    /**
+     * Get layer's base polygon offset
+     * @return
+     */
+    getPolygonOffset(): number;
+    /**
+     * Set layer's base polygon offset, called by GroupGLLayer
+     * @param offset polygon offset
+     * @return
+     */
+    setPolygonOffset(offset: number): this;
+    getRenderer(): TileLayerCanvasRenderer;
+    _getTileBBox(tile: TileNodeType): BBOX | null;
+    _tileInMask(tile: TileNodeType): boolean;
+}
+
+type TileOffsetType = [number, number];
+type TileNodeType = {
+    x: number;
+    y: number;
+    z: number;
+    url: string;
+    res: number;
+    parent: string;
+    offset: TileOffsetType;
+    layer: string;
+    idy: number;
+    idx: number;
+    id: string;
+    extent2d: PointExtent;
+    error: number;
+    children: Array<string>;
+    minAltitude?: number;
+    maxAltitude?: number;
+};
+type TileGridType = {
+    count?: number;
+    extent: PointExtent;
+    offset: TileOffsetType;
+    parents?: Array<TileNodeType>;
+    tiles: Array<TileNodeType>;
+    zoom: number;
+};
+type TilesType = {
+    tileGrids: Array<TileGridType>;
+    count: number;
+};
+type TileRootType = {
+    status: 0 | 1;
+    error?: string;
+    tiles?: Array<TileNodeType>;
+    mapWidth?: number;
+    mapHeight?: number;
+};
+type TileLayerOptionsType = LayerOptionsType & {
+    urlTemplate: string | ((...args: any[]) => string);
+    subdomains?: string[];
+    spatialReference?: SpatialReferenceType;
+    tileSize?: number | [number, number];
+    offset?: number[] | ((...args: any[]) => number[]);
+    tileSystem?: [number, number, number, number];
+    maxAvailableZoom?: number;
+    repeatWorld?: boolean;
+    background?: boolean;
+    placeholder?: boolean | ((...args: any[]) => boolean);
+    fragmentShader?: string;
+    crossOrigin?: string;
+    fadeAnimation?: boolean;
+    fadeDuration?: number;
+    debug?: boolean;
+    renderer?: 'gl' | 'canvas';
+    maxCacheSize?: number;
+    cascadeTiles?: boolean;
+    zoomOffset?: number;
+    tileRetryCount?: number;
+    errorUrl?: string;
+    customTags?: Record<string, any>;
+    decodeImageInWorker?: boolean;
+    token?: string;
+    fetchOptions?: Record<string, any>;
+    awareOfTerrain?: boolean;
+    bufferPixel?: number;
+    depthMask?: boolean;
+    loadingLimitOnInteracting?: number;
+    loadingLimit?: number;
+    clipByPitch?: boolean;
+    pyramidMode?: number;
+    tileLimitPerFrame?: number;
+    tileStackStartDepth?: number;
+    tileStackDepth?: number;
+    mipmapTexture?: boolean;
+    currentTilesFirst?: boolean;
+};
+
+declare class TileWorkerConnection extends Actor {
+    constructor();
+    checkUrl(url: string): string;
+    fetchImage(url: string, workerId: number, cb: Function, fetchOptions: any): void;
+}
+/**
+ * 基于 `HTML5 Canvas2D` 的渲染器类，用于瓦片图层
+ *
+ * @english
+ * Renderer class based on HTML5 Canvas2D for TileLayers
+ * @class
+ * @protected
+ * @group renderer
+ * @extends {renderer.CanvasRenderer}
+ */
+declare class TileLayerCanvasRenderer extends CanvasRenderer$1 {
+    tilesInView: TilesInViewType;
+    tilesLoading: {
+        [key: string]: any;
+    };
+    _parentTiles: any[];
+    _childTiles: any[];
+    _tileZoom: number;
+    _tileQueue: {
+        tileInfo: any;
+        tileData: any;
+    }[];
+    _tileQueueIds: Set<LayerId>;
+    tileCache: typeof LRUCache;
+    _compareTiles: any;
+    _tileImageWorkerConn: TileWorkerConnection;
+    _renderTimestamp: number;
+    _frameTiles: {
+        empty: boolean;
+        timestamp: number;
+    };
+    _terrainHelper: TerrainHelper;
+    _tilePlaceHolder: any;
+    _frameTileGrids: TileGrids;
+    drawingCurrentTiles: WithUndef<boolean>;
+    drawingChildTiles: WithUndef<boolean>;
+    drawingParentTiles: WithUndef<boolean>;
+    avgMinAltitude: number;
+    avgMaxAltitude: number;
+    /**
+     *
+     * @param {TileLayer} layer - TileLayer to render
+     */
+    constructor(layer: TileLayer);
+    getCurrentTileZoom(): number;
+    draw(timestamp: number, context: any): number;
+    getTileGridsInCurrentFrame(): TileGrids;
+    getCurrentTimestamp(): number;
+    _getTilesInCurrentFrame(): {
+        childTiles: any[];
+        missedTiles: any[];
+        parentTiles: any[];
+        tiles: any[];
+        incompleteTiles: unknown[];
+        placeholders: any[];
+        loading: boolean;
+        loadingCount: number;
+        tileQueue: {};
+    };
+    removeTileCache(tileId: TileId): void;
+    isTileCachedOrLoading(tileId: TileId): any;
+    isTileCached(tileId: TileId): boolean;
+    isTileFadingIn(tileImage: Tile['image']): boolean;
+    _drawTiles(tiles: any, parentTiles: any, childTiles: any, placeholders: any, parentContext: any, missedTiles: any, incompleteTiles: any): void;
+    _drawChildTiles(childTiles: any, parentContext: any): void;
+    _drawParentTiles(parentTiles: any, parentContext: any): void;
+    onDrawTileStart(context: RenderContext, parentContext: RenderContext): void;
+    onDrawTileEnd(context: RenderContext, parentContext: RenderContext): void;
+    _drawTile(info: any, image: any, parentContext: any): void;
+    _drawTileAndCache(tile: Tile, parentContext: any): void;
+    drawOnInteracting(event: any, timestamp: number, context: any): void;
+    needToRedraw(): boolean;
+    hitDetect(): boolean;
+    /**
+     * @private
+     * limit tile number to load when map is interacting
+     */
+    _getLoadLimit(): number;
+    isDrawable(): boolean;
+    clear(): void;
+    _isLoadingTile(tileId: TileId): boolean;
+    clipCanvas(context: any): boolean;
+    _clipByPitch(ctx: CanvasRenderingContext2D): boolean;
+    loadTileQueue(tileQueue: any): void;
+    loadTile(tile: Tile['info']): Tile['image'];
+    _fetchImage(image: any, tile: Tile['info']): void;
+    loadTileImage(tileImage: any, url: string): void;
+    abortTileLoading(tileImage: Tile['image'], tileInfo: Tile['info']): void;
+    onTileLoad(tileImage: Tile['image'], tileInfo: Tile['info']): void;
+    removeTileLoading(tileInfo: Tile['info']): void;
+    _consumeTileQueue(): void;
+    _computeAvgTileAltitude(): void;
+    checkTileInQueue(tileImage: Tile['image'], tileInfo: Tile['info']): boolean;
+    consumeTile(tileImage: Tile['image'], tileInfo: Tile['info']): void;
+    resetTileLoadTime(tileImage: Tile['image']): void;
+    onTileError(tileImage: Tile['image'], tileInfo: Tile['info'], error?: any): void;
+    drawTile(tileInfo: Tile['info'], tileImage: Tile['image'], parentContext?: RenderContext): void;
+    getDebugInfo(tileId: TileId): string;
+    findChildTiles(info: Tile['info']): any;
+    _findChildTiles(info: Tile['info']): Tile[] | any;
+    _findChildTilesAt(children: Tile[], pmin: number, pmax: number, layer: any, childZoom: number): void;
+    findParentTile(info: Tile['info'], targetDiff?: number): Tile;
+    _findParentTile(info: Tile['info'], targetDiff?: number): Tile;
+    isValidCachedTile(tile: Tile): boolean;
+    isTileComplete(tile: Tile): boolean;
+    _getLayerOfTile(layerId: LayerId): any;
+    getCachedTile(tile: Tile, isParent: boolean): any;
+    _addTileToCache(tileInfo: Tile['info'], tileImage: Tile['image']): void;
+    getTileOpacity(tileImage: Tile['image'], tileInfo: Tile['info']): number;
+    _getTileFadingOpacity(tileImage: Tile['image']): number;
+    onRemove(): void;
+    markCurrent(tile: Tile, isCurrent?: boolean): void;
+    markTiles(): number[];
+    retireTiles(force?: boolean): void;
+    deleteTile(tile: Tile): void;
+    _generatePlaceHolder(res: number): HTMLCanvasElement;
+    setTerrainHelper(helper: TerrainHelper): void;
+}
+
+type TileId = string;
+type LayerId = string | number;
+type TerrainHelper = any;
+type TileImage = (HTMLImageElement | HTMLCanvasElement | ImageBitmap) & {
+    loadTime: number;
+    glBuffer?: TileImageBuffer;
+    texture?: TileImageTexture;
+    onerrorTick?: number;
+};
+interface Tile {
+    id: TileId;
+    info: {
+        x: number;
+        y: number;
+        z: number;
+        idx: number;
+        idy: number;
+        id: TileId;
+        layer: number | string;
+        children: [];
+        error: number;
+        offset: [number, number];
+        extent2d: Extent;
+        res: number;
+        url: string;
+        parent: any;
+        cache?: boolean;
+        minAltitude?: number;
+        maxAltitude?: number;
+        _glScale: number;
+    };
+    image: TileImage;
+    current?: boolean;
+}
+type RenderContext = any;
+type TilesInViewType = {
+    [key: string]: Tile;
+};
+interface TileGrid {
+    extent: Extent;
+    count: number;
+    tiles: Tile[];
+    parents: any[];
+    offset: number[];
+    zoom: number;
+}
+interface TileGrids {
+    count: number;
+    tileGrids: TileGrid[];
+}
+
+declare const TileLayerGLRenderer_base: {
+    new (...args: any[]): {
+        gl: TileRenderingContext;
+        canvas: TileRenderingCanvas;
+        canvas2?: TileRenderingCanvas;
+        _debugInfoCanvas?: TileRenderingCanvas;
+        program?: TileRenderingProgram;
+        _layerAlt: number;
+        _layerAltitude: number;
+        layer?: any;
+        texBuffer?: TileImageBuffer;
+        _debugBuffer?: TileImageBuffer;
+        posBuffer?: TileImageBuffer;
+        _imageBuffers?: TileImageBuffer[];
+        _buffers?: TileImageBuffer[];
+        _textures?: WebGLTexture[];
+        getMap?(): Map;
+        drawGLImage(image: TileImageType, x: number, y: number, w: number, h: number, scale: number, opacity: number, debugInfo?: string, baseColor?: number[]): void;
+        drawDebug(uMatrix: Matrix4InOut, x: number, y: number, w: number, h: number, debugInfo: string): void;
+        bufferTileData(x: number, y: number, w: number, h: number, buffer?: TileImageBuffer): TileImageBuffer;
+        createCanvas2(): void;
+        createGLContext(): void;
+        resizeGLCanvas(): void;
+        clearGLCanvas(): void;
+        disposeImage(image: TileImageType): void;
+        _createTexture(image: TileImageType): WebGLTexture;
+        getTexture(): WebGLTexture;
+        saveTexture(texture: WebGLTexture): void;
+        loadTexture(image: TileImageType): WebGLTexture;
+        getImageBuffer(): TileImageBuffer;
+        saveImageBuffer(buffer: TileImageBuffer): void;
+        loadImageBuffer(data: Float32Array | Int16Array, glBuffer: TileImageBuffer): TileImageBuffer;
+        createImageBuffer(): TileImageBuffer;
+        removeGLCanvas(): void;
+        createBuffer(): TileImageBuffer;
+        enableVertexAttrib(attributes: VertexAttrib): void;
+        createProgram(vert: string, frag: string): TileRenderingProgram;
+        useProgram(program: TileRenderingProgram): any;
+        enableSampler(sampler: string, texIdx?: number): WebGLUniformLocation;
+        _initUniforms(program: TileRenderingProgram, uniforms: string[]): void;
+        _getUniform(program: TileRenderingProgram, uniformName: string): WebGLUniformLocation;
+        set8(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Float32Array;
+        set8Int(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Int16Array;
+    };
+} & typeof TileLayerCanvasRenderer;
+/**
+ * 基于 HTML5 WebGL 的 TileLayers 渲染器
+ *
+ * @english
+ * Renderer class based on HTML5 WebGL for TileLayers
+ * @class
+ * @protected
+ * @group renderer
+ * @extends {renderer.TileLayerCanvasRenderer}
+ * @param layer - TileLayer to render
+ */
+declare class TileLayerGLRenderer extends TileLayerGLRenderer_base {
+    isDrawable(): boolean;
+    needToRedraw(): boolean;
+    onDrawTileStart(context: RenderContext, parentContext: RenderContext): void;
+    onDrawTileEnd(context: RenderContext, parentContext: RenderContext): void;
+    drawTile(tileInfo: Tile['info'], tileImage: Tile['image'], parentContext: RenderContext): void;
+    _bindGLBuffer(image: Tile['image'], w: number, h: number): void;
+    loadTileImage(tileImage: HTMLImageElement, url: string): void;
+    /**
+     * prepare gl, create program, create buffers and fill unchanged data: image samplers, texture coordinates
+     */
+    onCanvasCreate(): void;
+    createContext(): void;
+    resizeCanvas(canvasSize: SizeLike): void;
+    clearCanvas(): void;
+    getCanvasImage(): any;
+    /**
+     * decide whether the layer is renderer with gl.
+     * when map is pitching, or fragmentShader is set in options
+     */
+    isGL(): boolean;
+    deleteTile(tile: Tile): void;
+    onRemove(): void;
+}
+//# sourceMappingURL=TileLayerGLRenderer.d.ts.map
+
+declare class CanvasRenderer extends TileLayerCanvasRenderer {
+    loadTile(...args: any[]): any;
+}
+declare class GLRenderer extends TileLayerGLRenderer {
+    loadTile(...args: any[]): any;
+}
+//# sourceMappingURL=CanvasTileLayerRenderer.d.ts.map
+
+declare class QuadStencil {
+    gl: TileRenderingContext;
+    quadVertices: any;
+    attributes: VertexAttrib;
+    debug: boolean;
+    buffer: any;
+    program: TileRenderingProgram;
+    _savedProgram: TileRenderingProgram;
+    colorLoc: WebGLUniformLocation;
+    transformLoc: WebGLUniformLocation;
+    ref: GLint;
+    constructor(gl: TileRenderingContext, vertices: any[] | Int8Array, debug?: boolean);
+    start(): void;
+    end(): void;
+    draw(transform: number[]): void;
+    remove(): this;
+    stencilMask(mask: number): this;
+    stencilFunc(func: number, ref: number, mask: number): this;
+    stencilOp(fail: number, zfail: number, zpass: number): this;
+    resetFunc(): this;
+    _save(): void;
+    _restore(): void;
+    _createBuffer(): void;
+    _createProgram(): void;
+}
+//# sourceMappingURL=QuadStencil.d.ts.map
+
+interface MapStateCacheType {
+    resolution: number;
+    pitch: number;
+    bearing: number;
+    glScale: number;
+    glRes: number;
+    _2DExtent: Extent;
+    glExtent: Extent;
+    containerExtent: Extent;
+    offset: number;
+}
+/**
+ * OverlayLayer 的父呈现器类，供 OverlayLayer 的子类继承。
+ *
+ * @english
+ *
+ * A parent renderer class for OverlayLayer to inherit by OverlayLayer's subclasses.
+ * @protected
+ * @memberOf renderer
+ * @name OverlayLayerCanvasRenderer
+ * @extends renderer.CanvasRenderer
+ */
+declare class OverlayLayerRenderer extends CanvasRenderer$1 {
+    _geosToCheck: Geometries[];
+    _resourceChecked: boolean;
+    clearImageData?(): void;
+    _lastGeosToDraw: Geometry[];
+    mapStateCache: MapStateCacheType;
+    /**
+     * @english
+     * possible memory leaks:
+     * 1. if geometries' symbols with external resources change frequently,
+     * resources of old symbols will still be stored.
+     * 2. removed geometries' resources won't be removed.
+     */
+    checkResources(): any[];
+    render(...args: any[]): void;
+    _addGeoToCheckRes(res: Geometries | Geometries[]): void;
+    onGeometryAdd(geometries: Geometries | Geometries[]): void;
+    onGeometryRemove(params: any): void;
+    onGeometrySymbolChange(e: {
+        target: Geometries;
+    }): void;
+    onGeometryShapeChange(params: any): void;
+    onGeometryPositionChange(params: any): void;
+    onGeometryZIndexChange(params: any): void;
+    onGeometryShow(params: any): void;
+    onGeometryHide(params: any): void;
+    onGeometryPropertiesChange(_: any): void;
+}
+//# sourceMappingURL=OverlayLayerCanvasRenderer.d.ts.map
+
+/**
+ * @classdesc
+ * Painter for collection type geometries
+ * @class
+ * @private
+ */
+declare class CollectionPainter extends Class {
+    _drawTime: number;
+    bbox: BBOX;
+    geometry: Geometries;
+    isMask: boolean;
+    /**
+     * @param geometry - geometry to paint
+     * @param isMask
+     */
+    constructor(geometry: Geometries, isMask?: boolean);
+    _setDrawTime(time: number): this;
+    getRenderBBOX(): BBOX;
+    _eachPainter(fn: (p: Painter) => void): void;
+    getLayer(): OverlayLayer;
+    paint(extent: Extent): void;
+    get2DExtent(resources?: ResourceCache, out?: Extent): Extent;
+    remove(): void;
+    setZIndex(index: number): void;
+    show(): void;
+    hide(): void;
+    repaint(): void;
+    refreshSymbol(): void;
+    hasPoint(): boolean;
+    getMinAltitude(): number;
+    getMaxAltitude(): number;
+}
+
+declare const CenterPointRenderer: {
+    _getRenderPoints(): [Point[], Point[]];
+};
+type CenterPointRendererType = typeof CenterPointRenderer;
+declare module '../../geometry/Marker' {
+    interface Marker extends CenterPointRendererType {
+    }
+}
+declare module '../../geometry/LineString' {
+    interface LineString {
+        _getRenderPoints(placement?: string): [Point[], WithNull<Point[]>];
+    }
+}
+declare module '../../geometry/Polygon' {
+    interface Polygon {
+        _getRenderPoints(placement?: string): [Point[], WithNull<Point[]>];
+    }
+}
+
+declare const geometryInclude: {
+    _redrawWhenPitch: () => boolean;
+    _redrawWhenRotate: () => boolean;
+    _getRenderBBOX(ctx: CanvasRenderingContext2D, points: Point[]): BBOX;
+};
+type GeometryIncludeType = typeof geometryInclude;
+declare module '../../geometry/Geometry' {
+    interface Geometry extends GeometryIncludeType {
+    }
+}
+declare function _computeRotatedPrjExtent(): Extent;
+declare function getRotatedShell(): Coordinate[];
+declare const el: {
+    _redrawWhenPitch: () => boolean;
+    _redrawWhenRotate: () => boolean;
+    _computeRotatedPrjExtent: typeof _computeRotatedPrjExtent;
+    getRotatedShell: typeof getRotatedShell;
+    _paintAsPath: () => boolean;
+    _getPaintParams(): any[];
+    _paintOn: (...args: any[]) => void;
+    _getRenderSize(pt: Coordinate): number[];
+};
+type ElType = typeof el;
+declare module '../../geometry/Ellipse' {
+    interface Ellipse extends Omit<ElType, '_paintOn' | '_getPaintParams'> {
+    }
+}
+declare module '../../geometry/Circle' {
+    interface Circle extends Omit<ElType, '_paintOn' | '_getPaintParams'> {
+    }
+}
+declare const rectangleInclude: {
+    _getPaintParams(): any[];
+    _paintOn: (ctx: any, points: any, lineOpacity: any, fillOpacity: any, lineDashArray?: any, smoothness?: any) => void;
+    _computeRotatedPrjExtent: typeof _computeRotatedPrjExtent;
+    getRotatedShell: typeof getRotatedShell;
+};
+type RectangleIncludeType = typeof rectangleInclude;
+declare module '../../geometry/Rectangle' {
+    interface Rectangle extends Omit<RectangleIncludeType, '_paintOn' | '_getPaintParams'> {
+    }
+}
+declare const sectorInclude: {
+    _redrawWhenPitch: () => boolean;
+    _getPaintParams(): [Point, number, [number, number]];
+    _paintOn: (...args: any[]) => void;
+};
+type SectorIncludeType = typeof sectorInclude;
+declare module '../../geometry/Sector' {
+    interface Sector extends Omit<SectorIncludeType, '_paintOn' | '_getPaintParams'> {
+    }
+}
+declare module '../../geometry/Path' {
+    interface Path {
+        _paintAsPath: () => boolean;
+    }
+}
+declare const lineStringInclude: {
+    arrowStyles: {
+        classic: number[];
+    };
+    _getArrowShape(prePoint?: Point, point?: any, lineWidth?: number, arrowStyle?: any, tolerance?: number): any[];
+    _getPaintParams(): [Point[]];
+    _paintOn(ctx: CanvasRenderingContext2D, points: Point[], lineOpacity?: number, fillOpacity?: number, dasharray?: number[]): any;
+    _getArrowPlacement(): any;
+    _getArrowStyle(): any;
+    _getArrows(points: any, lineWidth: number, tolerance?: number): any[];
+    _getArrowPoints(arrows: any[], segments: any[], lineWidth?: number, arrowStyle?: any, tolerance?: number): void;
+    _paintArrow(ctx: CanvasRenderingContext2D, points: Point[], lineOpacity?: number): void;
+};
+type LineStringIncludeType = typeof lineStringInclude;
+declare module '../../geometry/LineString' {
+    interface LineString extends LineStringIncludeType {
+    }
+}
+declare module '../../geometry/Polygon' {
+    interface Polygon {
+        _paintOn(ctx: CanvasRenderingContext2D, points: Point[], lineOpacity?: number, fillOpacity?: number, dasharray?: number[]): WithNull<BBOX>;
+    }
+}
+
+/**
+ * 基于 `HTML5 Canvas2D` 的渲染器类，用于矢量层
+ *
+ * @english
+ * Renderer class based on HTML5 Canvas2D for VectorLayers
+ * @protected
+ * @group renderer
+ * @name VectorLayerCanvasRenderer
+ * @extends renderer.OverlaylayerCanvasRenderer
+ * @param layer - layer to render
+ */
+declare class VectorLayerRenderer extends OverlayLayerRenderer {
+    _lastRenderTime: number;
+    _lastCollisionTime: number;
+    _imageData: ImageData;
+    _geosToDraw: Geometries[];
+    _lastGeosToDraw: Geometries[];
+    _hasPoint: boolean;
+    _onlyHasPoint: WithUndef<boolean>;
+    _displayExtent: Extent;
+    _drawnRes: number;
+    renderEnd: boolean;
+    pageGeos: Geometries[];
+    page: number;
+    maxTolerance: number;
+    geoPainterList: (Painter | CollectionPainter)[];
+    snapshotCanvas: HTMLCanvasElement;
+    setToRedraw(): this;
+    _geoIsCollision(geo: GeoType, collisionIndex: any): boolean;
+    getImageData(): ImageData;
+    clearImageData(): void;
+    checkResources(...args: any[]): any;
+    needToRedraw(): boolean;
+    /**
+     * render layer
+     */
+    draw(): void;
+    isBlank(): boolean;
+    drawOnInteracting(): void;
+    /**
+     * Show and render
+     * @override
+     */
+    show(...args: any[]): void;
+    forEachGeo(fn: Function, context?: any): void;
+    _checkGeos(): this;
+    drawGeos(): void;
+    prepareToDraw(): this;
+    _setDrawGeosDrawTime(): this;
+    checkGeo(geo: Geometries): void;
+    _collidesGeos(): this;
+    onZoomEnd(...args: any[]): void;
+    onRemove(): void;
+    onGeometryPropertiesChange(param: any): void;
+    _updateDisplayExtent(): void;
+    identifyAtPoint(point: Point, options?: {}): any;
+    _updateMapStateCache(): this;
+    /**
+     * 使用批量坐标转换提升性能
+     * 优化前 11fps
+     * 优化后 15fps
+     * Better performance of batch coordinate conversion
+     * @param glRes
+     */
+    _batchConversionMarkers(glRes: number): any[];
+    _sortByDistanceToCamera(cameraPosition: Vector3): void;
+    _constructorIsThis(): boolean;
+    isProgressiveRender(): boolean;
+    getGeosForIdentify(): Geometries[];
+    getGeoPainterList(): (Painter | CollectionPainter)[];
+    _checkSnapshotCanvas(): HTMLCanvasElement;
+    _getCurrentNeedRenderGeos(): Geometries[];
+    _resetProgressiveRender(): void;
+    _clearSnapshotCanvas(): void;
+    _snapshot(): this;
+    _drawSnapshot(): this;
+}
+type GeoType = any;
+//# sourceMappingURL=VectorLayerCanvasRenderer.d.ts.map
+
+declare class CanvasLayerRenderer extends CanvasRenderer$1 {
+    buffer: HTMLCanvasElement;
+    _drawContext: any[];
+    _predrawed: boolean;
+    _shouldClear: boolean;
+    getPrepareParams(): any[];
+    getDrawParams(): any[];
+    onCanvasCreate(): void;
+    needToRedraw(): boolean;
+    draw(...args: any[]): void;
+    drawOnInteracting(...args: any[]): void;
+    getCanvasImage(): any;
+    remove(): void;
+    onZoomStart(param: any): void;
+    onZooming(param: any): void;
+    onZoomEnd(param: any): void;
+    onMoveStart(param: any): void;
+    onMoving(param: any): void;
+    onMoveEnd(param: any): void;
+    onResize(param: any): void;
+    prepareDrawContext(): void;
+    _prepareDrawParams(): any[];
+    _drawLayer(...args: any[]): void;
+    _drawLayerOnInteracting(...args: any[]): void;
+}
+
+type handlerQueueFn = () => void;
+/**
+ * 所有地图渲染器的基类。
+ * @english
+ * Base class for all the map renderers.
+ * @abstract
+ * @protected
+ * @memberOf renderer
+ * @extends {Class}
+ */
+declare abstract class MapRenderer extends Class {
+    map: Map;
+    _handlerQueue: handlerQueueFn[];
+    _frontCount: WithUndef<number>;
+    _backCount: WithUndef<number>;
+    _uiCount: WithUndef<number>;
+    _thisDocVisibilitychange: () => void;
+    _thisDocDragStart: () => void;
+    _thisDocDragEnd: () => void;
+    _thisDocDPRChange: () => void;
+    constructor(map: Map);
+    abstract _frameLoop(f?: number): void;
+    abstract setToRedraw(): void;
+    callInNextFrame(fn: handlerQueueFn): void;
+    executeFrameCallbacks(): void;
+    /**
+     * Move map platform with offset
+     * @param offset
+     * @param force
+     */
+    offsetPlatform(offset: Point, force?: boolean): this;
+    domChanged(): boolean;
+    resetContainer(): void;
+    onZoomEnd(): void;
+    onLoad(): void;
+    _onDocVisibilitychange(): void;
+    _getWrapPanel(): PanelDom;
+    _onDocDragStart(): void;
+    _onDocDragEnd(): void;
+    _onDocDPRChange(): void;
+    _containerIsOffscreen(): boolean;
+}
+//# sourceMappingURL=MapRenderer.d.ts.map
+
+type GeometryEditSymbolType = {
+    'markerType': string;
+    'markerFill': string;
+    'markerLineColor': string;
+    'markerLineWidth': number;
+    'markerWidth': number;
+    'markerHeight': number;
+    'opacity': number;
+};
+type GeometryEditOptionsType = {
+    symbol?: {
+        [key: string]: any;
+    };
+    fixAspectRatio?: boolean;
+    centerHandleSymbol?: GeometryEditSymbolType;
+    vertexHandleSymbol?: GeometryEditSymbolType;
+    newVertexHandleSymbol?: GeometryEditSymbolType;
+    removeVertexOn?: string;
+    collision?: boolean;
+    collisionBufferSize?: number;
+    vertexZIndex?: number;
+    newVertexZIndex?: number;
+};
+declare module "../Geometry" {
+    interface Geometry {
+        startEdit(opts?: GeometryEditOptionsType): this;
+        endEdit(): this;
+        redoEdit(): this;
+        undoEdit(): this;
+        cancelEdit(): this;
+        isEditing(): boolean;
+    }
+}
+
+type GeometryEvents = {
+    'symbolchange': any;
+    'dragstart': any;
+    'dragend': any;
+    'positionchange shapechange': any;
+};
+declare const GeometryEditor_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Class;
+/**
+ * 内部使用的几何图形编辑器
+ * @english
+ * Geometry editor used internally for geometry editing.
+ * @category geometry
+ * @protected
+ * @extends Class
+ * @mixes Eventable
+ */
+declare class GeometryEditor extends GeometryEditor_base {
+    _geometry: any;
+    private _originalSymbol;
+    private _shadowLayer;
+    private _shadow;
+    private _geometryDraggble;
+    private _history;
+    private _historyPointer;
+    private _editOutline;
+    private _refreshHooks;
+    private _updating;
+    editing: boolean;
+    options: GeometryEditOptionsType;
+    /**
+     * @param {Geometry} geometry geometry to edit
+     * @param {Object} [opts=null] options
+     * @param {Object} [opts.symbol=null] symbol of being edited.
+     */
+    constructor(geometry: any, opts: GeometryEditOptionsType);
+    /**
+     * 获取地图对象
+     * @english
+     * Get map
+     * @return {Map} map
+     */
+    getMap(): any;
+    /**
+     * 准备编辑
+     * @english
+     * Prepare to edit
+     */
+    prepare(): void;
+    _prepareEditStageLayer(): void;
+    /**
+     * 开始编辑
+     * @english
+     * Start to edit
+     */
+    start(): void;
+    /**
+     * 停止编辑
+     * @english
+     * Stop editing
+     */
+    stop(): void;
+    /**
+     * 编辑器是否在编辑
+     * @english
+     * Whether the editor is editing
+     * @return {Boolean}
+     */
+    isEditing(): boolean;
+    _getGeometryEvents(): GeometryEvents;
+    _switchGeometryEvents(oper: any): void;
+    _onGeoSymbolChange(param: any): void;
+    _onMarkerDragEnd(): void;
+    /**
+     * 创建几何图形的矩形轮廓
+     * @english
+     * create rectangle outline of the geometry
+     * @private
+     */
+    _createOrRefreshOutline(): any;
+    _createCenterHandle(): void;
+    _createHandleInstance(containerPoint: any, opts: any): EditHandle;
+    createHandle(containerPoint: any, opts: any): EditHandle;
+    /**
+     * 为几何图形创建可以调整大小的事件
+     * @english
+     * create resize handles for geometry that can resize.
+     * @param {Array} blackList handle indexes that doesn't display, to prevent change a geometry's coordinates
+     * @param {fn} onHandleMove callback
+     * @private
+     */
+    _createResizeHandles(blackList: Array<any>, onHandleMove: any, onHandleUp: any): any;
+    /**
+     * 创建标记编辑器
+     * @english
+     * Create marker editor
+     * @private
+     */
+    createMarkerEditor(): void;
+    /**
+     * 创建圆形编辑器
+     * @english
+     * Create circle editor
+     * @private
+     */
+    createCircleEditor(): void;
+    /**
+     * 创建椭圆或者矩形编辑器
+     * @english
+     * editor of ellipse or rectangle
+     * @private
+     */
+    createEllipseOrRectEditor(): void;
+    /**
+     * 创建多边形编辑器
+     * @english
+     * Editor for polygon
+     * @private
+     */
+    createPolygonEditor(): void;
+    _refresh(): void;
+    _hideContext(): void;
+    _addRefreshHook(fn: any): void;
+    _update(method: any, ...args: any): void;
+    _updateCoordFromShadow(ignoreRecord?: any): void;
+    _recordHistory(method: any, ...args: any): void;
+    cancel(): GeometryEditor;
+    /**
+     * 获取视图历史记录中的上一个地图视图
+     * @english
+     * Get previous map view in view history
+     * @return {Object} map view
+     */
+    undo(): any;
+    /**
+     * 获取视图历史记录中的下一个地图视图
+     * @english
+     * Get next view in view history
+     * @return {Object} map view
+     */
+    redo(): any;
+    _exeAndReset(record: any): void;
+    _onDragStart(): void;
+    _onDragEnd(): void;
+    _exeHistory(record: any): void;
+}
+//# sourceMappingURL=GeometryEditor.d.ts.map
+
+type EventParams = any;
+interface EditHandleOptions {
+    symbol: Record<string, any>;
+    events: string[];
+    cursor: string;
+    zIndex?: number;
+}
+declare const EditHandle_base: any;
+declare class EditHandle extends EditHandle_base {
+    target: GeometryEditor;
+    map: Map;
+    w: number;
+    h: number;
+    opacity: number;
+    events: string[];
+    url: string;
+    bbox: BBOX;
+    _point: Point;
+    _img: any;
+    _dragger: DragHandler;
+    constructor(target: GeometryEditor, map: Map, options: EditHandleOptions);
+    getCursor(): any;
+    _fetchImage(): void;
+    setContainerPoint(cp: Point): void;
+    getContainerPoint(): Point;
+    offset(p: Point | PointJson): void;
+    render(ctx: any): boolean;
+    delete(): void;
+    hitTest(p: Point | PointJson): boolean;
+    addTo(map: Map): void;
+    onEvent(e: EventParams): void;
+    mousedown(e: EventParams): void;
+    onDragstart(e: EventParams): void;
+    onDragging(e: EventParams): void;
+    onDragend(e: EventParams): void;
+    needCollision(): boolean;
+    getRenderBBOX(dpr?: number): BBOX;
+    setZIndex(zIndex: number): void;
+}
+
+interface EditOutlineOptions {
+    zIndex?: number;
+}
+declare class EditOutline {
+    points: any;
+    xmin: number;
+    xmax: number;
+    ymin: number;
+    ymax: number;
+    map: Map;
+    target: GeometryEditor;
+    options: EditOutlineOptions;
+    constructor(target: GeometryEditor, map: Map, options?: EditOutlineOptions);
+    needCollision?(): boolean;
+    getRenderBBOX?(dpr?: number): BBOX;
+    setPoints(points: Point[]): void;
+    hitTest(): boolean;
+    render(ctx: CanvasRenderingContext2D): void;
+    addTo(map: Map): void;
+    delete(): void;
+}
+
+/**
+ * @classdesc
+ * A layer used to display a group of tile layers. <br>
+ * Its performance is better than add TileLayers seperately and it can help prevent limits of active webgl contexts: <br>
+ * "WARNING: Too many active WebGL contexts. Oldest context will be lost"
+ * @category layer
+ * @extends TileLayer
+ * @param {String|Number} id - tile layer's id
+ * @param {TileLayer[]} layers  - TileLayers to add
+ * @param {Object} [options=null] - options defined in [TileLayer]{@link TileLayer#options}
+ * @example
+ * new GroupTileLayer("group-tiles",[
+    new maptalks.WMSTileLayer('wms', {
+      'urlTemplate' : 'https://demo.boundlessgeo.com/geoserver/ows',
+      'crs' : 'EPSG:3857',
+      'layers' : 'ne:ne',
+      'styles' : '',
+      'version' : '1.3.0',
+      'format': 'image/png',
+      'transparent' : true,
+      'uppercase' : true
+    }),
+    new maptalks.TileLayer('tile2',{
+      urlTemplate: 'http://korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}'
+    })
+  ])
+ */
+declare class GroupTileLayer extends TileLayer {
+    layers: TileLayer[];
+    layerMap: Record<string, TileLayer>;
+    private _groupChildren;
+    /**
+     * Reproduce a GroupTileLayer from layer's profile JSON.
+     * @param layerJSON - layer's profile JSON
+     * @return
+     * @static
+     * @private
+     * @function
+     */
+    static fromJSON(layerJSON: {
+        [x: string]: any;
+    }): GroupTileLayer;
+    /**
+     * @param id    - layer's id
+     * @param layers  - TileLayers to add
+     * @param [options=null]          - construct options
+     * @param [options.*=null]             - options defined in [TileLayer]{@link TileLayer#options}
+     */
+    constructor(id: string, layers: TileLayer[], options?: GroupTileLayerOptionsType);
+    /**
+     * Get children TileLayer
+     */
+    getLayers(): TileLayer[];
+    /**
+     * add tilelayers
+     * @param tileLayers
+     */
+    addLayer(tileLayers?: TileLayer[]): this;
+    /**
+     * remove tilelayers
+     * @param tileLayers
+     */
+    removeLayer(tileLayers?: TileLayer[]): this;
+    /**
+   * clear tilelayers
+   */
+    clearLayers(): this;
+    /**
+     * Export the GroupTileLayer's profile json. <br>
+     * Layer's profile is a snapshot of the layer in JSON format. <br>
+     * It can be used to reproduce the instance by [fromJSON]{@link Layer#fromJSON} method
+     * @return layer's profile JSON
+     */
+    toJSON(): LayerJSONType;
+    getTileSize(id: number | string): Size;
+    /**
+     * Get tiles at zoom (or current zoom)
+     * @param z
+     * @returns tiles
+     */
+    getTiles(z: number, parentLayer: any): TilesType;
+    onAdd(): void;
+    onRemove(): void;
+    getLayer(id: string | number): TileLayer;
+    getChildLayer(id: string | number): TileLayer;
+    _removeChildTileCache(layer: TileLayer): this;
+    _onLayerShowHide(e: {
+        type: string;
+        target: any;
+    }): void;
+    _renderLayers(): this;
+    _refresh(): this;
+    isVisible(): boolean;
+    _checkChildren(): void;
+    _sortLayers(): void;
+}
+
+type GroupTileLayerOptionsType = TileLayerOptionsType & {
+    maxCacheSize?: number;
+};
+
+/**
+ * @classdesc
+ * Used to display [WMS]{https://en.wikipedia.org/wiki/Web_Map_Service} services as tile layers on the map. Extends [TileLayer]{@link TileLayer}.
+ * Implemented based on Leaflet's TileLayer.WMS.
+ * @category layer
+ * @extends TileLayer
+ * @param id - tile layer's id
+ * @param - options defined in [WMSTileLayer]{@link TileLayer#options}
+ * @example
+ * var layer = new maptalks.WMSTileLayer('wms', {
+ *     'urlTemplate' : 'https://demo.boundlessgeo.com/geoserver/ows',
+ *     'crs' : 'EPSG:3857',
+ *     'layers' : 'ne:ne',
+ *     'styles' : '',
+ *     'version' : '1.3.0',
+ *     'format': 'image/png',
+ *     'transparent' : true,
+ *     'uppercase' : true
+ * });
+ */
+declare class WMSTileLayer extends TileLayer {
+    wmsParams: WMSTileLayerOptionsType;
+    options: WMSTileLayerOptionsType;
+    private _wmsVersion;
+    constructor(id: string, options: WMSTileLayerOptionsType);
+    _optionsHook(options?: {}): this;
+    onAdd(): void;
+    getTileUrl(x: number, y: number, z: number): string;
+    /**
+     * Export the WMSTileLayer's json. <br>
+     * It can be used to reproduce the instance by [fromJSON]{@link Layer#fromJSON} method
+     * @return layer's JSON
+     */
+    toJSON(): LayerJSONType;
+    /**
+     * Reproduce a WMSTileLayer from layer's JSON.
+     * @param layerJSON - layer's JSON
+     * @return a WMSTileLayer instance
+     * @static
+     * @private
+     * @function
+     */
+    static fromJSON(layerJSON: {
+        [x: string]: any;
+    }): WMSTileLayer;
+}
+
+type WMSTileLayerOptionsType = TileLayerOptionsType & {
+    service?: string;
+    layers?: string;
+    styles?: string;
+    format?: string;
+    transparent?: boolean;
+    version?: string;
+    crs?: string;
+    uppercase?: boolean;
+    detectRetina?: boolean;
+    width?: number;
+    height?: number;
+};
+
+/**
+ * @classdesc
+ * @ignore
+ * @category layer
+ * @extends TileLayer
+ * @param id - tile layer's id
+ * @param - options defined in [CanvasTileLayer]{@link TileLayer#options}
+ * @example
+ * var layer = new CanvasTileLayer("tile");
+ * layer.drawTile = ()
+ */
+declare class CanvasTileLayer extends TileLayer {
+    constructor(id: string, options: CanvasTileLayerOptionsType);
+    /**
+     * The interface method to draw on canvsa tile
+     * @param canvas  canvas to draw on
+     * @param options current options
+     * @param options current options
+     */
+    drawTile(): void;
+    /**
+     * Export the CanvasTileLayer's json. <br>
+     * It can be used to reproduce the instance by [fromJSON]{@link Layer#fromJSON} method
+     * @return layer's JSON
+     */
+    toJSON(): LayerJSONType;
+    /**
+     * Reproduce a CanvasTileLayer from layer's JSON.
+     * @param layerJSON - layer's JSON
+     * @static
+     * @private
+     * @function
+     */
+    static fromJSON(layerJSON: {
+        [x: string]: any;
+    }): CanvasTileLayer;
+}
+
+type CanvasTileLayerOptionsType = TileLayerOptionsType;
+
+/**
+ * images layer,可指定图像地理位置及透明的
+ *
+ * @english
+ * @classdesc
+ * A layer used to display images, you can specify each image's geographic extent and opacity
+ * @category layer
+ * @extends Layer
+ * @param id - tile layer's id
+ * @param images=null - images
+ * @param options=null - options defined in [ImageLayer]{@link ImageLayer#options}
+ * @example
+ * new ImageLayer("images", [{
+        url : 'http://example.com/foo.png',
+        extent: [xmin, ymin, xmax, ymax],
+        opacity : 1
+    }])
+ */
+declare class ImageLayer extends Layer {
+    _images: Array<ImageItem>;
+    _imageData: Array<ImageDataItem>;
+    constructor(id: string, images?: ImageLayerOptionsType | Array<ImageItem>, options?: ImageLayerOptionsType);
+    onAdd(): void;
+    /**
+     * 设置图像并重新绘制
+     *
+     * @english
+     * Set images and redraw
+     * @param images - new images
+     * @return this
+     */
+    setImages(images: Array<ImageItem>): this;
+    /**
+     * 获取图像
+     *
+     * @english
+     * Get images
+     * @return
+     */
+    getImages(): Array<ImageItem>;
+    _prepareImages(images: Array<ImageItem>): void;
+    getRenderer(): ImageLayerCanvasRenderer;
+}
+declare class ImageLayerCanvasRenderer extends CanvasRenderer$1 {
+    _imageLoaded: boolean;
+    isDrawable(): boolean;
+    checkResources(): any;
+    retireImage(image: ImageType): void;
+    refreshImages(): void;
+    draw(timestamp?: number, context?: any): void;
+    _drawImages(timestamp?: number, context?: any): void;
+    _drawImage(image: ImageType, extent: PointExtent, opacity: number): void;
+    drawOnInteracting(event?: any, timestamp?: number, context?: any): void;
+}
+declare const ImageLayerGLRenderer_base: {
+    new (...args: any[]): {
+        gl: TileRenderingContext;
+        canvas: TileRenderingCanvas;
+        canvas2?: TileRenderingCanvas;
+        _debugInfoCanvas?: TileRenderingCanvas; /**
+         * 设置图像并重新绘制
+         *
+         * @english
+         * Set images and redraw
+         * @param images - new images
+         * @return this
+         */
+        program?: TileRenderingProgram;
+        _layerAlt: number;
+        _layerAltitude: number;
+        layer?: any;
+        texBuffer?: TileImageBuffer;
+        _debugBuffer?: TileImageBuffer;
+        posBuffer?: TileImageBuffer; /**
+         * 获取图像
+         *
+         * @english
+         * Get images
+         * @return
+         */
+        _imageBuffers?: TileImageBuffer[];
+        _buffers?: TileImageBuffer[];
+        _textures?: WebGLTexture[];
+        getMap?(): Map;
+        drawGLImage(image: TileImageType, x: number, y: number, w: number, h: number, scale: number, opacity: number, debugInfo?: string, baseColor?: number[]): void;
+        drawDebug(uMatrix: Matrix4InOut, x: number, y: number, w: number, h: number, debugInfo: string): void;
+        bufferTileData(x: number, y: number, w: number, h: number, buffer?: TileImageBuffer): TileImageBuffer;
+        createCanvas2(): void;
+        createGLContext(): void;
+        resizeGLCanvas(): void;
+        clearGLCanvas(): void;
+        disposeImage(image: TileImageType): void;
+        _createTexture(image: TileImageType): WebGLTexture;
+        getTexture(): WebGLTexture;
+        saveTexture(texture: WebGLTexture): void;
+        loadTexture(image: TileImageType): WebGLTexture;
+        getImageBuffer(): TileImageBuffer;
+        saveImageBuffer(buffer: TileImageBuffer): void;
+        loadImageBuffer(data: Float32Array | Int16Array, glBuffer: TileImageBuffer): TileImageBuffer;
+        createImageBuffer(): TileImageBuffer;
+        removeGLCanvas(): void;
+        createBuffer(): TileImageBuffer;
+        enableVertexAttrib(attributes: VertexAttrib): void;
+        createProgram(vert: string, frag: string): TileRenderingProgram;
+        useProgram(program: TileRenderingProgram): any;
+        enableSampler(sampler: string, texIdx?: number): WebGLUniformLocation;
+        _initUniforms(program: TileRenderingProgram, uniforms: string[]): void;
+        _getUniform(program: TileRenderingProgram, uniformName: string): WebGLUniformLocation;
+        set8(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Float32Array;
+        set8Int(a0: number, a1: number, a2: number, a3: number, a4: number, a5: number, a6: number, a7: number): Int16Array;
+    };
+} & typeof ImageLayerCanvasRenderer;
+declare class ImageLayerGLRenderer extends ImageLayerGLRenderer_base {
+    drawOnInteracting(event: any, timestamp: number, context: any): void;
+    _prepareGLContext(): void;
+    _drawImages(timestamp?: number, parentContext?: any): void;
+    isDrawable(): boolean;
+    _drawImage(image: ImageType, extent: PointExtent, opacity: number): void;
+    createContext(): void;
+    resizeCanvas(canvasSize: any): void;
+    clearCanvas(): void;
+    retireImage(image: ImageType): void;
+    onRemove(): void;
+}
+
+type ImageItem = {
+    url: string;
+    extent: Extent | [number, number, number, number];
+    opacity?: number;
+};
+type ImageDataItem = ImageItem & {
+    extent2d: PointExtent;
+};
+type ImageType = HTMLImageElement | ImageBitmap;
+declare enum depthFuncEnum {
+    'never' = 0,
+    '<' = 1,
+    '=' = 2,
+    '<=' = 3,
+    ' >' = 4,
+    '!=' = 5,
+    '>=' = 6,
+    'always' = 7
+}
+type ImageLayerOptionsType = LayerOptionsType & {
+    crossOrigin?: string;
+    renderer?: 'canvas' | 'gl' | 'dom';
+    alphaTest?: boolean;
+    depthMask?: boolean;
+    depthFunc?: keyof typeof depthFuncEnum;
+};
+
+/**
+ * layers 的基础类，可用于 geometries 的添加移除
+ * 抽象类,不准备实例化
+ *
+ * @english
+ * @classdesc
+ * Base class of all the layers that can add/remove geometries. <br>
+ * It is abstract and not intended to be instantiated.
+ * @category layer
+ * @abstract
+ * @extends Layer
+ */
+declare class OverlayLayer extends Layer {
+    _maxZIndex: number;
+    _minZIndex: number;
+    _geoMap: Record<string, Geometry>;
+    _geoList: Array<Geometry>;
+    _toSort: boolean;
+    _cookedStyles: any;
+    _clearing: boolean;
+    options: OverlayLayerOptionsType;
+    _renderer: OverlayLayerRenderer;
+    constructor(id: string, geometries: OverlayLayerOptionsType | Array<Geometry>, options?: OverlayLayerOptionsType);
+    getAltitude(): number;
+    /**
+     * 通过 id 获取 geometry
+     *
+     * @english
+     * Get a geometry by its id
+     * @param id   - id of the geometry
+     * @return
+     */
+    getGeometryById(id: string | number): Geometry;
+    /**
+     * 获取所有geometries，如果提供 filter() 方法,则根据方法返回
+     *
+     * @english
+     * Get all the geometries or the ones filtered if a filter function is provided.
+     * @param filter=undefined   - a function to filter the geometries
+     * @param context=undefined  - context of the filter function, value to use as this when executing filter.
+     * @return
+     */
+    getGeometries(filter?: (geo: Geometry) => boolean, context?: any): Array<Geometry>;
+    /**
+     * 获取第一个geometry, geometry 位于底部
+     *
+     * @english
+     * Get the first geometry, the geometry at the bottom.
+     * @return first geometry
+     */
+    getFirstGeometry(): Geometry;
+    /**
+     * 获取最后一个geometry, geometry 位于上部
+     *
+     * @english
+     * Get the last geometry, the geometry on the top
+     * @return last geometry
+     */
+    getLastGeometry(): Geometry;
+    /**
+     * 获取 geometries 个数
+     *
+     * Get count of the geometries
+     * @return count
+     */
+    getCount(): number;
+    /**
+     * 获取 geometries 的 extent, 如果 layer 为空,返回 null
+     *
+     * @english
+     * Get extent of all the geometries in the layer, return null if the layer is empty.
+     * @return {Extent} - extent of the layer
+     */
+    getExtent(): Extent;
+    /**
+     * 按顺序为图层中的每个 geometry 执行一次提供的回调。
+     *
+     * @english
+     * Executes the provided callback once for each geometry present in the layer in order.
+     * @param fn - a callback function
+     * @param context=undefined   - callback's context, value to use as this when executing callback.
+     * @return this
+     */
+    forEach(fn: (geo: Geometry, index: number) => void, context?: any): this;
+    /**
+     * 创建一个包含所有通过由提供的函数实现的测试的 geometries 的 GeometryCollection。
+     *
+     * @english
+     * Creates a GeometryCollection with all the geometries that pass the test implemented by the provided function.
+     * @param fn      - Function to test each geometry
+     * @param context=undefined  - Function's context, value to use as this when executing function.
+     * @return  A GeometryCollection with all the geometries that pass the test
+     */
+    filter(fn: (geo: Geometry) => boolean, context?: any): Array<Geometry>;
+    /**
+     * layer 是否为空
+     *
+     * @english
+     * Whether the layer is empty.
+     * @return {Boolean}
+     */
+    isEmpty(): boolean;
+    /**
+     * 为 layer 添加 geometries
+     *
+     * @english
+     * Adds one or more geometries to the layer
+     * @param geometries - one or more geometries
+     * @param fitView=false                                         - automatically set the map to a fit center and zoom for the geometries
+     * @param fitView.easing=out                                    - default animation type
+     * @param fitView.duration=map.options.zoomAnimationDuration    - default animation time
+     * @param fitView.step=null                                     - step function during animation, animation frame as the parameter
+     * @return this
+     */
+    addGeometry(geometries: Geometry | Array<Geometry>, fitView?: boolean | addGeometryFitViewOptions): any;
+    /**
+     * 所有 geometries 最小的 zIndex
+     *
+     * @english
+     * Get minimum zindex of geometries
+     */
+    getGeoMinZIndex(): number;
+    /**
+     * 所有 geometries 最大的 zIndex
+     *
+     * @english
+     * Get maximum zindex of geometries
+     */
+    getGeoMaxZIndex(): number;
+    _add(geo: Geometry, extent?: Extent, i?: number): void;
+    /**
+     * 移除一个或多个geometries
+     *
+     * @english
+     * Removes one or more geometries from the layer
+     * @param  geometries - geometry ids or geometries to remove
+     * @returns this
+     */
+    removeGeometry(geometries: Geometry | Geometry[]): any;
+    /**
+     * 清除 layer
+     *
+     * @english
+     * Clear all geometries in this layer
+     * @returns this
+     */
+    clear(): this;
+    /**
+     * 移除geometry 回调函数
+     *
+     * @english
+     * Called when geometry is being removed to clear the context concerned.
+     * @param geometry - the geometry instance to remove
+     * @protected
+     */
+    onRemoveGeometry(geometry: Geometry): void;
+    /**
+     * 获取 layer 的 style
+     *
+     * @english
+     * Gets layer's style.
+     * @return layer's style
+     */
+    getStyle(): any | any[];
+    /**
+     * layer 设置 style, 用样式符号对满足条件的 geometries进行样式修改
+     * 基于[mapbox-gl-js's style specification]， {https://www.mapbox.com/mapbox-gl-js/style-spec/#types-filter}.
+     *
+     * @english
+     * Sets style to the layer, styling the geometries satisfying the condition with style's symbol. <br>
+     * Based on filter type in [mapbox-gl-js's style specification]{https://www.mapbox.com/mapbox-gl-js/style-spec/#types-filter}.
+     * @param style - layer's style
+     * @returns this
+     * @fires VectorLayer#setstyle
+     * @example
+     * layer.setStyle([
+        {
+          'filter': ['==', 'count', 100],
+          'symbol': {'markerFile' : 'foo1.png'}
+        },
+        {
+          'filter': ['==', 'count', 200],
+          'symbol': {'markerFile' : 'foo2.png'}
+        }
+      ]);
+     */
+    setStyle(style: any | any[]): this;
+    _styleGeometry(geometry: Geometry): boolean;
+    /**
+     * 移除 style
+     *
+     * @english
+     * Removes layers' style
+     * @returns this
+     * @fires VectorLayer#removestyle
+     */
+    removeStyle(): this;
+    onAddGeometry(geo: Geometry): void;
+    hide(): this;
+    _initCache(): void;
+    _updateZIndex(...zIndex: number[]): void;
+    _sortGeometries(): void;
+    _compare(a: any, b: any): number;
+    _findInList(geo: Geometry): number;
+    _onGeometryEvent(param?: HandlerFnResultType): void;
+    _onGeometryIdChange(param: HandlerFnResultType): void;
+    _onGeometryZIndexChange(param: HandlerFnResultType): void;
+    _onGeometryPositionChange(param: HandlerFnResultType): void;
+    _onGeometryShapeChange(param: HandlerFnResultType): void;
+    _onGeometrySymbolChange(param: HandlerFnResultType): void;
+    _onGeometryShow(param: HandlerFnResultType): void;
+    _onGeometryHide(param: HandlerFnResultType): void;
+    _onGeometryPropertiesChange(param: HandlerFnResultType): void;
+    _hasGeoListeners(eventTypes: string | Array<string>): boolean;
+    _getRenderer(): OverlayLayerRenderer;
+}
+
+type OverlayLayerOptionsType = LayerOptionsType & {
+    drawImmediate?: boolean;
+    geometryEvents?: boolean;
+    geometryEventTolerance?: number;
+    style?: any;
+};
+type addGeometryFitViewOptions = {
+    easing?: string;
+    duration?: number;
+    step?: (frame: any) => void;
+};
+type LayerIdentifyOptionsType = {
+    onlyVisible?: boolean;
+    tolerance?: number;
+};
+
+type VectorLayerToJSONOptions = {
+    geometries: any;
+    clipExtent: Extent;
+};
+/**
+ * 用于管理、呈现 geometries 的 layer
+ *
+ * @english
+ * @classdesc
+ * A layer for managing and rendering geometries.
+ * @category layer
+ * @extends OverlayLayer
+ */
+declare class VectorLayer extends OverlayLayer {
+    options: VectorLayerOptionsType;
+    isVectorLayer: boolean;
+    /**
+     * @param id                    - layer's id
+     * @param geometries=null       - geometries to add
+     * @param options=null          - construct options
+     * @param options.style=null    - vectorlayer's style
+     * @param options.*=null        - options defined in [VectorLayer]{@link VectorLayer#options}
+     */
+    constructor(id: string, geometries: VectorLayerOptionsType | Array<Geometry>, options?: VectorLayerOptionsType);
+    onConfig(conf: Record<string, any>): void;
+    /**
+     * 通过给定 coordinate 识别 geometries
+     *
+     * @english
+     * Identify the geometries on the given coordinate
+     * @param  {maptalks.Coordinate} coordinate   - coordinate to identify
+     * @param  {Object} [options=null]  - options
+     * @param  {Object} [options.tolerance=0] - identify tolerance in pixel
+     * @param  {Object} [options.count=null]  - result count
+     * @return {Geometry[]} geometries identified
+     */
+    identify(coordinate: Coordinate, options?: LayerIdentifyOptionsType): Geometry[];
+    /**
+     * 通过给定 point 识别 geometries
+     *
+     * @english
+     * Identify the geometries on the given container point
+     * @param  {maptalks.Point} point   - container point to identify
+     * @param  {Object} [options=null]  - options
+     * @param  {Object} [options.tolerance=0] - identify tolerance in pixel
+     * @param  {Object} [options.count=null]  - result count
+     * @return {Geometry[]} geometries identified
+     */
+    identifyAtPoint(point: Point, options?: LayerIdentifyOptionsType): any;
+    _hitGeos(geometries: Array<Geometry>, cp: Point, options: LayerIdentifyOptionsType): Geometry[];
+    getAltitude(): number;
+    /**
+     * 输出 VectorLayer 的 json
+     *
+     * @english
+     * Export the VectorLayer's JSON. <br>
+     * @param  {Object} [options=null] - export options
+     * @param  {Object} [options.geometries=null] - If not null and the layer is a [OverlayerLayer]{@link OverlayLayer},
+     *                                            the layer's geometries will be exported with the given "options.geometries" as a parameter of geometry's toJSON.
+     * @param  {Extent} [options.clipExtent=null] - if set, only the geometries intersectes with the extent will be exported.
+     * @return layer's JSON
+     */
+    toJSON(options?: VectorLayerToJSONOptions): LayerJSONType;
+    getRenderer(): VectorLayerRenderer;
+    /**
+     * 通过 json 生成 VectorLayer
+     *
+     * @english
+     * Reproduce a VectorLayer from layer's JSON.
+     * @param  {Object} layerJSON - layer's JSON
+     * @return {VectorLayer}
+     * @static
+     * @private
+     * @function
+     */
+    static fromJSON(json: Record<string, any>): VectorLayer;
+    static getPainterClass(): typeof Painter;
+    static getCollectionPainterClass(): typeof CollectionPainter;
+}
+
+type VectorLayerOptionsType = OverlayLayerOptionsType & {
+    debug?: boolean;
+    enableSimplify?: boolean;
+    cursor?: string;
+    geometryEvents?: boolean;
+    defaultIconSize?: [number, number];
+    cacheVectorOnCanvas?: boolean;
+    cacheSvgOnCanvas?: boolean;
+    enableAltitude?: boolean;
+    altitudeProperty?: string;
+    drawAltitude?: boolean;
+    sortByDistanceToCamera?: boolean;
+    roundPoint?: boolean;
+    altitude?: number;
+    clipBBoxBufferSize?: number;
+    collision?: boolean;
+    collisionBufferSize?: number;
+    collisionDelay?: number;
+    collisionScope?: 'layer' | 'map';
+    progressiveRender?: boolean;
+    progressiveRenderCount?: number;
+    progressiveRenderDebug?: boolean;
+};
+
+/**
+ * 一个带有HTML5 2D canvas的layer
+ * CanvasLayer为canvas操作提供了一些接口方法
+ * 你可以直接使用CanvasLayer,但不能通过JSON序列化/反序列化实现CanvasLayer
+ * 更推荐使用子类扩展CanvasLayer，并在子类中实现canvas绘画
+ *
+ * @english
+ * A layer with a HTML5 2D canvas context.<br>
+ * CanvasLayer provides some interface methods for canvas context operations. <br>
+ * You can use it directly, but can't serialize/deserialize a CanvasLayer with JSON in this way. <br>
+ * It is more recommended to extend it with a subclass and implement canvas paintings inside the subclass.
+ * @example
+ *  var layer = new CanvasLayer('canvas');
+ *
+ *  layer.prepareToDraw = function (context) {
+ *      var size = map.getSize();
+ *      return [size.width, size.height]
+ *  };
+ *
+ *  layer.draw = function (context, width, height) {
+ *      context.fillStyle = "#f00";
+ *      context.fillRect(0, 0, w, h);
+ *  };
+ *  layer.addTo(map);
+ * @category layer
+ * @extends Layer
+ * @param {String|Number} id - layer's id
+ * @param {Object} options - options defined in [options]{@link CanvasLayer#options}
+ */
+declare class CanvasLayer extends Layer {
+    isCanvasRender(): boolean;
+    /**
+     * 准备画布的接口函数
+     *
+     * @engilsh
+     * An optional interface function called only once before the first draw, useful for preparing your canvas operations.
+     * @param  {CanvasRenderingContext2D } context - CanvasRenderingContext2D of the layer canvas.
+     * @return {Object[]} objects that will be passed to function draw(context, ..) as parameters.
+     */
+    prepareToDraw(): void;
+    /**
+     * 绘制something的接口函数
+     *
+     * @engilsh
+     * The required interface function to draw things on the layer canvas.
+     * @param  {CanvasRenderingContext2D} context - CanvasRenderingContext2D of the layer canvas.
+     * @param  {*} params.. - parameters returned by function prepareToDraw(context).
+     */
+    draw(...params: any[]): void;
+    /**
+     * map交互绘制接口
+     * 默认情况调用draw()
+     * 如果你知道如何提升绘制性能可以重新此方法
+     *
+     * @english
+     * An optional interface function to draw while map is interacting.
+     * By default, it will call draw method instead.
+     * You can override this method if you are clear with what to draw when interacting to improve performance.
+     * @param  {CanvasRenderingContext2D} context - CanvasRenderingContext2D of the layer canvas.
+     * @param  {*} params.. - parameters returned by function prepareToDraw(context).
+     */
+    /**
+     * 重绘
+     *
+     * @english
+     * Redraw the layer
+     * @return this
+     */
+    redraw(): this;
+    /**
+     * 播放
+     *
+     * @english
+     * Start animation
+     * @return this
+     */
+    play(): this;
+    /**
+     * 暂停
+     *
+     * @english
+     * Pause the animation
+     * @return this
+     */
+    pause(): this;
+    /**
+     * 是否正在播放
+     *
+     * @english
+     * If the animation is playing
+     * @return
+     */
+    isPlaying(): boolean;
+    /**
+     * 清空画布
+     *
+     * @engilsh
+     * Clear layer's canvas
+     * @return this
+     */
+    clearCanvas(): this;
+    /**
+     * 要求map不触发任何事件下重绘canvas
+     *
+     * @engilsh
+     * Ask the map to redraw the layer canvas without firing any event.
+     * @return this
+     */
+    requestMapToRender(): this;
+    /**
+     * 要求map触发layerload事件重绘canvas
+     *
+     * @engilsh
+     * Ask the map to redraw the layer canvas and fire layerload event
+     * @return this
+     */
+    completeRender(): this;
+    /**
+     * canvas创建完成后的回调函数
+     *
+     * @english
+     * Callback function when layer's canvas is created. <br>
+     * Override it to do anything needed.
+     */
+    onCanvasCreate(): this;
+    /**
+     * map zoomstart事件回调
+     *
+     * @engilsh
+     * The event callback for map's zoomstart event.
+     * @param  {Object} param - event parameter
+     */
+    onZoomStart(): void;
+    /**
+     * map zooming事件回调
+     *
+     * @engilsh
+     * The event callback for map's zooming event.
+     * @param  {Object} param - event parameter
+     */
+    onZooming(): void;
+    /**
+     * map zoomend事件回调
+     *
+     * @engilsh
+     * The event callback for map's zoomend event.
+     * @param  {Object} param - event parameter
+     */
+    onZoomEnd(): void;
+    /**
+     * map movestart事件回调
+     *
+     * @engilsh
+     * The event callback for map's movestart event.
+     * @param  {Object} param - event parameter
+     */
+    onMoveStart(): void;
+    /**
+     * map moving事件回调
+     *
+     * @engilsh
+     * The event callback for map's moving event.
+     * @param  {Object} param - event parameter
+     */
+    onMoving(): void;
+    /**
+     * map moveend事件回调
+     *
+     * @engilsh
+     * The event callback for map's moveend event.
+     * @param  {Object} param - event parameter
+     */
+    onMoveEnd(): void;
+    /**
+     * map resize事件回调
+     *
+     * @engilsh
+     * The event callback for map's resize event.
+     * @param  {Object} param - event parameter
+     */
+    onResize(): void;
+    /**
+     * double buffer的回调函数
+     * 默认情况下just draws and return，如果你需要在绘制之前处理canvas，可以重写改函数
+     *
+     * @engilsh
+     * The callback function to double buffer. <br>
+     * In default, it just draws and return, and you can override it if you need to process the canvas image before drawn.
+     * @param  {CanvasRenderingContext2D} bufferContext CanvasRenderingContext2D of double buffer of the layer canvas.
+     * @param  {CanvasRenderingContext2D} context CanvasRenderingContext2D of the layer canvas.
+     */
+    doubleBuffer(bufferContext: CanvasRenderingContext2D): CanvasLayer;
+    _getRenderer(): CanvasLayerRenderer;
+}
+
+type CanvasLayerOptionsType = LayerOptionsType & {
+    doubleBuffer?: boolean;
+    animation?: boolean;
+    fps?: number | string;
+};
+
+/**
+ * 粒子图层
+ * 提供了一些渲染粒子的接口方法。
+ * 你可以直接使用它，但不能以这种方式用JSON序列化/反序列化一个 particelayer
+ * 更建议使用子类来扩展它
+ *
+ * @english
+ * @classdesc
+ * A layer to draw particles. <br>
+ * ParticleLayer provides some interface methods to render particles. <br>
+ * You can use it directly, but can't serialize/deserialize a ParticleLayer with JSON in this way. <br>
+ * It is more recommended to extend it with a subclass.
+ * @example
+ * import { ParticleLayer } from 'maptalks';
+ * var layer = new ParticleLayer('particle');
+ *
+ * layer.getParticles = function (t) {
+ *     return particles[t];
+ * };
+ * layer.addTo(map);
+ * @category layer
+ * @extends CanvasLayer
+ * @param {String} id - layer's id
+ * @param {Object} [options=null] - options defined in [options]{@link ParticleLayer#options}
+ */
+declare class ParticleLayer extends CanvasLayer {
+    options: ParticleLayerOptionsType;
+    /**
+     * 获取t时刻的例子位置
+     *
+     * @english
+     * Interface method to get particles's position at time t.
+     * @param t - current time in milliseconds
+     */
+    getParticles(t?: number): void;
+    draw(context: CanvasRenderingContext2D, view: any): void;
+    _fillCanvas(context: CanvasRenderingContext2D): void;
+}
+
+type ParticleLayerOptionsType = CanvasLayerOptionsType & {
+    animation?: boolean;
+};
+
+/**
+ * 基于 Canvas2D 的 map 渲染器
+ *
+ * @english
+ * Renderer class based on HTML5 Canvas for maps.
+ * @class
+ * @protected
+ * @extends {renderer.MapRenderer}
+ * @memberOf renderer
+ */
+declare class MapCanvasRenderer extends MapRenderer {
+    _containerIsCanvas: boolean;
+    _loopTime: number;
+    _resizeTime: number;
+    _resizeCount: number;
+    _frameCycleRenderCount: number;
+    _resizeEventList: ResizeObserverEntry[];
+    _needClear: boolean;
+    _canvasUpdated: boolean;
+    _isViewChanged: WithUndef<boolean>;
+    _spatialRefChanged: WithUndef<boolean>;
+    _resizeObserver: ResizeObserver;
+    _resizeInterval: number;
+    _checkSizeInterval: number;
+    _hitDetectFrame: number;
+    _animationFrame: number;
+    _mapview: MapView;
+    _zoomMatrix: number[];
+    _eventParam: any;
+    _canvasIds: string[];
+    _updatedIds: string[];
+    _frameTimestamp: number;
+    _checkPositionTime: number;
+    _tops: (EditHandle | EditOutline)[];
+    context: CanvasRenderingContext2D;
+    canvas: HTMLCanvasElement;
+    topLayer: HTMLCanvasElement;
+    topCtx: CanvasRenderingContext2D;
+    /**
+     * @param map - map for the renderer
+     */
+    constructor(map: Map);
+    load(): void;
+    /**
+     * render layers in current frame
+     * @returns return false to cease frame loop
+     */
+    renderFrame(framestamp: number): boolean;
+    updateMapDOM(): void;
+    drawLayers(layers: Layer[], framestamp: number): void;
+    /**
+     * check if need to call layer's draw/drawInteracting
+     * @param layer
+     */
+    _checkLayerRedraw(layer: Layer): boolean;
+    /**
+     * Draw canvas rendered layer when map is interacting
+     * @param layer
+     * @param t     current consumed time of layer drawing
+     * @param timeLimit time limit for layer drawing
+     * @param framestamp
+     * @returns time to draw this layer
+     * @private
+     */
+    _drawCanvasLayerOnInteracting(layer: Layer, t: number, timeLimit: number, framestamp: number): number;
+    /**
+     * Fire layerload events.
+     * Make sure layer are drawn on map when firing the events
+     * @private
+     */
+    _fireLayerLoadEvents(): void;
+    isLayerCanvasUpdated(): boolean;
+    setLayerCanvasUpdated(): void;
+    /**
+     * Renders the layers
+     */
+    drawLayerCanvas(layers: Layer[]): boolean;
+    setToRedraw(): void;
+    updateMapSize(size: Size): void;
+    getMainPanel(): HTMLCanvasElement | HTMLDivElement | (HTMLElement & {
+        layerDOM: HTMLElement;
+        uiDOM: HTMLElement;
+    });
+    toDataURL(mimeType: string, quality?: number): string;
+    remove(): void;
+    hitDetect(point: Point): void;
+    _getLayerImage(layer: Layer): any;
+    /**
+     * initialize container DOM of panels
+     */
+    initContainer(): void;
+    /**
+     * Is current map's state changed?
+     */
+    isViewChanged(): boolean;
+    _recordView(): void;
+    isSpatialReferenceChanged(): boolean;
+    _getMapView(): MapView;
+    _lockFrameRenderEnable(): boolean;
+    /**
+    * Main frame loop
+    */
+    _frameLoop(framestamp: number): void;
+    _cancelFrameLoop(): void;
+    _drawLayerCanvasImage(layer: Layer, layerImage: any, targetWidth?: number, targetHeight?: number): void;
+    _drawCenterCross(): void;
+    _drawContainerExtent(): void;
+    _drawFog(): void;
+    _debugSky(): this;
+    _getAllLayerToRender(): any[];
+    clearCanvas(): void;
+    _updateCanvasSize(): boolean;
+    createCanvas(): void;
+    _updateDomPosition(framestamp: number): this;
+    _handleResizeEventList(time: number): this;
+    _checkSize(): void;
+    _setCheckSizeInterval(interval: number): void;
+    _registerEvents(): void;
+    _onMapMouseMove(param: any): void;
+    _getCanvasLayers(): any[];
+    addTopElement(e: EditHandle | EditOutline): void;
+    removeTopElement(e: EditHandle | EditOutline): void;
+    getTopElements(): (EditHandle | EditOutline)[];
+    sortTopElements(): void;
+    drawTops(): void;
+}
+type MapView = {
+    x: number;
+    y: number;
+    zoom: number;
+    pitch: number;
+    bearing: number;
+    width: number;
+    height: number;
+};
+
+/**
+ * 一切可渲染的公共方法，例如：`Map`、'Layers'
+ * @english
+ * Common methods for classes can be rendered, e.g. Map, Layers
+ * @mixin Renderable
+ * @protected
+ */
+declare function export_default<T extends MixinConstructor>(Base: T): {
+    new (...args: any[]): {};
+    /**
+     * 用给定的 name 注册一个 `renderer` 类
+     * @english
+     * Register a renderer class with the given name.
+     * @param  name  - renderer's register key
+     * @param  clazz - renderer's class{@link Class}).
+     */
+    registerRenderer<T_1 extends typeof Class>(name: string, clazz: T_1): any & T;
+    /**
+     * 返回用name注册的 `renderer` 类
+     * @english
+     * Get the registered renderer class by the given name
+     * @param  name  - renderer's register key
+     */
+    getRendererClass(name: string): Class | null;
+} & T;
+
+/** @namespace renderer */
+//# sourceMappingURL=index.d.ts.map
+
+type index_d$3_CanvasLayerRenderer = CanvasLayerRenderer;
+declare const index_d$3_CanvasLayerRenderer: typeof CanvasLayerRenderer;
+declare const index_d$3_ImageGLRenderable: typeof ImageGLRenderable;
+type index_d$3_ImageLayerCanvasRenderer = ImageLayerCanvasRenderer;
+declare const index_d$3_ImageLayerCanvasRenderer: typeof ImageLayerCanvasRenderer;
+type index_d$3_ImageLayerGLRenderer = ImageLayerGLRenderer;
+declare const index_d$3_ImageLayerGLRenderer: typeof ImageLayerGLRenderer;
+type index_d$3_MapCanvasRenderer = MapCanvasRenderer;
+declare const index_d$3_MapCanvasRenderer: typeof MapCanvasRenderer;
+type index_d$3_MapRenderer = MapRenderer;
+declare const index_d$3_MapRenderer: typeof MapRenderer;
+type index_d$3_QuadStencil = QuadStencil;
+declare const index_d$3_QuadStencil: typeof QuadStencil;
+type index_d$3_ResourceCache = ResourceCache;
+declare const index_d$3_ResourceCache: typeof ResourceCache;
+type index_d$3_TileLayerCanvasRenderer = TileLayerCanvasRenderer;
+declare const index_d$3_TileLayerCanvasRenderer: typeof TileLayerCanvasRenderer;
+type index_d$3_TileLayerGLRenderer = TileLayerGLRenderer;
+declare const index_d$3_TileLayerGLRenderer: typeof TileLayerGLRenderer;
+declare namespace index_d$3 {
+  export { index_d$3_CanvasLayerRenderer as CanvasLayerRenderer, CanvasRenderer$1 as CanvasRenderer, CanvasRenderer as CanvasTileLayerCanvasRenderer, GLRenderer as CanvasTileLayerGLRenderer, index_d$3_ImageGLRenderable as ImageGLRenderable, index_d$3_ImageLayerCanvasRenderer as ImageLayerCanvasRenderer, index_d$3_ImageLayerGLRenderer as ImageLayerGLRenderer, index_d$3_MapCanvasRenderer as MapCanvasRenderer, index_d$3_MapRenderer as MapRenderer, OverlayLayerRenderer as OverlayLayerCanvasRenderer, index_d$3_QuadStencil as QuadStencil, export_default as Renderable, index_d$3_ResourceCache as ResourceCache, index_d$3_TileLayerCanvasRenderer as TileLayerCanvasRenderer, index_d$3_TileLayerGLRenderer as TileLayerGLRenderer, VectorLayerRenderer as VectorLayerCanvasRenderer };
+}
+
+declare class StrokeAndFillSymbolizer extends CanvasSymbolizer {
+    _extMin: Coordinate;
+    _extMax: Coordinate;
+    _pxExtent: PointExtent;
+    static test(symbol: any, geometry: Geometry): boolean;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    symbolize(ctx: CanvasRenderingContext2D, resources: ResourceCache): void;
+    get2DExtent(): PointExtent;
+    getFixedExtent(): PointExtent;
+    _getPaintParams(): any[];
+    translate(): any;
+    _createGradient(ctx: CanvasRenderingContext2D, points: any[], lineColor: any): void;
+}
+
+declare class TextMarkerSymbolizer extends PointSymbolizer {
+    _dynamic: any;
+    strokeAndFill: any;
+    _textDesc: any;
+    _fixedExtent: PointExtent;
+    _index: number;
+    static test(symbol: any): boolean;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    symbolize(ctx: CanvasRenderingContext2D, resources: ResourceCache): void;
+    getPlacement(): any;
+    getRotation(): number;
+    getDxDy(): Point;
+    getFixedExtent(): PointExtent;
+    translate(): any;
+    translateLineAndFill(s: any): any;
+}
+
+declare class VectorMarkerSymbolizer extends PointSymbolizer {
+    _dynamic: any;
+    strokeAndFill: any;
+    padding: number;
+    _stamp: any;
+    _fixedExtent: PointExtent;
+    static test(symbol: any): boolean;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    symbolize(ctx: CanvasRenderingContext2D, resources: ResourceCache): void;
+    _drawMarkers(ctx: CanvasRenderingContext2D, cookedPoints: any[], resources: ResourceCache): void;
+    _drawMarkersWithCache(ctx: CanvasRenderingContext2D, cookedPoints: any[], resources: ResourceCache): void;
+    _createMarkerImage(ctx: CanvasRenderingContext2D, resources: ResourceCache): any;
+    _stampSymbol(): any;
+    _getCacheImageAnchor(w: number, h: number): Point;
+    _getGraidentExtent(points: PointExtent | Extent): PointExtent;
+    _drawVectorMarker(ctx: CanvasRenderingContext2D, point: Point, resources: ResourceCache): void;
+    getFixedExtent(): PointExtent;
+    translate(): any;
+}
+
+declare class VectorPathMarkerSymbolizer extends ImageMarkerSymbolizer {
+    _url: any;
+    static test(symbol: any): boolean;
+    constructor(symbol: any, geometry: any, painter: any);
+    _prepareContext(): void;
+    _getImage(resources: ResourceCache): any;
+}
+
+declare class DrawAltitudeSymbolizer extends PointSymbolizer {
+    dxdy: any;
+    static test(symbol: any, geometry: Geometry): boolean;
+    constructor(symbol: any, geometry: Geometry, painter: Painter);
+    symbolize(ctx: CanvasRenderingContext2D): void;
+    getDxDy(): Point;
+    get2DExtent(): PointExtent;
+    getPlacement(): string;
+    _getPaintParams(dx: any, dy: any): any[];
+    _drawMarkerAltitude(ctx: CanvasRenderingContext2D, point: Point, groundPoint: Point): void;
+    _drawLineAltitude(ctx: CanvasRenderingContext2D, points: any[], groundPoints: any[]): void;
+    _drawLine(ctx: CanvasRenderingContext2D, points: any[], groundPoints: any[]): void;
+    _getStyle(): any;
+}
+
+//# sourceMappingURL=index.d.ts.map
+
+type index_d$2_CanvasSymbolizer = CanvasSymbolizer;
+declare const index_d$2_CanvasSymbolizer: typeof CanvasSymbolizer;
+type index_d$2_DebugSymbolizer = DebugSymbolizer;
+declare const index_d$2_DebugSymbolizer: typeof DebugSymbolizer;
+type index_d$2_DrawAltitudeSymbolizer = DrawAltitudeSymbolizer;
+declare const index_d$2_DrawAltitudeSymbolizer: typeof DrawAltitudeSymbolizer;
+type index_d$2_ImageMarkerSymbolizer = ImageMarkerSymbolizer;
+declare const index_d$2_ImageMarkerSymbolizer: typeof ImageMarkerSymbolizer;
+type index_d$2_PointSymbolizer = PointSymbolizer;
+declare const index_d$2_PointSymbolizer: typeof PointSymbolizer;
+type index_d$2_StrokeAndFillSymbolizer = StrokeAndFillSymbolizer;
+declare const index_d$2_StrokeAndFillSymbolizer: typeof StrokeAndFillSymbolizer;
+type index_d$2_Symbolizer = Symbolizer;
+declare const index_d$2_Symbolizer: typeof Symbolizer;
+type index_d$2_TextMarkerSymbolizer = TextMarkerSymbolizer;
+declare const index_d$2_TextMarkerSymbolizer: typeof TextMarkerSymbolizer;
+type index_d$2_VectorMarkerSymbolizer = VectorMarkerSymbolizer;
+declare const index_d$2_VectorMarkerSymbolizer: typeof VectorMarkerSymbolizer;
+type index_d$2_VectorPathMarkerSymbolizer = VectorPathMarkerSymbolizer;
+declare const index_d$2_VectorPathMarkerSymbolizer: typeof VectorPathMarkerSymbolizer;
+declare namespace index_d$2 {
+  export { index_d$2_CanvasSymbolizer as CanvasSymbolizer, index_d$2_DebugSymbolizer as DebugSymbolizer, index_d$2_DrawAltitudeSymbolizer as DrawAltitudeSymbolizer, index_d$2_ImageMarkerSymbolizer as ImageMarkerSymbolizer, index_d$2_PointSymbolizer as PointSymbolizer, index_d$2_StrokeAndFillSymbolizer as StrokeAndFillSymbolizer, index_d$2_Symbolizer as Symbolizer, index_d$2_TextMarkerSymbolizer as TextMarkerSymbolizer, index_d$2_VectorMarkerSymbolizer as VectorMarkerSymbolizer, index_d$2_VectorPathMarkerSymbolizer as VectorPathMarkerSymbolizer };
+}
+
+declare const TEMP_BBOX: {
+    minx: number;
+    miny: number;
+    maxx: number;
+    maxy: number;
+};
+/**
+ * @classdesc
+ * Painter class for all geometry types except the collection types.
+ * @class
+ * @private
+ */
+declare class Painter extends Class {
+    _drawTime: number;
+    _hasPoint: boolean;
+    _debugSymbolizer: DebugSymbolizer;
+    _renderPoints: Record<string, Point[][]>;
+    _hitPoint: WithUndef<Point>;
+    _sprite: any;
+    _paintParams: any;
+    _cachedParams: any;
+    _unsimpledParams: any;
+    _spriting: boolean;
+    _extent2D: Extent & {
+        _zoom: number;
+    };
+    _fixedExtent: PointExtent;
+    _altAtGL: any;
+    _propAlt: number | number[] | number[][];
+    _projCode: string;
+    _pitched: boolean;
+    _rotated: boolean;
+    _painted: boolean;
+    _containerBbox: typeof TEMP_BBOX;
+    bbox: BBOX;
+    geometry: Geometries;
+    symbolizers: any[];
+    containerOffset: Point;
+    minAltitude: number;
+    maxAltitude: number;
+    /**
+     *  @param geometry - geometry to paint
+     */
+    constructor(geometry: Geometries);
+    _setDrawTime(time: number): this;
+    getRenderBBOX(): BBOX;
+    getMap(): Map;
+    getLayer(): OverlayLayer;
+    /**
+     * create symbolizers
+     */
+    _createSymbolizers(): any[];
+    hasPoint(): boolean;
+    /**
+     * for point symbolizers
+     * @return points to render
+     */
+    getRenderPoints(placement: string): Point[][];
+    /**
+     * for strokeAndFillSymbolizer
+     * @return resources to render vector
+     */
+    getPaintParams(dx: number, dy: number, ignoreAltitude: boolean, disableClip: boolean, ptkey?: string): any[];
+    _pointContainerPoints(points: any, dx: any, dy: any, ignoreAltitude: any, disableClip: any, pointPlacement: any, ptkey?: string): any;
+    _clip(points: Point[], altitude?: number): {
+        points: any;
+        altitude: any;
+    } | {
+        points: Point[];
+        altitude: number;
+        inView: boolean;
+    };
+    /**
+     * interpolate clipped line segs's altitude
+     * @param {Point[]|Point[][]} clipSegs
+     * @param {Point[]|Point[][]} orig
+     * @param {Number|Number[]} altitude
+     * @private
+     */
+    _interpolateSegAlt(clipSegs: any, orig: any, altitude: any): {
+        points: any;
+        altitude: any;
+    };
+    getSymbol(): any;
+    _resetSymbolizersBBOX(): this;
+    paint(extent?: Extent, context?: any, offset?: Point): void;
+    getSprite(resources: any, canvasClass: any): any;
+    isSpriting(): boolean;
+    hitTest(cp: any, tolerance: any): boolean;
+    isHitTesting(): boolean;
+    _prepareShadow(ctx: CanvasRenderingContext2D, symbol: Record<string, any>): void;
+    _eachSymbolizer(fn: any, context?: any): void;
+    get2DExtent(resources?: ResourceCache, out?: Extent): Extent;
+    _computeExtent2D(extent: any): any;
+    _computeFixedExtent(resources: any, extent: any): any;
+    _isDynamicSize(): boolean;
+    _aboveCamera(): boolean;
+    getFixedExtent(): any;
+    setZIndex(change: number): void;
+    show(): void;
+    hide(): void;
+    repaint(): void;
+    /**
+     * refresh symbolizers when symbol changed
+     */
+    refreshSymbol(): void;
+    remove(): void;
+    _removeSymbolizers(): void;
+    /**
+     * delete painter's caches
+     */
+    removeCache(): void;
+    getAltitude(): any;
+    getMinAltitude(): number;
+    getMaxAltitude(): number;
+    _getGeometryAltitude(): number | number[] | number[][];
+    _verifyProjection(): void;
+    _beforePaint(): void;
+    _afterPaint(): void;
+}
+//# sourceMappingURL=Painter.d.ts.map
+
+type ProjectionCommon = typeof CommonProjection;
+/**
+ * @classdesc
+ * Represents a GeometryCollection.
+ * @category geometry
+ * @extends Geometry
+ * @example
+ * var marker = new Marker([0, 0]),
+ *     line = new LineString([[0, 0], [0, 1]]),
+ *     polygon = new Polygon([[0, 0], [0, 1], [1, 3]]);
+ * var collection = new GeometryCollection([marker, line, polygon])
+ *     .addTo(layer);
+ */
+declare class GeometryCollection extends Geometry {
+    _geometries: Geometry[];
+    _pickGeometryIndex: number;
+    _originalSymbol: any;
+    _draggbleBeforeEdit: any;
+    _editing: boolean;
+    /**
+     * @param {Geometry[]} geometries - GeometryCollection's geometries
+     * @param {Object} [options=null] - options defined in [nGeometryCollection]{@link GeometryCollection#options}
+     */
+    constructor(geometries?: Geometry[], opts?: GeometryOptionsType);
+    getContainerExtent(out?: PointExtent): PointExtent;
+    /**
+     * 将多个几何图形设置到几何图形集合
+     * @english
+     * Set new geometries to the geometry collection
+     * @param {Geometry[]} geometries
+     * @return {GeometryCollection} this
+     * @fires GeometryCollection#shapechange
+     */
+    setGeometries(_geometries: Geometry[]): this;
+    /**
+     * 获取几何集合中的几何图形们
+     * @english
+     * Get geometries of the geometry collection
+     * @return {Geometry[]} geometries
+     */
+    getGeometries(): Geometry[];
+    /**
+     * 按顺序对集合中存在的每个几何体执行一次提供的回调。
+     * @english
+     * Executes the provided callback once for each geometry present in the collection in order.
+     * @param  {Function} fn             - a callback function
+     * @param  {*} [context=undefined]   - callback's context
+     * @return {GeometryCollection} this
+     */
+    forEach(fn: (geo: Geometry, index: number) => void, context?: any): this;
+    /**
+     * 创建一个几何集合类，这个集合类的所有元素都通过所提供的函数实现的测试
+     * @english
+     * Creates a GeometryCollection with all elements that pass the test implemented by the provided function.
+     * @param  {Function} fn      - Function to test each geometry
+     * @param  {*} [context=undefined]    - Function's context
+     * @return {GeometryCollection} A GeometryCollection with all elements that pass the test
+     * @example
+     * var filtered = collection.filter(['==', 'foo', 'bar]);
+     * @example
+     * var filtered = collection.filter(geometry => geometry.getProperties().foo === 'bar');
+     */
+    filter(fn?: (geo: Geometry) => boolean, context?: any): GeometryCollection;
+    /**
+     * 按给定偏移平移或移动几何体集合。
+     * @english
+     * Translate or move the geometry collection by the given offset.
+     * @param  {Coordinate} offset - translate offset
+     * @return {GeometryCollection} this
+     */
+    translate(offset: Coordinate): this;
+    /**
+     * 几何图形集合是否为空
+     * @english
+     * Whether the geometry collection is empty
+     * @return {Boolean}
+     */
+    isEmpty(): boolean;
+    /**
+     * 移除本身，如果图层含有的话
+     * @english
+     * remove itself from the layer if any.
+     * @returns {Geometry} this
+     * @fires GeometryCollection#removestart
+     * @fires GeometryCollection#remove
+     * @fires GeometryCollection#removeend
+     */
+    remove(): any;
+    /**
+     * 显示几何集合
+     * @english
+     * Show the geometry collection.
+     * @return {GeometryCollection} this
+     * @fires GeometryCollection#show
+     */
+    show(): this;
+    /**
+     * 隐藏几何集合
+     * @english
+     * Hide the geometry collection.
+     * @return {GeometryCollection} this
+     * @fires GeometryCollection#hide
+     */
+    hide(): this;
+    onConfig(config?: string | Record<string, any>): void;
+    getSymbol(): any;
+    setSymbol(s?: any): this;
+    _setExternSymbol(symbol: any): this;
+    /**
+     * 绑定几何几何到一个图层
+     * @english
+     * bind this geometry collection to a layer
+     * @param  {Layer} layer
+     * @private
+     */
+    _bindLayer(): void;
+    _bindGeometriesToLayer(): void;
+    /**
+     * 检查几何图形的类型是否有效
+     * @english
+     * Check whether the type of geometries is valid
+     * @param  {Geometry[]} geometries - geometries to check
+     * @private
+     */
+    _checkGeometries(geometries: Geometry[]): Geometry[];
+    _checkGeo(geo: Geometry): boolean;
+    _updateCache(): void;
+    _removePainter(): void;
+    _computeCenter(projection: null | ProjectionCommon): Coordinate;
+    _containsPoint(point: Point, t?: number): boolean;
+    _hitTestTolerance(): number;
+    _computeExtent(projection: null | ProjectionCommon): Extent;
+    _computePrjExtent(projection: null | ProjectionCommon): Extent;
+    _computeGeodesicLength(projection: null | ProjectionCommon): number;
+    _computeGeodesicArea(projection: null | ProjectionCommon): number;
+    _exportGeoJSONGeometry(): {
+        type: string;
+        geometries: any[];
+    };
+    _toJSON(options?: any): any;
+    _clearProjection(): void;
+    /**
+     * 如果通过[ConnectorLine]连接，则获取连接点
+     * @english
+     * Get connect points if being connected by [ConnectorLine]{@link ConnectorLine}
+     * @private
+     * @return {Coordinate[]}
+     */
+    _getConnectPoints(): Coordinate[];
+    _getExternalResources(): any;
+    startEdit(opts?: GeometryEditOptionsType): this;
+    endEdit(): this;
+    isEditing(): boolean;
+}
+//# sourceMappingURL=GeometryCollection.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        _removeDomEvents(): void;
+        _ignoreEvent(domEvent: MapEventDomType): boolean;
+        _isEventOutMap(domEvent: MapEventDomType): boolean;
+        _parseEvent(e: MapEventDomType, type?: string): MapEventDataType;
+        _parseEventFromCoord(coord: Coordinate): MapEventDataType;
+        _fireDOMEvent(target: any, e: MapEventDomType, type: string): any;
+        _getEventParams(e: MapEventDomType): MapEventDataType;
+    }
+}
+type MapEventDomType = MouseEvent | TouchEvent | DragEvent;
+type MapEventDataType = {
+    coordinate?: Coordinate;
+    containerPoint?: Point;
+    viewPoint?: Point;
+    point2d?: Point;
+    domEvent?: MouseEvent | DragEvent | TouchEvent;
+    terrain?: {
+        coordinate: Coordinate;
+        altitude: number;
+    } | null;
+};
+
+declare const UIComponent_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Class;
+/**
+ * @classdesc
+ * Base class for all the UI component classes, a UI component is a HTMLElement positioned with geographic coordinate. <br>
+ * It is abstract and not intended to be instantiated.
+ *
+ * @category ui
+ * @abstract
+ * @mixes Eventable
+ * @memberOf ui
+ * @extends Class
+ */
+declare class UIComponent extends UIComponent_base {
+    options: UIComponentOptionsType;
+    _owner: Map | Geometry;
+    _coordinate: Coordinate;
+    _showBySymbolChange: boolean;
+    _mapEventsOn: boolean;
+    __uiDOM: HTMLElement;
+    _pos: Point;
+    _autoPanId: NodeJS.Timeout;
+    _domContentRect: {
+        width: number;
+        height: number;
+    };
+    _size: Size;
+    _resizeObserver: ResizeObserver;
+    /**
+     *  Some instance methods subclasses needs to implement:  <br>
+     *  <br>
+     * 1. Optional, returns the Dom element's position offset  <br>
+     * function getOffset : Point  <br>
+     *  <br>
+     * 2. Method to create UI's Dom element  <br>
+     * function buildOn : HTMLElement  <br>
+     *  <br>
+     * 3 Optional, to provide an event map to register event listeners.  <br>
+     * function getEvents : void  <br>
+     * 4 Optional, a callback when dom is removed.  <br>
+     * function onDomRemove : void  <br>
+     * 5 Optional, a callback when UI Component is removed.  <br>
+     * function onRemove : void  <br>
+     * @param  {Object} options configuration options
+     */
+    constructor(options: UIComponentOptionsType);
+    _appendCustomClass(dom: HTMLElement): this;
+    onAdd(): void;
+    onRemove(): void;
+    onDomRemove(): void;
+    getEvents(): {
+        [key: string]: () => void;
+    };
+    getOwnerEvents(): {
+        [key: string]: () => void;
+    };
+    buildOn(): HTMLElement;
+    /**
+     * Adds the UI Component to a geometry or a map
+     * @param {Geometry|Map} owner - geometry or map to addto.
+     * @returns {ui.UIComponent} this
+     * @fires ui.UIComponent#add
+     */
+    addTo(owner: Geometry | Map): this;
+    /**
+     * Get the map it added to
+     * @return {Map} map instance
+     * @override
+     */
+    getMap(): Map;
+    _collides(): this;
+    _collidesEffect(show: boolean): this;
+    /**
+     * Show the UI Component, if it is a global single one, it will close previous one.
+     * @param {Coordinate} [coordinate=null] - coordinate to show, default is owner's center
+     * @return {ui.UIComponent} this
+     * @fires ui.UIComponent#showstart
+     * @fires ui.UIComponent#showend
+     */
+    show(coordinate: Coordinate): this;
+    /**
+     * Hide the UI Component.
+     * @return {ui.UIComponent} this
+     * @fires ui.UIComponent#hide
+     */
+    hide(): this;
+    /**
+     * Decide whether the ui component is open
+     * @returns {Boolean} true|false
+     */
+    isVisible(): boolean;
+    /**
+     * Remove the UI Component
+     * @return {ui.UIComponent} this
+     * @fires ui.UIComponent#hide
+     * @fires ui.UIComponent#remove
+     */
+    remove(): this;
+    /**
+     * Get pixel size of the UI Component.
+     * @return {Size} size
+     */
+    getSize(): Size;
+    getOwner(): Map | Geometry;
+    /**
+     * get Dom Node
+     * @returns {HTMLDivElement} dom|null
+     */
+    getDOM(): HTMLElement;
+    /**
+     * set Dom Node zIndex
+     *
+     */
+    setZIndex(zIndex: number): this;
+    _roundPoint(point: Point): Point;
+    getPosition(): Point;
+    _getAnimation(): {
+        fade: boolean;
+        scale: boolean;
+        ok: boolean;
+        transition: string;
+    };
+    _getViewPoint(): Point;
+    _meterToPoint(center: Coordinate, altitude: number): number;
+    _autoPan(): void;
+    /**
+     * Measure dom's size
+     * @param  {HTMLElement} dom - element to measure
+     * @return {Size} size
+     * @private
+     */
+    _measureSize(dom: HTMLElement): Size;
+    /**
+     * Remove previous UI DOM if it has.
+     *
+     * @private
+     */
+    _removePrevDOM(): void;
+    /**
+     * generate the cache key to store the singletong UI DOM
+     * @private
+     * @return {String} cache key
+     */
+    _uiDomKey(): string;
+    _singleton(): boolean;
+    _getUIContainer(): PanelDom;
+    _getClassName(): string;
+    _switchMapEvents(to: string): void;
+    _switchEvents(to: string): void;
+    _getDefaultEvents(): {
+        'zooming rotate pitch': () => void;
+        zoomend: () => void;
+        moving: () => void;
+        moveend: () => void;
+        resize: () => void;
+    };
+    _getOwnerEvents(): {
+        [key: string]: (...args: any[]) => void;
+    };
+    onGeometryPositionChange(param: any): void;
+    onMoving(): void;
+    onEvent(): void;
+    onZoomEnd(): void;
+    onResize(): void;
+    onDomSizeChange(): void;
+    _updatePosition(): this;
+    _setPosition(): void;
+    _toCSSTranslate(p: Point): string;
+    _observerDomSize(dom: HTMLElement): this;
+    isSupportZoomFilter(): boolean;
+    onConfig(): this;
+    static isSupport(owner: Geometry | Map): boolean;
+    _bindDomEvents(dom: HTMLElement, to: string): void;
+    _getDomEvents(): {
+        mouseover: () => void;
+        mouseout: () => void;
+    };
+    _configMapPreventWheelScroll(preventWheelScroll: boolean): void;
+    _onDomMouseover(): void;
+    _onDomMouseout(): void;
+}
+
+type UIComponentOptionsType = {
+    eventsPropagation?: boolean;
+    eventsToStop?: string;
+    dx?: number;
+    dy?: number;
+    autoPan?: boolean;
+    autoPanDuration?: number;
+    single?: boolean;
+    animation?: string;
+    animationOnHide?: boolean;
+    animationDuration?: number;
+    pitchWithMap?: boolean;
+    rotateWithMap?: boolean;
+    visible?: boolean;
+    roundPoint?: boolean;
+    collision?: boolean;
+    collisionBufferSize?: number;
+    collisionWeight?: number;
+    collisionFadeIn?: boolean;
+    zIndex?: number;
+    cssName?: string | Array<string>;
+};
+
+/**
+ * @classdesc
+ * Class for info window, a popup on the map to display any useful infomation you wanted.
+ * @category ui
+ * @extends ui.UIComponent
+ * @param {Object} options - options defined in [InfoWindow]{@link InfoWindow#options}
+ * @memberOf ui
+ */
+declare class InfoWindow extends UIComponent {
+    options: InfoWindowOptionsType;
+    _onCloseBtnClick: () => void;
+    _getClassName(): string;
+    /**
+     * Adds the UI Component to a geometry or a map
+     * @param {Geometry|Map} owner - geometry or map to addto.
+     * @returns {UIComponent} this
+     * @fires UIComponent#add
+     */
+    addTo(owner: Geometry | Map): this;
+    /**
+     * Set the content of the infowindow.
+     * @param {String|HTMLElement} content - content of the infowindow.
+     * return {InfoWindow} this
+     * @fires InfoWindow#contentchange
+     */
+    setContent(content: string | HTMLElement): this;
+    /**
+     * Get content of  the infowindow.
+     * @return {String|HTMLElement} - content of the infowindow
+     */
+    getContent(): string | HTMLElement;
+    /**
+     * Set the title of the infowindow.
+     * @param {String|HTMLElement} title - title of the infowindow.
+     * return {InfoWindow} this
+     * @fires InfoWindow#titlechange
+     */
+    setTitle(title: string): this;
+    /**
+     * Get title of  the infowindow.
+     * @return {String|HTMLElement} - content of the infowindow
+     */
+    getTitle(): string;
+    buildOn(): HTMLElement;
+    _replaceTemplate(dom: Element): this;
+    /**
+     * Gets InfoWindow's transform origin for animation transform
+     * @protected
+     * @return {Point} transform origin
+     */
+    getTransformOrigin(): string;
+    getOffset(): Point;
+    show(coordinate: Coordinate): this;
+    getEvents(): {};
+    getOwnerEvents(): {};
+    onRemove(): void;
+    onDomRemove(): void;
+    _onAutoOpen(e: MapEventDataType): void;
+    _rectifyMouseCoordinte(owner: Geometry | Map, mouseCoordinate: Coordinate): Coordinate;
+    _rectifyLineStringMouseCoordinate(lineString: LineString, mouseCoordinate: Coordinate): {
+        dis: number;
+        coordinate: Coordinate;
+    };
+    _getWindowWidth(): string;
+}
+
+type InfoWindowOptionsType = {
+    containerClass?: string;
+    autoPan?: boolean;
+    autoCloseOn?: string;
+    autoOpenOn?: string;
+    width?: string;
+    minHeight?: number;
+    custom?: boolean;
+    title?: string;
+    content?: string | HTMLElement;
+    enableTemplate?: boolean;
+} & UIComponentOptionsType;
+
+declare const Geometry_base: {
+    new (...args: any[]): {
+        _jsonType?: string;
+        getJSONType(): string;
+    };
+    registerJSONType(type: string): void;
+    getJSONClass(type: string): {
+        new (...args: any[]): {
+            _eventMap?: Record<string, {
+                handler: HandlerFn;
+                context: any;
+            }[]>;
+            _eventParent?: any;
+            _eventTarget?: any;
+            on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+            addEventListener(...args: any[]): any;
+            once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+            off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+            removeEventListener(...args: any[]): any;
+            listens(eventType: string, handler?: HandlerFn, context?: any): number;
+            getListeningEvents(): string[];
+            copyEventListeners(target: any): any;
+            fire(eventType: string, param?: BaseEventParamsType): any;
+            _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+            _switch(to: string, eventRecords: EventRecords, context?: any): any;
+            _clearListeners(eventType: string): void;
+            _clearAllListeners(): void;
+            _setEventParent(parent: any): any;
+            _setEventTarget(target: any): any;
+            _fire(eventType: string, param: BaseEventParamsType): any;
+        };
+    } & {
+        new (...args: any[]): {
+            _handlers?: Handler[];
+            addHandler(name: any, handlerClass: any): any;
+            removeHandler(name: any): any;
+            _clearHandlers(): void;
+        };
+    } & typeof Class;
+} & {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & {
+    new (...args: any[]): {
+        _handlers?: Handler[];
+        addHandler(name: any, handlerClass: any): any;
+        removeHandler(name: any): any;
+        _clearHandlers(): void;
+    };
+} & typeof Class;
+/**
+ * 所有几何图形的基类。
+ * 它定义了所有几何图形类共享的通用方法。
+ * 它是抽象的，不打算被实例化而是被扩展。
+ * @english
+ * Base class for all the geometries. <br/>
+ * It defines common methods that all the geometry classes share. <br>
+ * It is abstract and not intended to be instantiated but extended.
+ *
+ * @category geometry
+ * @abstract
+ * @extends Class
+ * @mixes Eventable
+ * @mixes Handlerable
+ * @mixes JSONAble
+ * @mixes ui.Menuable
+ */
+declare class Geometry extends Geometry_base {
+    options: GeometryOptionsType;
+    type: string;
+    _layer: OverlayLayer;
+    _angle: number;
+    _pivot: Coordinate;
+    _id: string;
+    properties: Record<string, any>;
+    _symbol: any;
+    _symbolUpdated: any;
+    _compiledSymbol: any;
+    _symbolHash: any;
+    _textDesc: any;
+    _eventSymbolProperties: any;
+    _sizeSymbol: any;
+    _internalId: number;
+    _extent: Extent;
+    _fixedExtent: PointExtent;
+    _extent2d: PointExtent;
+    _externSymbol: any;
+    _parent: Geometry | GeometryCollection;
+    _silence: boolean;
+    _projCode: string;
+    _painter: Painter;
+    _maskPainter: CollectionPainter | Painter;
+    _dirtyCoords: any;
+    _pcenter: Coordinate;
+    _coordinates: any;
+    _infoWinOptions: InfoWindowOptionsType;
+    _minAlt: number;
+    _maxAlt: number;
+    _isCheck?: boolean;
+    _cPoint?: any;
+    _inCurrentView?: boolean;
+    isPoint?: boolean;
+    _paintAsPath?: () => any;
+    _getPaintParams?: (disableSimplify?: boolean) => any[];
+    _simplified?: boolean;
+    getHoles?(): Array<Array<Coordinate>>;
+    __connectors: Array<Geometry>;
+    getShell?(): Array<Coordinate>;
+    getGeometries?(): Geometry[];
+    getCoordinates?(): Coordinate | Array<Coordinate> | Array<Array<Coordinate>> | Array<Array<Array<Coordinate>>>;
+    setCoordinates?(coordinate: any): this;
+    _computeCenter?(T: any): Coordinate;
+    _computeExtent?(T: any): Extent;
+    onRemove?(): void;
+    _computeGeodesicLength?(T: any): number;
+    _computeGeodesicArea?(T: any): number;
+    getRotateOffsetAngle?(): number;
+    _computePrjExtent?(T: null | ProjectionType): Extent;
+    _updateCache?(): void;
+    onAdd?(): void;
+    constructor(options: GeometryOptionsType);
+    static fromJSON(json: {
+        [key: string]: any;
+    } | Array<{
+        [key: string]: any;
+    }>): Geometry | Array<Geometry>;
+    /**
+     * 获取几何图形第一个坐标点
+     * @english
+     * Returns the first coordinate of the geometry.
+     *
+     * @return {Coordinate} First Coordinate
+     */
+    getFirstCoordinate(): Coordinate;
+    /**
+     * 获取几何图形最后一个坐标点
+     * @english
+     * Returns the last coordinate of the geometry.
+     *
+     * @return {Coordinate} Last Coordinate
+     */
+    getLastCoordinate(): Coordinate;
+    /**
+     * 将几何图形添加到指定图层上
+     * @english
+     * Adds the geometry to a layer
+     * @param {Layer} layer    - layer add to
+     * @param {Boolean} [fitview=false] - automatically set the map to a fit center and zoom for the geometry
+     * @return {Geometry} this
+     * @fires Geometry#add
+     */
+    addTo(layer: OverlayLayer, fitview?: boolean | addGeometryFitViewOptions): this;
+    /**
+     * 获取几何图形所在的图层
+     * @english
+     * Get the layer which this geometry added to.
+     * @returns {Layer} - layer added to
+     */
+    getLayer(): OverlayLayer;
+    /**
+     * 获取几何图形所在的地图对象
+     * @english
+     * Get the map which this geometry added to
+     * @returns {Map} - map added to
+     */
+    getMap(): Map | null;
+    /**
+     * 获取几何图形的id
+     * @english
+     * Gets geometry's id. Id is set by setId or constructor options.
+     * @returns {String|Number} geometry的id
+     */
+    getId(): string;
+    /**
+     * 给几何图形设置id
+     * @english
+     * Set geometry's id.
+     * @param {String} id - new id
+     * @returns {Geometry} this
+     * @fires Geometry#idchange
+     */
+    setId(id: string): this;
+    /**
+     * 获取几何图形的属性
+     * @english
+     * Get geometry's properties. Defined by GeoJSON as [feature's properties]{@link http://geojson.org/geojson-spec.html#feature-objects}.
+     *
+     * @returns {Object} properties
+     */
+    getProperties(): {
+        [key: string]: any;
+    } | null;
+    /**
+     * 给几何图形设置新的属性
+     * Set a new properties to geometry.
+     * @param {Object} properties - new properties
+     * @returns {Geometry} this
+     * @fires Geometry#propertieschange
+     */
+    setProperties(properties: {
+        [key: string]: any;
+    }): this;
+    /**
+     * 获取几何图形的类型,例如“点”,"线"
+     * @english
+     * Get type of the geometry, e.g. "Point", "LineString"
+     * @returns {String} type of the geometry
+     */
+    getType(): string;
+    /**
+     * 获取几何图形的样式
+     * @english
+     * Get symbol of the geometry
+     * @returns {Object} geometry's symbol
+     */
+    getSymbol(): any;
+    /**
+     * 给几何图形设置样式
+     * @english
+     * Set a new symbol to style the geometry.
+     * @param {Object} symbol - new symbol
+     * @see {@tutorial symbol Style a geometry with symbols}
+     * @return {Geometry} this
+     * @fires Geometry#symbolchange
+     */
+    setSymbol(symbol: any): this;
+    /**
+     * 获取样式的哈希值
+     * @english
+     * Get symbol's hash code
+     * @return {String}
+     */
+    getSymbolHash(): string;
+    /**
+     * 更新几何图形当前的样式
+     * @english
+     * Update geometry's current symbol.
+     *
+     * @param  {Object | Array} props - symbol properties to update
+     * @return {Geometry} this
+     * @fires Geometry#symbolchange
+     * @example
+     * var marker = new Marker([0, 0], {
+     *  // if has markerFile , the priority of the picture is greater than the vector and the path of svg
+     *  // svg image type:'path';vector type:'cross','x','diamond','bar','square','rectangle','triangle','ellipse','pin','pie'
+     *    symbol : {
+     *       markerType : 'ellipse',
+     *       markerWidth : 20,
+     *       markerHeight : 30
+     *    }
+     * });
+     * // update symbol's markerWidth to 40
+     * marker.updateSymbol({
+     *     markerWidth : 40
+     * });
+     */
+    updateSymbol(props: any): this;
+    /**
+     * 如果几何图形有文本内容，就获取它
+     * @english
+     * Get geometry's text content if it has
+     * @returns {String}
+     */
+    getTextContent(): any;
+    getTextDesc(): any;
+    /**
+     * 获取几何图形中心点
+     * @english
+     * Get the geographical center of the geometry.
+     *
+     * @returns {Coordinate}
+     */
+    getCenter(): Coordinate;
+    /**
+     * 获取几何图形的包围盒范围
+     * @english
+     * Get the geometry's geographical extent
+     *
+     * @returns {Extent} geometry's extent
+     */
+    getExtent(): Extent;
+    /**
+     * 获取几何图形的屏幕像素范围
+     * @english
+     * Get geometry's screen extent in pixel
+     *
+     * @returns {PointExtent}
+     */
+    getContainerExtent(out?: PointExtent): PointExtent;
+    _getFixedExtent(): PointExtent;
+    get2DExtent(): PointExtent;
+    /**
+     * 获取几何体的像素大小，不同缩放级别的像素大小可能会有所不同。
+     * @english
+     * Get pixel size of the geometry, which may vary in different zoom levels.
+     *
+     * @returns {Size}
+     */
+    getSize(): SizeLike;
+    /**
+     * 几何体是否包含输入容器点
+     * @english
+     * Whehter the geometry contains the input container point.
+     *
+     * @param  {Point|Coordinate} point - input container point or coordinate
+     * @param  {Number} [t=undefined] - tolerance in pixel
+     * @return {Boolean}
+     * @example
+     * var circle = new Circle([0, 0], 1000)
+     *     .addTo(layer);
+     * var contains = circle.containsPoint(new maptalks.Point(400, 300));
+     */
+    containsPoint(containerPoint: Point, t?: number): boolean;
+    _containsPoint(containerPoint: Point, t?: number): boolean;
+    /**
+     * 显示几何图形
+     * @english
+     * Show the geometry.
+     *
+     * @return {Geometry} this
+     * @fires Geometry#show
+     */
+    show(): this;
+    /**
+     * 隐藏几何图形
+     * @english
+     * Hide the geometry
+     *
+     * @return {Geometry} this
+     * @fires Geometry#hide
+     */
+    hide(): this;
+    /**
+     * 几何图形是否可见
+     * @english
+     * Whether the geometry is visible
+     *
+     * @returns {Boolean}
+     */
+    isVisible(): boolean;
+    /**
+     * symbol是否可见
+     * @english
+     * Whether the geometry symbol is visible
+     *
+     * @returns {Boolean}
+     */
+    symbolIsVisible(): boolean;
+    /**
+     * 获取几何图形所在层级，默认是0
+     * @english
+     * Get zIndex of the geometry, default is 0
+     * @return {Number} zIndex
+     */
+    getZIndex(): number;
+    /**
+     * 给几何图形设置新的层级并触发zindexchange事件（将导致层对几何体进行排序并进行渲染）
+     * @english
+     * Set a new zIndex to Geometry and fire zindexchange event (will cause layer to sort geometries and render)
+     * @param {Number} zIndex - new zIndex
+     * @return {Geometry} this
+     * @fires Geometry#zindexchange
+     */
+    setZIndex(zIndex: number): this;
+    /**
+     * 仅将新的zIndex设置为Geometry，而不触发zindexchange事件
+     * 当需要更新许多几何图形的zIndex时，可以用来提高性能
+     * 当更新了N个几何体时，可以将setZIndexSilently与（N-1）个几何体一起使用，并将setZIendex与要排序和渲染的层的最后一个几何体一同使用。
+     * @english
+     * Only set a new zIndex to Geometry without firing zindexchange event. <br>
+     * Can be useful to improve perf when a lot of geometries' zIndex need to be updated. <br>
+     * When updated N geometries, You can use setZIndexSilently with (N-1) geometries and use setZIndex with the last geometry for layer to sort and render.
+     * @param {Number} zIndex - new zIndex
+     * @return {Geometry} this
+     */
+    setZIndexSilently(zIndex: number): this;
+    /**
+     * 将几何图形至于顶层
+     * @english
+     * Bring the geometry on the top
+     * @return {Geometry} this
+     * @fires Geometry#zindexchange
+     */
+    bringToFront(): this;
+    /**
+     * 将几何图形置于底层
+     * @english
+     * Bring the geometry to the back
+     * @return {Geometry} this
+     * @fires Geometry#zindexchange
+     */
+    bringToBack(): this;
+    /**
+     * 按给定偏移平移或移动几何体
+     * @english
+     * Translate or move the geometry by the given offset.
+     *
+     * @param  {Coordinate} offset - translate offset
+     * @return {Geometry} this
+     * @fires Geometry#positionchange
+     * @fires Geometry#shapechange
+     */
+    /**
+     * Translate or move the geometry by the given offset.
+     *
+     * @param  {Number} x - x offset
+     * @param  {Number} y - y offset
+     * @return {Geometry} this
+     * @fires Geometry#positionchange
+     * @fires Geometry#shapechange
+     */
+    translate(x: number | Coordinate, y?: number): this;
+    /**
+     * 闪烁几何图形，按一定的内部显示和隐藏计数次数。
+     * @english
+     * Flash the geometry, show and hide by certain internal for times of count.
+     *
+     * @param {Number} [interval=100]     - interval of flash, in millisecond (ms)
+     * @param {Number} [count=4]          - flash times
+     * @param {Function} [cb=null]        - callback function when flash ended
+     * @param {*} [context=null]          - callback context
+     * @return {Geometry} this
+     */
+    flash(interval: number, count: number, cb: () => void, context: any): this;
+    /**
+     * 返回不包含事件侦听器的几何体的副本。
+     * @english
+     * Returns a copy of the geometry without the event listeners.
+     * @returns {Geometry} copy
+     */
+    copy(): Geometry;
+    /**
+     * 将其自身从图层中移除（如果有的话）。
+     * @english
+     * remove itself from the layer if any.
+     * @returns {Geometry} this
+     * @fires Geometry#removestart
+     * @fires Geometry#remove
+     */
+    remove(): this;
+    /**
+     * 将几何对象导出成geojson对象
+     * @english
+     * Exports [geometry]{@link http://geojson.org/geojson-spec.html#feature-objects} out of a GeoJSON feature.
+     * @return {Object} GeoJSON Geometry
+     */
+    toGeoJSONGeometry(): {
+        [key: string]: any;
+    };
+    /**
+     * 导出geojson对象中的一个feature
+     * @english
+     * Exports a GeoJSON feature.
+     * @param {Object} [opts=null]              - export options
+     * @param {Boolean} [opts.geometry=true]    - whether export geometry
+     * @param {Boolean} [opts.properties=true]  - whether export properties
+     * @returns {Object} GeoJSON Feature
+     */
+    toGeoJSON(opts?: {
+        [key: string]: any;
+    }): {
+        [key: string]: any;
+    };
+    /**
+     * 从几何体中导出一个配置文件json。
+     * 除了导出特性对象，概要文件json还包含符号、构造选项和信息窗口信息。
+     * 配置文件json可以存储在其他地方，稍后用于重现几何图形
+     * 由于函数的序列化问题，概要文件json中不包括事件侦听器和上下文菜单
+     * @english
+     * Export a profile json out of the geometry. <br>
+     * Besides exporting the feature object, a profile json also contains symbol, construct options and infowindow info.<br>
+     * The profile json can be stored somewhere else and be used to reproduce the geometry later.<br>
+     * Due to the problem of serialization for functions, event listeners and contextmenu are not included in profile json.
+     * @example
+     *     // an example of a profile json.
+     * var profile = {
+            "feature": {
+                  "type": "Feature",
+                  "id" : "point1",
+                  "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+                  "properties": {"prop0": "value0"}
+            },
+            //construct options.
+            "options":{
+                "draggable" : true
+            },
+            //symbol
+            "symbol":{
+                "markerFile"  : "http://foo.com/icon.png",
+                "markerWidth" : 20,
+                "markerHeight": 20
+            },
+            //infowindow info
+            "infowindow" : {
+                "options" : {
+                    "style" : "black"
+                },
+                "title" : "this is a infowindow title",
+                "content" : "this is a infowindow content"
+            }
+        };
+     * @param {Object}  [options=null]          - export options
+     * @param {Boolean} [opts.geometry=true]    - whether export feature's geometry
+     * @param {Boolean} [opts.properties=true]  - whether export feature's properties
+     * @param {Boolean} [opts.options=true]     - whether export construct options
+     * @param {Boolean} [opts.symbol=true]      - whether export symbol
+     * @param {Boolean} [opts.infoWindow=true]  - whether export infowindow
+     * @return {Object} profile json object
+     */
+    toJSON(options?: {
+        [key: string]: any;
+    }): {
+        [key: string]: any;
+    };
+    /**
+     * 获取几何图形的地理长度
+     * @english
+     * Get the geographic length of the geometry.
+     * @returns {Number} geographic length, unit is meter
+     */
+    getLength(): number;
+    /**
+     * 获取几何图形的面积
+     * @english
+     * Get the geographic area of the geometry.
+     * @returns {Number} geographic area, unit is sq.meter
+     */
+    getArea(): number;
+    /**
+     * 按给定角度围绕轴心点旋转几何体
+     * @english
+     * Rotate the geometry of given angle around a pivot point
+     * @param {Number} angle - angle to rotate in degree
+     * @param {Coordinate} [pivot=null]  - optional, will be the geometry's center by default
+     * @returns {Geometry} this
+     */
+    rotate(angle: number, pivot?: Coordinate): this;
+    _rotatePrjCoordinates(coordinates: Coordinate | Array<Coordinate>): Coordinate | Coordinate[];
+    isRotated(): boolean;
+    /**
+     * 获取连线的连接点
+     * @english
+     * Get the connect points for [ConnectorLine]{@link ConnectorLine}
+     * @return {Coordinate[]} connect points
+     * @private
+     */
+    _getConnectPoints(): Coordinate[];
+    _initOptions(options: GeometryOptionsType): void;
+    _bindLayer(layer: OverlayLayer): void;
+    _prepareSymbol(symbol: any): any;
+    _checkAndCopySymbol(symbol: any): any;
+    _getSymbol(): any;
+    /**
+     * 将外部符号设置为几何体，例如VectorLayer的setStyle中的样式
+     * @english
+     * Sets a external symbol to the geometry, e.g. style from VectorLayer's setStyle
+     * @private
+     * @param {Object} symbol - external symbol
+     */
+    _setExternSymbol(symbol: any): this;
+    _getInternalSymbol(): any;
+    _getPrjExtent(): Extent;
+    _unbind(): void;
+    _getInternalId(): number;
+    _setInternalId(id: number): void;
+    _getMeasurer(): any;
+    _getProjection(): WithNull<ProjectionType>;
+    _verifyProjection(): void;
+    _getExternalResources(): string[];
+    _getPainter(): any;
+    _getMaskPainter(): CollectionPainter | Painter;
+    _removePainter(): void;
+    _paint(extent?: Extent): void;
+    _clearCache(): void;
+    _clearProjection(): void;
+    _repaint(): void;
+    onHide(): void;
+    onShapeChanged(): void;
+    onPositionChanged(): void;
+    onSymbolChanged(): void;
+    _genSizeSymbol(): void;
+    _getSizeSymbol(symbol: any): any;
+    _getCompiledSymbol(): any;
+    onConfig(conf: any): void;
+    /**
+     * 将父对象设置为几何体，通常是“多重多边形”、“几何集合”等
+     * @english
+     * Set a parent to the geometry, which is usually a MultiPolygon, GeometryCollection, etc
+     * @param {GeometryCollection} geometry - parent geometry
+     * @private
+     */
+    _setParent(geometry?: Geometry | GeometryCollection): void;
+    _getParent(): any;
+    _fireEvent(eventName: string, param?: BaseEventParamsType): void;
+    _toJSON(options?: any): any;
+    _exportGraphicOptions(options: any): any;
+    _exportGeoJSONGeometry(): any;
+    _exportProperties(): any;
+    _hitTestTolerance(): number;
+    _getAltitude(): number | number[] | number[][];
+    getAltitude(): number | number[] | number[][];
+    hasAltitude(): boolean;
+    setAltitude(alt: number): this;
+    _genMinMaxAlt(): void;
+    getMinAltitude(): number;
+    getMaxAltitude(): number;
+    _clearAltitudeCache(): Geometry;
+}
+type GeometryOptionsType = {
+    id?: string;
+    visible?: boolean;
+    interactive?: boolean;
+    editable?: boolean;
+    cursor?: string;
+    antiMeridian?: boolean;
+    defaultProjection?: string;
+    measure?: string;
+    draggable?: boolean;
+    dragShadow?: boolean;
+    dragOnAxis?: string;
+    dragOnScreenAxis?: boolean;
+    zIndex?: number;
+    symbol?: any;
+    properties?: {
+        [key: string]: any;
+    };
+};
+
+type FunctionTypeExponential = {
+    stops: Array<Array<number>>;
+    base?: number;
+    property?: string;
+    default?: number;
+    type: 'exponential';
+};
+type FunctionTypeIdentity = {
+    property: string;
+    default?: any;
+    type: 'identity';
+};
+type FunctionTypeInterval = {
+    stops: Array<[number, any]>;
+    property?: string;
+    default?: any;
+    type: 'interval';
+};
+type FunctionTypeCategorical = {
+    stops: Array<[number, any]>;
+    property?: string;
+    default?: any;
+    type: 'categorical';
+};
+type FunctionTypeColor_Interpolate = {
+    stops: Array<[number, string]>;
+    property?: string;
+    default?: any;
+    type: 'color-interpolate';
+};
+type SymbolBooleanType = boolean | FunctionTypeIdentity | FunctionTypeInterval | FunctionTypeCategorical;
+type SymbolNumberType = number | FunctionTypeExponential | FunctionTypeIdentity | FunctionTypeInterval | FunctionTypeCategorical;
+type SymbolColorType = string | Array<number> | FunctionTypeColor_Interpolate;
+type SymbolCommon = {
+    visible?: SymbolBooleanType;
+    opacity?: SymbolNumberType;
+    shadowBlur?: SymbolNumberType;
+    shadowColor?: SymbolColorType;
+    shadowOffsetX?: SymbolNumberType;
+    shadowOffsetY?: SymbolNumberType;
+};
+type MarkerCommonSymbol = {
+    markerOpacity?: SymbolNumberType;
+    markerWidth?: SymbolNumberType;
+    markerHeight?: SymbolNumberType;
+    markerDx?: SymbolNumberType;
+    markerDy?: SymbolNumberType;
+    markerHorizontalAlignment?: 'left' | 'middle' | 'right';
+    markerVerticalAlignment?: 'top' | 'middle' | 'bottom';
+    markerPlacement?: 'point' | 'vertex' | 'line' | 'vertex-first' | 'vertex-last';
+    markerRotation?: number;
+};
+type FileMarkerSymbol = {
+    markerFile: string;
+} & MarkerCommonSymbol & SymbolCommon;
+type VectorMarkerSymbol = {
+    markerType: 'ellipse' | 'cross' | 'x' | 'diamond' | 'bar' | 'square' | 'rectangle' | 'triangle' | 'pin' | 'pie';
+    markerFill?: SymbolColorType;
+    markerFillPatternFile?: string;
+    markerFillOpacity?: number;
+    markerLineColor?: SymbolColorType;
+    markerLineWidth?: number;
+    markerLineOpacity?: number;
+    markerLineDasharray?: Array<number>;
+    markerLinePatternFile?: string;
+} & MarkerCommonSymbol & SymbolCommon;
+type SVGPathItem = {
+    path: string;
+    fill?: string;
+};
+type PathMarkerSymbol = {
+    markerType: 'path';
+    markerPath: string | Array<SVGPathItem>;
+    markerPathWidth: number;
+    markerPathHeight: number;
+} & MarkerCommonSymbol & SymbolCommon;
+type TextSymbol = {
+    textName?: string;
+    textPlacement?: 'point' | 'vertex' | 'line' | 'vertex-first' | 'vertex-last';
+    textFaceName?: string;
+    textFont?: string;
+    textWeight?: string;
+    textStyle?: string;
+    textSize?: SymbolNumberType;
+    textFill?: SymbolColorType;
+    textOpacity?: SymbolNumberType;
+    textHaloFill?: SymbolColorType;
+    textHaloRadius?: SymbolNumberType;
+    textHaloOpacity?: SymbolNumberType;
+    textWrapWidth?: number;
+    textWrapCharacter?: string;
+    textLineSpacing?: number;
+    textHorizontalAlignment?: 'left' | 'middle' | 'right';
+    textVerticalAlignment?: 'top' | 'middle' | 'bottom';
+    textAlign?: 'left' | 'right' | 'center';
+    textRotation?: number;
+    textDx?: SymbolNumberType;
+    textDy?: SymbolNumberType;
+};
+type LineSymbol = {
+    lineColor?: SymbolColorType;
+    lineWidth?: SymbolNumberType;
+    lineDasharray?: Array<number>;
+    lineOpacity?: SymbolNumberType;
+    lineJoin?: 'round' | 'bevel' | 'miter';
+    lineCap?: 'butt' | 'round' | 'square';
+    linePatternFile?: string;
+    lineDx?: SymbolNumberType;
+    lineDy?: SymbolNumberType;
+};
+type FillSymbol = {
+    polygonFill?: SymbolColorType;
+    polygonOpacity?: SymbolNumberType;
+    polygonPatternFile?: string;
+} & LineSymbol;
+type AnyMarkerSymbol = FileMarkerSymbol | VectorMarkerSymbol | PathMarkerSymbol | TextSymbol;
+type AnySymbol = FillSymbol | LineSymbol | TextSymbol | FileMarkerSymbol | VectorMarkerSymbol | PathMarkerSymbol;
+
+declare const Marker_base: {
+    new (...args: any[]): {
+        _coordinates: Coordinate;
+        _pcenter: Coordinate;
+        _dirtyCoords: boolean;
+        getMap?(): Map;
+        _getProjection?(): {
+            code: string;
+            is(code: string): boolean;
+            project(p: Coordinate): Coordinate;
+            unproject(p: Coordinate): Coordinate;
+            projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            isSphere(): boolean;
+            isOutSphere(pcoord: Coordinate): boolean;
+            wrapCoord(pcoord: Coordinate): Coordinate;
+            getCircum(): Record<string, number>;
+            getSphereExtent(): Extent;
+        };
+        onPositionChanged?(): void;
+        _verifyProjection?(): void;
+        _clearCache?(): void;
+        getCoordinates(): Coordinate;
+        setCoordinates(coordinates: Coordinate | number[]): any;
+        _getCenter2DPoint(res?: number): Point;
+        _getPrjCoordinates(): Coordinate;
+        _setPrjCoordinates(pcenter: Coordinate): void;
+        _updateCache(): void;
+        _clearProjection(): void;
+        _computeCenter(): Coordinate;
+    };
+} & typeof Geometry;
+/**
+ * @classdesc
+ * Represents a Point type Geometry.
+ * @category geometry
+ * @extends Geometry
+ * @mixes CenterMixin
+ * @example
+ * var marker = new Marker([100, 0], {
+ *     'id' : 'marker0',
+ *     'symbol' : {
+ *         'markerFile'  : 'foo.png',
+ *         'markerWidth' : 20,
+ *         'markerHeight': 20,
+ *     },
+ *     'properties' : {
+ *         'foo' : 'value'
+ *     }
+ * });
+ */
+declare class Marker extends Marker_base {
+    isPoint: boolean;
+    /**
+     * @param {Coordinate} coordinates      - coordinates of the marker
+     * @param {Object} [options=null]       - construct options defined in [Marker]{@link Marker#options}
+     */
+    constructor(coordinates: MarkerCoordinatesType, options?: MarkerOptionsType);
+    getOutline(): Marker;
+    setSymbol(symbol: AnyMarkerSymbol): this;
+    _getSizeSymbol(symbol: any): any;
+    _setExternSymbol(symbol: any): this;
+    _isDynamicSize(): boolean;
+    _getFixedExtent(): PointExtent;
+    _isVectorMarker(): boolean;
+    /**
+     * 可以编辑，只能编辑带有矢量符号、矢量路径符号或图像符号的标记。
+     * @english
+     * Can be edited, only marker with a vector symbol, vector path symbol or a image symbol can be edited.
+     * @return {Boolean}
+     * @private
+     */
+    _canEdit(): boolean;
+    _containsPoint(point: Point, t?: number): boolean;
+    _computeExtent(): Extent;
+    _computePrjExtent(): Extent;
+    _computeGeodesicLength(): number;
+    _computeGeodesicArea(): number;
+    _getSprite(resources: any, canvasClass: any): any;
+}
+
+type MarkerCoordinatesType = Coordinate | Array<number>;
+type MarkerOptionsType = GeometryOptionsType & {
+    hitTestForEvent?: boolean;
+    collision?: boolean;
+    symbol?: AnyMarkerSymbol | Array<AnyMarkerSymbol>;
+};
+
+type animateShowCallback = (frame: Frame, currentCoord: Coordinate) => void;
+type PathCoordinates = Array<Coordinate>;
+type PathsCoordinates = Array<PathCoordinates>;
+type MultiPathsCoordinates = Array<PathsCoordinates>;
+/**
+ * 一个抽象类Path，包含Path几何类的常用方法，例如LineString、Polygon
+ * @english
+ * An abstract class Path containing common methods for Path geometry classes, e.g. LineString, Polygon
+ * @abstract
+ * @category geometry
+ * @extends Geometry
+ */
+declare class Path extends Geometry {
+    _coordinates: Coordinate[];
+    _showPlayer: Player;
+    _animIdx: number;
+    _animLenSoFar: number;
+    _animTailRatio: number;
+    _prjAniShowCenter: Coordinate;
+    _aniShowCenter: Coordinate;
+    _tempCoord: Coordinate;
+    _tempPrjCoord: Point;
+    _simplified: boolean;
+    _prjCoords: Array<Coordinate>;
+    hasHoles?(): boolean;
+    _getPrjHoles?(): Array<Array<Coordinate>>;
+    /**
+     * 动画展示线条
+     * @english
+     * Show the linestring with animation
+     * @param  {Object} [options=null] animation options
+     * @param  {Number} [options.duration=1000] duration
+     * @param  {String} [options.easing=out] animation easing
+     * @param  {Function} [cb=null] callback function in animation, function parameters: frame, currentCoord
+     * @example
+     *  line.animateShow({
+     *    duration : 2000,
+     *    easing : 'linear'
+     *  }, function (frame, currentCoord) {
+     *    //frame is the animation frame
+     *    //currentCoord is current coordinate of animation
+     *  });
+     * @return {LineString}         this
+     */
+    animateShow(options?: (AnimationOptionsType | animateShowCallback), cb?: animateShowCallback): Player | undefined;
+    _drawAnimShowFrame(t: number, duration: number, length: number, coordinates: Coordinate[], prjCoords: Array<Coordinate>): Coordinate;
+    _getCenterInExtent(extent: Extent, coordinates: Coordinate[], clipFn: any): Coordinate;
+    /**
+     * 将投影坐标转换为视点
+     * @english
+     * Transform projected coordinates to view points
+     * @param  {Coordinate[]} prjCoords           - projected coordinates
+     * @param  {Boolean} disableSimplify          - whether to disable simplify\
+     * @param  {Number} zoom                      - 2d points' zoom level
+     * @returns {Point[]}
+     * @private
+     */
+    _getPath2DPoints(prjCoords: PathCoordinates | PathsCoordinates, disableSimplify: boolean, res?: number): Point | Array<Point> | Array<Array<Point>>;
+    _shouldSimplify(): boolean;
+    _setPrjCoordinates(prjPoints: PathCoordinates): void;
+    _getPrjCoordinates(): PathCoordinates;
+    _updateCache(): void;
+    _clearProjection(): void;
+    _projectCoords(points: PathCoordinates | PathsCoordinates): PathCoordinates | PathsCoordinates;
+    _unprojectCoords(prjPoints: PathCoordinates | PathsCoordinates): PathCoordinates | PathsCoordinates;
+    _computeCenter(): null | Coordinate;
+    _computeExtent(_?: any): Extent;
+    _computePrjExtent(_?: any): Extent;
+    _get2DLength(): number;
+    _hitTestTolerance(): number;
+    _coords2Extent(coords: PathsCoordinates, proj?: CommonProjectionType): Extent;
+}
+
+type PathOptionsType = GeometryOptionsType & {
+    'smoothness'?: boolean;
+    'enableClip'?: boolean;
+    'enableSimplify'?: boolean;
+    'simplifyTolerance'?: number;
+    'symbol'?: FillSymbol | LineSymbol;
+};
+
+/**
+ * 表示LineString类型的Geometry。
+ * @english
+ * Represents a LineString type Geometry.
+ * @category geometry
+ * @extends Path
+ * @example
+ * var line = new LineString(
+ *     [
+ *         [121.45942, 31.24123],
+ *         [121.46371, 31.24226],
+ *         [121.46727, 31.23870],
+ *         [121.47019, 31.24145]
+ *     ]
+ * ).addTo(layer);
+ */
+declare class LineString extends Path {
+    /**
+     * @param {Coordinate[]|Number[][]} coordinates - coordinates of the line string
+     * @param {Object} [options=null] - construct options defined in [LineString]{@link LineString#options}
+     */
+    constructor(coordinates: LineStringCoordinatesType, options?: LineStringOptionsType);
+    getOutline(): any;
+    /**
+     * 给线段设置坐标
+     * @english
+     * Set new coordinates to the line string
+     * @param {Coordinate[]|Number[][]} coordinates - new coordinates
+     * @fires LineString#shapechange
+     * @return {LineString} this
+     */
+    setCoordinates(coordinates: Array<Coordinate> | Array<Array<number>>): this;
+    /**
+     * 获取线段的坐标
+     * @english
+     * Get coordinates of the line string
+     * @return {Coordinate[]|Number[][]} coordinates
+     */
+    getCoordinates(): Coordinate[];
+    /**
+     * 获取具有给定范围的线串的交点的中心
+     * @english
+     * Get center of linestring's intersection with give extent
+     * @example
+     *  const extent = map.getExtent();
+     *  const center = line.getCenterInExtent(extent);
+     * @param {Extent} extent
+     * @return {Coordinate} center, null if line doesn't intersect with extent
+     */
+    getCenterInExtent(extent: Extent): Coordinate;
+    _computeGeodesicLength(measurer: any): number;
+    _computeGeodesicArea(): number;
+}
+
+type LineStringCoordinatesType = Array<Coordinate> | Array<Array<number>>;
+type LineStringOptionsType = PathOptionsType & {
+    arrowStyle?: 'classic' | [number, number];
+    arrowPlacement?: 'vertex-first' | 'vertex-last' | 'vertex-firstlast' | 'point';
+    symbol?: LineSymbol | Array<AnySymbol>;
+};
+
+/**
+ * @classdesc
+ * Geometry class for polygon type
+ * @category geometry
+ * @extends Path
+ * @example
+ * var polygon = new Polygon(
+ *      [
+ *          [
+ *              [121.48053653961283, 31.24244899384889],
+ *              [121.48049362426856, 31.238559229494186],
+ *              [121.49032123809872, 31.236210614999653],
+ *              [121.49366863494917, 31.242926029397037],
+ *              [121.48577221160967, 31.243880093267567],
+ *              [121.48053653961283, 31.24244899384889]
+ *          ]
+ *      ]
+ *  ).addTo(layer);
+ */
+type PolygonCoordinatesType = Array<Array<Coordinate>> | Array<Array<number>>;
+type RingCoordinates = PathCoordinates;
+type RingsCoordinates = PathsCoordinates;
+declare class Polygon extends Path {
+    _holes: RingsCoordinates;
+    _prjHoles: RingsCoordinates;
+    _prjShell: RingCoordinates;
+    _getShell?(): RingCoordinates;
+    /**
+     * @param {Number[][]|Number[][][]|Coordinate[]|Coordinate[][]} coordinates - coordinates, shell coordinates or all the rings.
+     * @param {Object} [options=null] - construct options defined in [Polygon]{@link Polygon#options}
+     */
+    constructor(coordinates: PolygonCoordinatesType | LineStringCoordinatesType, options?: PolygonOptionsType);
+    getOutline(): null | Polygon;
+    /**
+     * 设置多边形坐标
+     * @english
+     * Set coordinates to the polygon
+     *
+     * @param {Number[][]|Number[][][]|Coordinate[]|Coordinate[][]} coordinates - new coordinates
+     * @return {Polygon} this
+     * @fires Polygon#shapechange
+     */
+    setCoordinates(coordinates: PolygonCoordinatesType | LineStringCoordinatesType): this;
+    /**
+     * 获取多边形坐标
+     * @english
+     * Gets polygons's coordinates
+     *
+     * @returns {Coordinate[][]}
+     */
+    getCoordinates(): RingsCoordinates;
+    /**
+     * 获取具有给定范围的线串的交点的中心
+     * @english
+     * Get center of linestring's intersection with give extent
+     * @example
+     *  const extent = map.getExtent();
+     *  const center = line.getCenterInExtent(extent);
+     * @param {Extent} extent
+     * @return {Coordinate} center, null if line doesn't intersect with extent
+     */
+    getCenterInExtent(extent: Extent): Coordinate;
+    /**
+     * 获取多边形的外壳坐标
+     * @english
+     * Gets shell's coordinates of the polygon
+     *
+     * @returns {Coordinate[]}
+     */
+    getShell(): RingCoordinates;
+    /**
+     * 获取多边形的洞的坐标（如果有）。
+     * @english
+     * Gets holes' coordinates of the polygon if it has.
+     * @returns {Coordinate[][]}
+     */
+    getHoles(): RingsCoordinates;
+    /**
+     * 判断多边形是否带有洞
+     * @english
+     * Whether the polygon has any holes inside.
+     *
+     * @returns {Boolean}
+     */
+    hasHoles(): boolean;
+    _projectRings(): void;
+    _setPrjCoordinates(prjCoords: RingCoordinates): void;
+    _cleanRing(ring: RingCoordinates): void;
+    /**
+     * 检查环是否有效
+     * @english
+     * Check if ring is valid
+     * @param  {*} ring ring to check
+     * @return {Boolean} is ring a closed one
+     * @private
+     */
+    _checkRing(ring: RingCoordinates): boolean;
+    /**
+     * 如果第一个坐标与最后一个坐标相等，则删除最后一个座标。
+     * @english
+     * If the first coordinate is equal with the last one, then remove the last coordinates.
+     * @private
+     */
+    _trimRing(ring: RingCoordinates): RingCoordinates;
+    /**
+     * 如果第一个坐标与最后一个不同，则复制第一个坐标并添加到环中。
+     * @english
+     * If the first coordinate is different with the last one, then copy the first coordinates and add to the ring.
+     * @private
+     */
+    _copyAndCloseRing(ring: RingCoordinates): RingCoordinates;
+    _getPrjShell(): RingCoordinates;
+    _getPrjHoles(): RingsCoordinates;
+    _computeGeodesicLength(measurer: any): number;
+    _computeGeodesicArea(measurer: any): number;
+    _updateCache(): void;
+    _clearCache(): any;
+    _clearProjection(): void;
+}
+
+type PolygonOptionsType = PathOptionsType & {
+    'symbol'?: FillSymbol | Array<AnySymbol>;
+};
+
+/**
+ * MultiPoint、MultiLineString和MultiPolygon的父类
+ * @english
+ * The parent class for MultiPoint, MultiLineString and MultiPolygon
+ * @category geometry
+ * @abstract
+ * @extends {GeometryCollection}
+ */
+type MultiGeometryCoordinates = PathCoordinates | PathsCoordinates | MultiPathsCoordinates;
+type SingleGeometryCreateCoordinates = MarkerCoordinatesType | LineStringCoordinatesType | PolygonCoordinatesType;
+type MultiGeometryCreateCoordinates = Array<SingleGeometryCreateCoordinates>;
+type MultiGeometryData = Array<SingleGeometryCreateCoordinates | Geometry>;
+type GeometryClass<T> = (new (coordinates: SingleGeometryCreateCoordinates, options: Record<string, any>) => T);
+declare class MultiGeometry extends GeometryCollection {
+    GeometryType: GeometryClass<Geometry>;
+    /**
+     * @param  {Class} geoType      Type of the geometry
+     * @param  {String} type        type in String, e.g. "MultiPoint", "MultiLineString"
+     * @param  {Geometry[]} data    data
+     * @param  {Object} [options=null] configuration options
+     */
+    constructor(geoType: GeometryClass<Geometry>, type: string, data: MultiGeometryData, options?: GeometryOptionsType);
+    /**
+     * 获取集合中得坐标
+     * @english
+     * Get coordinates of the collection
+     * @return {Coordinate[]|Coordinate[][]|Coordinate[][][]} coordinates
+     */
+    getCoordinates(): MultiGeometryCoordinates;
+    /**
+     * 设置集合得坐标
+     * @english
+     * Set new coordinates to the collection
+     * @param {Coordinate[]|Coordinate[][]|Coordinate[][][]} coordinates
+     * @returns {Geometry} this
+     * @fires maptalk.Geometry#shapechange
+     */
+    setCoordinates(coordinates: MultiGeometryCreateCoordinates): this;
+    _initData(data: MultiGeometryData): void;
+    _checkGeo(geo: Geometry): boolean;
+    _exportGeoJSONGeometry(): {
+        type: string;
+        coordinates: any;
+    };
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+    };
+}
+
+/**
+ * @classdesc
+ * Represents a Geometry type of MultiPoint.
+ * @category geometry
+ * @extends MultiGeometry
+ * @example
+ * var multiPoint = new MultiPoint(
+ *     [
+ *         [121.5080881906138, 31.241128104458117],
+ *         [121.50804527526954, 31.237238340103413],
+ *         [121.5103728890997, 31.23888972560888]
+ *     ]
+ * ).addTo(layer);
+ */
+declare class MultiPoint extends MultiGeometry {
+    /**
+     * @param {Number[][]|Coordinate[]|Marker[]} data - construct data, coordinates or an array of markers
+     * @param {Object} [options=null] - options defined in [nMultiPoint]{@link MultiPoint#options}
+     */
+    constructor(data: Array<MarkerCoordinatesType>, opts?: MarkerOptionsType);
+    /**
+     * 找到给定坐标的最近点
+     * @english
+     * Find the closet point to the give coordinate
+     * @param {Coordinate} coordinate coordinate
+     * @returns {Coordinate} coordinate
+     */
+    findClosest(coordinate: Coordinate): Coordinate;
+}
+//# sourceMappingURL=MultiPoint.d.ts.map
+
+/**
+ * @classdesc
+ * An abstract class for MultiPolygon and MultiLineString
+ * @category geometry
+ * @extends MultiGeometry
+ */
+declare class MultiPath extends MultiGeometry {
+    /**
+     * 获取（MultiLineString或MultiPolygon）与给定范围的交点的中心
+     * @english
+     * Get center of (MultiLineString or MultiPolygon)'s intersection with give extent
+     * @example
+     *  const extent = map.getExtent();
+     *  const center = geometry.getCenterInExtent(extent);
+     * @param {Extent} extent
+     * @return {Coordinate} center, null if line doesn't intersect with extent
+     */
+    getCenterInExtent(extent: Extent): null | Coordinate;
+}
+//# sourceMappingURL=MultiPath.d.ts.map
+
+/**
+ * @classdesc
+ * Represents a Geometry type of MultiLineString
+ * @category geometry
+ * @extends MultiGeometry
+ * @example
+ * var multiLineString = new MultiLineString(
+ *      [
+ *          [
+ *              [121.5289450479131, 31.2420083925986],
+ *              [121.52860172515919, 31.238926401171824]
+ *          ],
+ *          [
+ *              [121.53091915374796, 31.241898323208233],
+ *              [121.53104789978069, 31.23859618183896]
+ *          ],
+ *          [
+ *               [121.5324641061405, 31.241898323208233],
+ *               [121.53242119079626, 31.239146546752256]
+ *           ]
+ *       ],
+ *       {
+ *           symbol:{
+ *               'lineColor' : '#000000',
+ *               'lineWidth' : 5,
+ *               'lineOpacity' : 1
+ *           },
+ *          draggable:true
+ *      }
+ * ).addTo(layer);
+ */
+declare class MultiLineString extends MultiPath {
+    /**
+     * @param {Number[][][]|Coordinate[][]|LineString[]} data - construct data, coordinates or an array of linestrings
+     * @param {Object} [options=null]           - options defined in [MultiLineString]{@link MultiLineString#options}
+     */
+    constructor(data: Array<LineStringCoordinatesType>, options?: LineStringOptionsType);
+}
+//# sourceMappingURL=MultiLineString.d.ts.map
+
+/**
+ * @classdesc
+ * Represents a Geometry type of MultiPolygon
+ * @category geometry
+ * @extends MultiGeometry
+ * @example
+ * var multiPolygon = new MultiPolygon(
+ *       [
+ *           [
+ *               [
+ *                   [121.55074604278596, 31.242008515751614],
+ *                   [121.55074604278596, 31.23914637638951],
+ *                   [121.55349262481711, 31.23914637638951],
+ *                   [121.55349262481711, 31.24134802974913],
+ *                   [121.5518618417361, 31.241384723537074],
+ *                   [121.55074604278596, 31.242008515751614]
+ *               ]
+ *           ],
+ *           [
+ *               [
+ *                   [121.5543080163576, 31.241054478932387],
+ *                   [121.5543938470461, 31.240100432478293],
+ *                   [121.55555256134048, 31.240173821009137],
+ *                   [121.55542381530773, 31.240981091085693],
+ *                   [121.5543080163576, 31.241054478932387]
+ *               ]
+ *           ]
+ *
+ *       ],
+ *       {
+ *           symbol:{
+ *               'lineColor' : '#000000',
+ *               'lineWidth' : 2,
+ *               'lineDasharray' : null,//线形
+ *               'lineOpacity' : 1,
+ *               'polygonFill' : 'rgb(255, 0, 0)',
+ *               'polygonOpacity' : 0.8
+ *           },
+ *           draggable:true
+ * }).addTo(layer);
+ */
+declare class MultiPolygon extends MultiPath {
+    /**
+     * @param {Number[][][][]|Coordinate[][][]|Polygon[]} data - construct data, coordinates or an array of polygons
+     * @param {Object} [options=null]           - options defined in [MultiPolygon]{@link MultiPolygon#options}
+     */
+    constructor(data: Array<PolygonCoordinatesType>, opts?: PolygonOptionsType);
+}
+//# sourceMappingURL=MultiPolygon.d.ts.map
+
+/**
+ * GeoJSON工具类
+ * @english
+ * GeoJSON utilities
+ * @category geometry
+ */
+declare const GeoJSON: {
+    /**
+     * 将一个或多个GeoJSON对象转换为几何体
+     * @english
+     * Convert one or more GeoJSON objects to geometry
+     * @param  {String|Object|Object[]} geoJSON - GeoJSON objects or GeoJSON string
+     * @param  {Function} [foreachFn=undefined] - callback function for each geometry
+     * @return {Geometry|Geometry[]} a geometry array when input is a FeatureCollection
+     * @example
+     * var collection = {
+     *      "type": "FeatureCollection",
+     *      "features": [
+     *          { "type": "Feature",
+     *            "geometry": {"type": "Point", "coordinates": [102.0, 0.5]},
+     *            "properties": {"prop0": "value0"}
+     *           },
+     *           { "type": "Feature",
+     *             "geometry": {
+     *                 "type": "LineString",
+     *                 "coordinates": [
+     *                     [102.0, 0.0], [103.0, 1.0], [104.0, 0.0], [105.0, 1.0]
+     *                 ]
+     *             },
+     *             "properties": {
+     *                 "prop0": "value0",
+     *                 "prop1": 0.0
+     *             }
+     *           },
+     *           { "type": "Feature",
+     *             "geometry": {
+     *                 "type": "Polygon",
+     *                 "coordinates": [
+     *                     [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0],
+     *                       [100.0, 1.0], [100.0, 0.0] ]
+     *                 ]
+     *             },
+     *             "properties": {
+     *                 "prop0": "value0",
+     *                 "prop1": {"this": "that"}
+     *             }
+     *          }
+     *      ]
+     *  }
+     *  // A geometry array.
+     *  const geometries = GeoJSON.toGeometry(collection, geometry => { geometry.config('draggable', true); });
+     */
+    toGeometry: (geoJSON: any, foreachFn?: any) => any;
+    /**
+     * async将一个或多个GeoJSON对象转换为几何体
+     * @english
+    * async Convert one or more GeoJSON objects to geometry
+    * @param  {String|Object|Object[]} geoJSON - GeoJSON objects or GeoJSON string
+    * @param  {Function} [foreachFn=undefined] - callback function for each geometry
+    * @param  {Number} [countPerTime=2000] - Number of graphics converted per time
+    * @return {Promise}
+    * @example
+    *  GeoJSON.toGeometryAsync(geoJSON).then(geos=>{
+    *    console.log(geos);
+    * })
+    * */
+    toGeometryAsync(geoJSON: any, foreachFn: any, countPerTime?: number): any;
+    /**
+     * 转换单个GeoJSON对象
+     * @english
+     * Convert single GeoJSON object
+     * @param  {Object} geoJSONObj - a GeoJSON object
+     * @return {Geometry}
+     * @private
+     */
+    _convert: (json: any, foreachFn?: any) => any;
+    _isGeoJSON(json: any): boolean;
+    /**
+     * 正在请求一个大容量的geojson文件。解决主线程阻塞问题
+     * @english
+    * Requesting a large volume geojson file.Solve the problem of main thread blocking
+    * @param  {String} url - GeoJSON file path
+    * @param  {Number} [countPerTime=2000] - Number of graphics converted per time
+    * @return {Promise}
+    * @example
+    *  GeoJSON.fetch('https://abc.com/file.geojson',2000).then(geojson=>{
+    *    console.log(geojson);
+    * })
+    * */
+    fetch(url: any, countPerTime?: number): any;
+};
+//# sourceMappingURL=GeoJSON.d.ts.map
+
+declare const Circle_base: {
+    new (...args: any[]): {
+        _coordinates: Coordinate;
+        _pcenter: Coordinate;
+        _dirtyCoords: boolean;
+        getMap?(): Map;
+        _getProjection?(): {
+            code: string;
+            is(code: string): boolean;
+            project(p: Coordinate): Coordinate;
+            unproject(p: Coordinate): Coordinate;
+            projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            isSphere(): boolean;
+            isOutSphere(pcoord: Coordinate): boolean;
+            wrapCoord(pcoord: Coordinate): Coordinate;
+            getCircum(): Record<string, number>;
+            getSphereExtent(): Extent;
+        };
+        onPositionChanged?(): void;
+        _verifyProjection?(): void;
+        _clearCache?(): void;
+        getCoordinates(): Coordinate;
+        setCoordinates(coordinates: Coordinate | number[]): any;
+        _getCenter2DPoint(res?: number): Point;
+        _getPrjCoordinates(): Coordinate;
+        _setPrjCoordinates(pcenter: Coordinate): void;
+        _updateCache(): void;
+        _clearProjection(): void;
+        _computeCenter(): Coordinate;
+    };
+} & typeof Polygon;
+/**
+ * @classdesc
+ * Represents a Circle Geometry. <br>
+ * @category geometry
+ * @extends Polygon
+ * @mixes Geometry.Center
+ * @example
+ * var circle = new Circle([100, 0], 1000, {
+ *     id : 'circle0',
+ *     properties : {
+ *         foo : 'bar'
+ *     }
+ * });
+ * @mixes CenterMixin
+ */
+declare class Circle extends Circle_base {
+    _radius: number;
+    static fromJSON(json: Record<string, any>): Circle;
+    /**
+     * @param {Coordinate} center - center of the circle
+     * @param {Number} radius           - radius of the circle, in meter
+     * @param {Object} [options=null]   - construct options defined in [Circle]{@link Circle#options}
+     */
+    constructor(coordinates: Coordinate | Array<number>, radius: number, options?: CircleOptionsType);
+    /**
+     * 获取圆形的半径
+     * @english
+     * Get radius of the circle
+     * @return {Number}
+     */
+    getRadius(): number;
+    /**
+     * 给圆形设置新的半径
+     * @english
+     * Set a new radius to the circle
+     * @param {Number} radius - new radius
+     * @return {Circle} this
+     * @fires Circle#shapechange
+     */
+    setRadius(radius: number): this;
+    /**
+     * 获取作为多边形的圆的外壳，外壳点数由[options.numberOfShellPoints决定
+     * @english
+     * Gets the shell of the circle as a polygon, number of the shell points is decided by [options.numberOfShellPoints]{@link Circle#options}
+     * @return {Coordinate[]} - shell coordinates
+     */
+    getShell(): RingCoordinates;
+    /**
+     * 圆没有任何孔，总是返回null
+     * @english
+     * Circle won't have any holes, always returns null
+     * @return {Object[]} an empty array
+     */
+    getHoles(): RingsCoordinates;
+    animateShow(): any;
+    _containsPoint(point: Point, tolerance?: number): boolean;
+    _computePrjExtent(projection: CommonProjectionType): Extent;
+    _computeExtent(measurer: any): Extent;
+    _getMinMax(measurer: any): [Coordinate, Coordinate, Coordinate, Coordinate];
+    _computeGeodesicLength(): number;
+    _computeGeodesicArea(): number;
+    _exportGeoJSONGeometry(): {
+        type: string;
+        coordinates: any;
+    };
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        subType: string;
+        coordinates: number[];
+        radius: number;
+    };
+}
+
+type CircleOptionsType = PolygonOptionsType & {
+    numberOfShellPoints?: number;
+};
+
+declare const Ellipse_base: {
+    new (...args: any[]): {
+        _coordinates: Coordinate;
+        _pcenter: Coordinate;
+        _dirtyCoords: boolean;
+        getMap?(): Map;
+        _getProjection?(): {
+            code: string;
+            is(code: string): boolean;
+            project(p: Coordinate): Coordinate;
+            unproject(p: Coordinate): Coordinate;
+            projectCoords(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][], antiMeridian?: boolean): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            unprojectCoords(projCoords: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[] | Coordinate[][] | Coordinate[][][];
+            isSphere(): boolean;
+            isOutSphere(pcoord: Coordinate): boolean;
+            wrapCoord(pcoord: Coordinate): Coordinate;
+            getCircum(): Record<string, number>;
+            getSphereExtent(): Extent;
+        };
+        onPositionChanged?(): void;
+        _verifyProjection?(): void;
+        _clearCache?(): void;
+        getCoordinates(): Coordinate;
+        setCoordinates(coordinates: Coordinate | number[]): any;
+        _getCenter2DPoint(res?: number): Point;
+        _getPrjCoordinates(): Coordinate;
+        _setPrjCoordinates(pcenter: Coordinate): void;
+        _updateCache(): void;
+        _clearProjection(): void;
+        _computeCenter(): Coordinate;
+    };
+} & typeof Polygon;
+/**
+ * 表示椭圆几何体
+ * @english
+ * Represents a Ellipse Geometry. <br>
+ * @category geometry
+ * @extends Polygon
+ * @mixes CenterMixin
+ * @example
+ * var ellipse = new Ellipse([100, 0], 1000, 500, {
+ *     id : 'ellipse0'
+ * });
+ */
+declare class Ellipse extends Ellipse_base {
+    width: number;
+    height: number;
+    options: EllipseOptionsType;
+    static fromJSON(json: Record<string, any>): Ellipse;
+    /**
+     * @param {Coordinate} center  - center of the ellipse
+     * @param {Number} width  - width of the ellipse, in meter
+     * @param {Number} height - height of the ellipse, in meter
+     * @param {Object}  [options=null] - construct options defined in [Ellipse]{@link Ellipse#options}
+     */
+    constructor(coordinates: Coordinate | Array<number>, width: number, height: number, options?: EllipseOptionsType);
+    /**
+     * 获取椭圆的宽度
+     * @english
+     * Get ellipse's width
+     * @return {Number}
+     */
+    getWidth(): number;
+    /**
+     * 设置椭圆的宽度
+     * Set new width to ellipse
+     * @param {Number} width - new width
+     * @fires Ellipse#shapechange
+     * @return {Ellipse} this
+     */
+    setWidth(width: number): this;
+    /**
+     * 获取椭圆高度
+     * @english
+     * Get ellipse's height
+     * @return {Number}
+     */
+    getHeight(): number;
+    /**
+     * 设置椭圆高度
+     * @english
+     * Set new height to ellipse
+     * @param {Number} height - new height
+     * @fires Ellipse#shapechange
+     * @return {Ellipse} this
+     */
+    setHeight(height: number): this;
+    /**
+     * 获取作为多边形的椭圆的外壳，外壳点数由决定
+     * @english
+     * Gets the shell of the ellipse as a polygon, number of the shell points is decided by [options.numberOfShellPoints]{@link Circle#options}
+     * @return {Coordinate[]} - shell coordinates
+     */
+    getShell(): RingCoordinates;
+    _getShell(): RingCoordinates;
+    _getPrjShell(): RingCoordinates;
+    /**
+     * 椭圆没有任何孔，总是返回null
+     * @english
+     * Ellipse won't have any holes, always returns null
+     * @return {Object[]} an empty array
+     */
+    getHoles(): RingsCoordinates;
+    animateShow(): any;
+    _containsPoint(point: Point, tolerance?: number): boolean;
+    _computePrjExtent(): Extent;
+    _computeExtent(): any;
+    _getMinMax(measurer: any): [Coordinate, Coordinate, Coordinate, Coordinate];
+    _computeGeodesicLength(): number;
+    _computeGeodesicArea(): number;
+    _exportGeoJSONGeometry(): {
+        type: string;
+        coordinates: any;
+    };
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        subType: string;
+        coordinates: number[];
+        width: number;
+        height: number;
+    };
+}
+
+type EllipseOptionsType = PolygonOptionsType & {
+    numberOfShellPoints?: number;
+    debug?: boolean;
+};
+
+/**
+ * @classdesc
+ * Represents a Rectangle geometry.
+ * @category geometry
+ * @extends Polygon
+ * @example
+ * var rectangle = new Rectangle([100, 0], 1000, 500, {
+ *     id : 'rectangle0'
+ * });
+ */
+declare class Rectangle extends Polygon {
+    _coordinates: Coordinate;
+    _width: number;
+    _height: number;
+    _pnw: any;
+    static fromJSON(json: any): Rectangle;
+    /**
+     * @param {Coordinate} coordinates  - northwest of the rectangle
+     * @param {Number} width                     - width of the rectangle, in meter
+     * @param {Number} height                    - height of the rectangle, in meter
+     * @param {Object} [options=null]            - options defined in [Rectangle]{@link Rectangle#options}
+     */
+    constructor(coordinates: Coordinate | Array<number>, width: number, height: number, opts?: RectangleOptionsType);
+    /**
+     * Get coordinates of rectangle's northwest
+     * @return {Coordinate}
+     */
+    getCoordinates(): Coordinate;
+    /**
+     * Set a new coordinate for northwest of the rectangle
+     * @param {Coordinate} nw - coordinates of new northwest
+     * @return {Rectangle} this
+     * @fires Rectangle#positionchange
+     */
+    setCoordinates(nw: Coordinate | Array<number>): this;
+    /**
+     * Get rectangle's width
+     * @return {Number}
+     */
+    getWidth(): number;
+    /**
+     * Set new width to the rectangle
+     * @param {Number} width - new width
+     * @fires Rectangle#shapechange
+     * @return {Rectangle} this
+     */
+    setWidth(width: number): this;
+    /**
+     * Get rectangle's height
+     * @return {Number}
+     */
+    getHeight(): number;
+    /**
+     * Set new height to rectangle
+     * @param {Number} height - new height
+     * @fires Rectangle#shapechange
+     * @return {Rectangle} this
+     */
+    setHeight(height: number): this;
+    /**
+     * Gets the shell of the rectangle as a polygon
+     * @return {Coordinate[]} - shell coordinates
+     */
+    getShell(): Coordinate[];
+    _getShell(): RingCoordinates;
+    /**
+     * Rectangle won't have any holes, always returns null
+     * @return {Object[]} an empty array
+     */
+    getHoles(): RingsCoordinates;
+    animateShow(): this;
+    _getPrjCoordinates(): Coordinate;
+    _setPrjCoordinates(pnw: any): void;
+    _getPrjShell(): RingCoordinates;
+    _updateCache(): void;
+    _clearProjection(): void;
+    _computeCenter(measurer?: any): Coordinate;
+    _containsPoint(point: Point, tolerance?: number): boolean;
+    _computePrjExtent(projection: CommonProjectionType): Extent;
+    _computeExtent(measurer?: any): Extent;
+    _getSouthEast(measurer: any): Coordinate;
+    _computeGeodesicLength(): number;
+    _computeGeodesicArea(): number;
+    _exportGeoJSONGeometry(): {
+        type: string;
+        coordinates: any;
+    };
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        subType: string;
+        coordinates: number[];
+        width: number;
+        height: number;
+    };
+}
+
+type RectangleOptionsType = PolygonOptionsType;
+
+/**
+ * @classdesc
+ * Represents a sector Geometry.
+ * @category geometry
+ * @extends Circle
+ * @example
+ * var sector = new Sector([100, 0], 1000, 30, 120, {
+ *     id : 'sector0'
+ * });
+ */
+declare class Sector extends Circle {
+    startAngle: number;
+    endAngle: number;
+    static fromJSON(json: Record<string, any>): Sector;
+    /**
+     * @param {Coordinate} center - center of the sector
+     * @param {Number} radius           - radius of the sector, in meter
+     * @param {Number} startAngle       - start angle of the sector, in degree
+     * @param {Number} endAngle         - end angle of the sector, in degree
+     * @param {Object} [options=null]   - construct options defined in [Sector]{@link Sector#options}
+     */
+    constructor(coordinates: Coordinate | Array<number>, radius: number, startAngle: number, endAngle: number, opts?: SectorOptionsType);
+    /**
+     * Get the sector's start angle
+     * @return {Number}
+     */
+    getStartAngle(): number;
+    /**
+     * Set a new start angle to the sector
+     * @param {Number} startAngle
+     * @return {Sector} this
+     * @fires Sector#shapechange
+     */
+    setStartAngle(startAngle: number): this;
+    /**
+     * Get the sector's end angle
+     * @return {Number}
+     */
+    getEndAngle(): number;
+    /**
+     * Set a new end angle to the sector
+     * @param {Number} endAngle
+     * @return {Sector} this
+     * @fires Sector#shapechange
+     */
+    setEndAngle(endAngle: number): this;
+    _correctAngles(): [number, number];
+    /**
+     * Gets the shell of the sector as a polygon, number of the shell points is decided by [options.numberOfShellPoints]{@link Sector#options}
+     * @return {Coordinate[]} - shell coordinates
+     */
+    getShell(): RingCoordinates;
+    _getShell(): RingCoordinates;
+    getRotateOffsetAngle(): number;
+    _getPrjShell(): RingCoordinates;
+    _computePrjExtent(): Extent;
+    _containsPoint(point: Point, tolerance?: number): boolean;
+    _computeGeodesicLength(): number;
+    _computeGeodesicArea(): number;
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        subType: string;
+        coordinates: number[];
+        radius: number;
+        startAngle: number;
+        endAngle: number;
+    };
+}
+
+type SectorOptionsType = CircleOptionsType & {
+    numberOfShellPoints?: number;
+};
+
+/**
+ * 曲线样式LineString，所有曲线的抽象父类。
+ * @english
+ * Curve style LineString, an abstract parent class for all the curves.
+ * @category geometry
+ * @abstract
+ * @extends LineString
+ * @param {Coordinate[]|Number[][]} coordinates - coordinates of the line string
+ * @param {Object} [options=null] - construct options defined in [LineString]{@link LineString#options}
+ * @property {Boolean} [options.enableSimplify=false] - whether to simplify path before rendering
+ * @property {Boolean} [options.enableClip=false] - whether to clip curve with map's current extent
+ */
+declare class Curve extends LineString {
+    _arc(ctx: CanvasRenderingContext2D, points: any, lineOpacity: number): void;
+    _quadraticCurve(ctx: CanvasRenderingContext2D, points: any): void;
+    _bezierCurve(ctx: CanvasRenderingContext2D, points: any): void;
+    _getCurveArrowPoints(arrows: any[], segments: [], lineWidth: number, arrowStyle: any, tolerance: any, step: number): void;
+}
+
+type CurveOptionsType = LineStringOptionsType & {
+    enableSimplify?: boolean;
+    enableClip?: boolean;
+};
+
+/**
+ * @classdesc
+ * Circle Arc Curve
+ * @category geometry
+ * @extends Curve
+ * @param {Coordinate[]|Number[][]} coordinates - coordinates of the curve
+ * @param {Object} [options=null]   - construct options defined in [ArcCurve]{@link ArcCurve#options}
+ * @example
+ * var curve = new ArcCurve(
+ *     [
+ *         [121.47083767181408,31.214448123476995],
+ *         [121.4751292062378,31.215475523000404],
+ *         [121.47869117980943,31.211916269810335]
+ *     ],
+ *     {
+ *         arcDegree : 120,
+ *         symbol : {
+ *             'lineWidth' : 5
+ *         }
+ *     }
+ * ).addTo(layer);
+ */
+declare class ArcCurve extends Curve {
+    _toJSON(options: any): any;
+    _paintOn(ctx: CanvasRenderingContext2D, points: any, lineOpacity: number): void;
+    static fromJSON(json: any): ArcCurve;
+}
+
+type ArcCurveOptionsType = CurveOptionsType & {
+    arcDegree?: number;
+};
+
+/**
+ * 三次贝塞尔曲线
+ * @english
+ * Cubic Bezier Curve
+ * @category geometry
+ * @extends Curve
+ * @param {Coordinate[]|Number[][]} coordinates - coordinates of the curve
+ * @param {Object} [options=null]   - construct options defined in [CubicBezierCurve]{@link CubicBezierCurve#options}
+ * @example
+ * var curve = new CubicBezierCurve(
+ *     [
+ *         [121.47083767181408,31.214448123476995],
+ *         [121.4751292062378,31.215475523000404],
+ *         [121.47869117980943,31.211916269810335]
+ *     ],
+ *     {
+ *         symbol : {
+ *             'lineWidth' : 5
+ *         }
+ *     }
+ * ).addTo(layer);
+ */
+declare class CubicBezierCurve extends Curve {
+    static fromJSON(json: any): CubicBezierCurve;
+    _toJSON(options: any): any;
+    _paintOn(ctx: CanvasRenderingContext2D, points: any, lineOpacity: number): void;
+    _getArrowPoints(arrows: any[], segments: [], lineWidth: number, arrowStyle: any, tolerance: any): any;
+}
+
+/**
+ * @classdesc
+ * Quadratic Bezier Curve
+ * @category geometry
+ * @extends Curve
+ * @param {Coordinate[]|Number[][]} coordinates - coordinates of the curve
+ * @example
+ * var curve = new QuadBezierCurve(
+ *     [
+ *         [121.47083767181408,31.214448123476995],
+ *         [121.4751292062378,31.215475523000404],
+ *         [121.47869117980943,31.211916269810335]
+ *     ],
+ *     {
+ *         symbol : {
+ *             'lineWidth' : 5
+ *         }
+ *     }
+ * ).addTo(layer);
+ */
+declare class QuadBezierCurve extends Curve {
+    static fromJSON(json: any): QuadBezierCurve;
+    _toJSON(options: any): any;
+    _paintOn(ctx: CanvasRenderingContext2D, points: any, lineOpacity: number): void;
+    _getArrowPoints(arrows: any[], segments: [], lineWidth: number, arrowStyle: any, tolerance: any): void;
+}
+
+/**
+ * @classdesc
+ * Base class for  the Text marker classes, a marker which has text and background box. <br>
+ * It is abstract and not intended to be instantiated.
+ * @category geometry
+ * @abstract
+ * @extends Marker
+ */
+declare class TextMarker extends Marker {
+    _content: string;
+    _refreshing: boolean;
+    _refresh?(): void;
+    getTextStyle?(): any;
+    setTextStyle?(tyle?: any): any;
+    setTextSymbol?(style?: any): any;
+    setBoxStyle?(style?: any): any;
+    getBoxStyle?(): any;
+    setBoxSymbol?(style?: any): any;
+    /**
+     * 获取标签的文本内容
+     * @english
+     * Get text content of the label
+     * @returns {String}
+     */
+    getContent(): string;
+    /**
+     * 给标签设置文本内容
+     * @english
+     * Set a new text content to the label
+     * @return {Label} this
+     * @fires Label#contentchange
+     */
+    setContent(content: string): this;
+    onAdd(): void;
+    toJSON(): {
+        [key: string]: any;
+    };
+    setSymbol(symbol: any): this;
+    _parseSymbol(symbol: any): any;
+    _getTextSize(symbol: any): any;
+    _getInternalSymbol(): any;
+    _getDefaultTextSymbol(): TextSymbol;
+    _getDefaultBoxSymbol(): VectorMarkerSymbol;
+    _getDefaultPadding(): [number, number];
+}
+
+type TextMarkerOptionsType = MarkerOptionsType;
+
+/**
+ * @classdesc
+ * Represents point type geometry for text boxes.<br>
+ * A TextBox is used to draw a box with text inside on a particular coordinate.
+ * @category geometry
+ * @extends TextMarker
+ * @mixes TextEditable
+ * @example
+ * var textbox = new maptalks.TextBox('This is a textbox',
+    [0, 0], 200, 90,
+    {
+      'draggable' : true,
+      'textStyle' : {
+        'wrap' : true,
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'symbol' : {
+          'textFaceName' : 'monospace',
+          'textFill' : '#34495e',
+          'textHaloFill' : '#fff',
+          'textHaloRadius' : 4,
+          'textSize' : 18,
+          'textWeight' : 'bold'
+        }
+      },
+      'boxSymbol': {
+        // box's symbol
+        'markerType' : 'square',
+        'markerFill' : 'rgb(135,196,240)',
+        'markerFillOpacity' : 0.9,
+        'markerLineColor' : '#34495e',
+        'markerLineWidth' : 1
+      }
+    });
+ */
+declare class TextBox extends TextMarker {
+    options: TextBoxOptionsType;
+    _width: number;
+    _height: number;
+    _oldWidth: any;
+    _oldHeight: any;
+    /**
+     * @param {String} content                 - TextBox's text content
+     * @param {Coordinate} coordinates         - coordinates
+     * @param {Number} width                   - width in pixel
+     * @param {Number} height                  - height in pixel
+     * @param {Object} [options=null]          - construct options defined in [TextBox]{@link TextBox#options}
+     */
+    constructor(content: string, coordinates: Coordinate | Array<number>, width: number, height: number, options?: TextBoxOptionsType);
+    /**
+     * 获取文本框得宽度
+     * @english
+     * Get textbox's width
+     * @return {Number}
+     */
+    getWidth(): number;
+    /**
+     * 设置文本框得宽度
+     * @english
+     * Set new width to textbox
+     * @param {Number} width
+     * returns {TextBox} this
+     */
+    setWidth(width: number): this;
+    /**
+     * 获取文本框高度
+     * @english
+     * Get textbox's height
+     * @return {Number}
+     */
+    getHeight(): number;
+    /**
+     * 设置文本框高度
+     * @english
+     * Set new height to textbox
+     * @param {Number} height
+     * returns {TextBox} this
+     */
+    setHeight(height: number): this;
+    /**
+     * 获取文本框边框样式
+     * @english
+     * Get textbox's boxSymbol
+     * @return {Object} boxsymbol
+     */
+    getBoxSymbol(): VectorMarkerSymbol;
+    /**
+     * 设置文本框边框样式
+     * @english
+     * Set a new box symbol to textbox
+     * @param {Object} symbol
+     * returns {TextBox} this
+     */
+    setBoxSymbol(symbol: VectorMarkerSymbol): this;
+    /**
+     * 获取文本框文本样式
+     * @english
+     * Get textbox's text style
+     * @return {Object}
+     */
+    getTextStyle(): TextStyle | null;
+    /**
+     * 设置文本框文本样式
+     * @english
+     * Set a new text style to the textbox
+     * @param {Object} style new text style
+     * returns {TextBox} this
+     */
+    setTextStyle(style: TextStyle): this;
+    static fromJSON(json: {
+        [key: string]: any;
+    }): TextBox;
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        width: number;
+        height: number;
+        subType: string;
+        content: string;
+    };
+    _refresh(): void;
+    startEdit(opts: GeometryEditOptionsType): this;
+    endEdit(): this;
+}
+
+type TextStyle = {
+    wrap?: boolean;
+    padding?: [number, number];
+    verticalAlignment?: 'top' | 'middle' | 'bottom';
+    horizontalAlignment?: 'left' | 'middle' | 'right';
+    symbol?: TextSymbol;
+};
+type TextBoxOptionsType = TextMarkerOptionsType & {
+    boxSymbol?: VectorMarkerSymbol;
+    textStyle?: TextStyle;
+};
+
+/**
+ * @classdesc
+ * Represents point type geometry for text labels.<br>
+ * A label is used to draw text (with a box background if specified) on a particular coordinate.
+ * @category geometry
+ * @extends TextMarker
+ * @mixes TextEditable
+ * @example
+ * var label = new maptalks.Label('label with a box',
+    [0, 0],
+    {
+      'draggable' : true,
+      'boxStyle' : {
+        'padding' : [12, 8],
+        'verticalAlignment' : 'top',
+        'horizontalAlignment' : 'right',
+        'minWidth' : 300,
+        'minHeight' : 200,
+        'symbol' : {
+          'markerType' : 'square',
+          'markerFill' : 'rgb(135,196,240)',
+          'markerFillOpacity' : 0.9,
+          'markerLineColor' : '#34495e',
+          'markerLineWidth' : 1
+        }
+      },
+      'textSymbol': {
+        'textFaceName' : 'monospace',
+        'textFill' : '#34495e',
+        'textHaloFill' : '#fff',
+        'textHaloRadius' : 4,
+        'textSize' : 18,
+        'textWeight' : 'bold',
+        'textVerticalAlignment' : 'top'
+      }
+    });
+ */
+declare class Label extends TextMarker {
+    options: any;
+    /**
+     * @param {String} content                 - Label's text content
+     * @param {Coordinate} coordinates         - coordinates
+     * @param {Object} [options=null]          - construct options defined in [Label]{@link Label#options}
+     */
+    constructor(content: string, coordinates: Coordinate | Array<number>, options?: LabelOptionsType);
+    /**
+     * 获取标注的边框样式
+     * @english
+     * Get label's box style
+     * @return {Object}
+     */
+    getBoxStyle(): BoxStyle;
+    /**
+     * 设置标注的边框样式
+     * @english
+     * Set a new box style to the label
+     * @param {Object}
+     * @returns {Label} this
+     */
+    setBoxStyle(style: BoxStyle): this;
+    /**
+     * 获取标注的文本样式
+     * Get label's text symbol
+     * @return {Object}
+     */
+    getTextSymbol(): TextSymbol;
+    /**
+     * 给标注设置新的文本样式
+     * @english
+     * Set a new text symbol to the label
+     * @param {Object} symbol
+     * @returns {Label} this
+     */
+    setTextSymbol(symbol: TextSymbol): this;
+    static fromJSON(json: {
+        [key: string]: any;
+    }): Label;
+    _canEdit(): boolean;
+    _toJSON(options: any): {
+        feature: {
+            [key: string]: any;
+        };
+        subType: string;
+        content: string;
+    };
+    _refresh(): void;
+    _getBoxSize(symbol: any): any;
+}
+
+type BoxStyle = {
+    padding?: [number, number];
+    verticalAlignment?: 'top' | 'middle' | 'bottom';
+    horizontalAlignment?: 'left' | 'middle' | 'right';
+    minWidth?: number;
+    minHeight?: number;
+    symbol?: VectorMarkerSymbol;
+};
+type LabelOptionsType = TextMarkerOptionsType & {
+    textSymbol?: TextSymbol;
+    boxStyle?: BoxStyle;
+};
+
+declare const ConnectorLine_base: {
+    new (...args: any[]): {
+        options: ConnectableOptionsType;
+        _connSource: Geometry;
+        _connTarget: Geometry;
+        getMap?(): Map;
+        getCoordinates?(): Coordinate[];
+        setCoordinates?(coordinates: Coordinate[]): any;
+        hide?(): any;
+        show?(): any;
+        remove?(): any;
+        /**
+         * 获取连接线的源
+         * @english
+         * Gets the source of the connector line.
+         * @return {Geometry|control.Control|UIComponent}
+         * @function Connectable.getConnectSource
+         */
+        getConnectSource(): Geometry;
+        /**
+         * 设置连接线的源
+         * @english
+         * Sets the source to the connector line.
+         * @param {Geometry|control.Control|UIComponent} src
+         * @return {ConnectorLine} this
+         * @function Connectable.setConnectSource
+         */
+        setConnectSource(src: Geometry): any;
+        /**
+         * 获取连接线的目标
+         * @english
+         * Gets the target of the connector line.
+         * @return {Geometry|control.Control|UIComponent}
+         * @function Connectable.getConnectTarget
+         */
+        getConnectTarget(): Geometry;
+        /**
+         * 设置连接线目标
+         * @english
+         * Sets the target to the connector line.
+         * @param {Geometry|control.Control|UIComponent} target
+         * @return {ConnectorLine} this
+         * @function Connectable.setConnectTarget
+         */
+        setConnectTarget(target: Geometry): any;
+        _updateCoordinates(): void;
+        onAdd(): void;
+        onRemove(): void;
+        _showConnect(): void;
+        _registerEvents(): void;
+    };
+    _hasConnectors(geometry: any): boolean;
+    _getConnectors(geometry: any): any;
+} & typeof LineString;
+/**
+ * 直线连接线几何图形可以将几何图形或ui组件相互连接。
+ * @english
+ * A straight connector line geometry can connect geometries or ui components with each other. <br>
+ *
+ * @category geometry
+ * @extends LineString
+ * @example
+ * var src = new Marker([0,0]).addTo(layer),
+ *     dst = new Marker([1,0]).addTo(layer),
+ *     line = new ConnectorLine(src, dst, {
+ *         showOn : 'always', //'moving', 'click', 'mouseover', 'always'
+ *         arrowStyle : 'classic',
+ *         arrowPlacement : 'vertex-last', //vertex-first, vertex-last, vertex-firstlast, point
+ *         symbol: {
+ *           lineColor: '#34495e',
+ *           lineWidth: 2
+ *        }
+ *     }).addTo(layer);
+ * @mixes connectorLineMixin
+ */
+declare class ConnectorLine extends ConnectorLine_base {
+    /**
+     * @param {Geometry|control.Control|UIComponent} src     - source to connect
+     * @param {Geometry|control.Control|UIComponent} target  - target to connect
+     * @param {Object} [options=null]  - construct options defined in [ConnectorLine]{@link ConnectorLine#options}
+     */
+    constructor(src: Geometry, target: Geometry, options?: ConnectorLineOptionsType);
+}
+declare const ArcConnectorLine_base: {
+    new (...args: any[]): {
+        options: ConnectableOptionsType;
+        _connSource: Geometry;
+        _connTarget: Geometry;
+        getMap?(): Map;
+        getCoordinates?(): Coordinate[];
+        setCoordinates?(coordinates: Coordinate[]): any;
+        hide?(): any;
+        show?(): any;
+        remove?(): any;
+        /**
+         * 获取连接线的源
+         * @english
+         * Gets the source of the connector line.
+         * @return {Geometry|control.Control|UIComponent}
+         * @function Connectable.getConnectSource
+         */
+        getConnectSource(): Geometry;
+        /**
+         * 设置连接线的源
+         * @english
+         * Sets the source to the connector line.
+         * @param {Geometry|control.Control|UIComponent} src
+         * @return {ConnectorLine} this
+         * @function Connectable.setConnectSource
+         */
+        setConnectSource(src: Geometry): any;
+        /**
+         * 获取连接线的目标
+         * @english
+         * Gets the target of the connector line.
+         * @return {Geometry|control.Control|UIComponent}
+         * @function Connectable.getConnectTarget
+         */
+        getConnectTarget(): Geometry;
+        /**
+         * 设置连接线目标
+         * @english
+         * Sets the target to the connector line.
+         * @param {Geometry|control.Control|UIComponent} target
+         * @return {ConnectorLine} this
+         * @function Connectable.setConnectTarget
+         */
+        setConnectTarget(target: Geometry): any;
+        _updateCoordinates(): void;
+        onAdd(): void;
+        onRemove(): void;
+        _showConnect(): void;
+        _registerEvents(): void;
+    };
+    _hasConnectors(geometry: any): boolean;
+    _getConnectors(geometry: any): any;
+} & typeof ArcCurve;
+/**
+ * 弧形曲线连接线几何图形可以将几何图形或ui组件相互连接
+ * @english
+ * An arc curve connector line geometry can connect geometries or ui components with each other. <br>
+ *
+ * @category geometry
+ * @extends ArcCurve
+ * @example
+ * var src = new Marker([0,0]).addTo(layer),
+ *     dst = new Marker([1,0]).addTo(layer),
+ *     line = new ArcConnectorLine(src, dst, {
+ *         arcDegree : 120,
+ *         showOn : 'always', //'moving', 'click', 'mouseover', 'always'
+ *         arrowStyle : 'classic',
+ *         arrowPlacement : 'vertex-last', //vertex-first, vertex-last, vertex-firstlast, point
+ *         symbol: {
+ *           lineColor: '#34495e',
+ *           lineWidth: 2
+ *        }
+ *     }).addTo(layer);
+ * @mixes connectorLineMixin
+ */
+declare class ArcConnectorLine extends ArcConnectorLine_base {
+    /**
+     * @param {Geometry|control.Control|UIComponent} src     - source to connect
+     * @param {Geometry|control.Control|UIComponent} target  - target to connect
+     * @param {Object} [options=null]  - construct options defined in [ConnectorLine]{@link ConnectorLine#options}
+     */
+    constructor(src: Geometry, target: Geometry, options?: ArcConnectorLineOptionsType);
+}
+
+type ConnectableOptionsType = {
+    showOn?: 'always' | 'moving' | 'click' | 'mouseover';
+};
+type ConnectorLineOptionsType = LineStringOptionsType & ConnectableOptionsType;
+type ArcConnectorLineOptionsType = ArcCurveOptionsType & ConnectableOptionsType;
+
+type Geometries = ArcCurve | Circle | ConnectorLine | ArcConnectorLine | CubicBezierCurve | Curve | Ellipse | Geometry | GeometryCollection | Label | LineString | Marker | MultiLineString | MultiPoint | MultiPolygon | Polygon | QuadBezierCurve | Rectangle | Sector | TextBox | TextMarker;
+type PathLikeGeometries = Curve | ArcCurve | CubicBezierCurve | QuadBezierCurve | LineString | MultiLineString | ConnectorLine | Rectangle | Polygon | MultiPolygon | Circle | Sector | Ellipse;
+
+declare const Layer_base: {
+    new (...args: any[]): {
+        _jsonType?: string;
+        getJSONType(): string;
+    };
+    registerJSONType(type: string): void;
+    getJSONClass(type: string): {
+        new (...args: any[]): {
+            _eventMap?: Record<string, {
+                handler: HandlerFn;
+                context: any;
+            }[]>;
+            _eventParent?: any;
+            _eventTarget?: any;
+            on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+            addEventListener(...args: any[]): any;
+            once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+            off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+            removeEventListener(...args: any[]): any;
+            listens(eventType: string, handler?: HandlerFn, context?: any): number;
+            getListeningEvents(): string[];
+            copyEventListeners(target: any): any;
+            fire(eventType: string, param?: BaseEventParamsType): any;
+            _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+            _switch(to: string, eventRecords: EventRecords, context?: any): any;
+            _clearListeners(eventType: string): void;
+            _clearAllListeners(): void;
+            _setEventParent(parent: any): any;
+            _setEventTarget(target: any): any;
+            _fire(eventType: string, param: BaseEventParamsType): any;
+        };
+    } & {
+        new (...args: any[]): {};
+        registerRenderer<T extends typeof Class>(name: string, clazz: T): any & typeof Class;
+        getRendererClass(name: string): Class;
+    } & typeof Class;
+} & {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & {
+    new (...args: any[]): {};
+    registerRenderer<T extends typeof Class>(name: string, clazz: T): any & typeof Class;
+    getRendererClass(name: string): Class;
+} & typeof Class;
+/**
+ * layers的基础类，定义了所有layers公共方法。
+ * 抽象类，不做实例化打算
+ *
+ * @english
+ * @classdesc
+ * Base class for all the layers, defines common methods that all the layer classes share. <br>
+ * It is abstract and not intended to be instantiated.
+ *
+ * @category layer
+ * @abstract
+ * @extends Class
+ * @mixes Eventable
+ * @mixes JSONAble
+ * @mixes Renderable
+ */
+declare class Layer extends Layer_base {
+    _canvas: HTMLCanvasElement;
+    _renderer: CanvasRenderer$1;
+    _id: string;
+    _zIndex: number;
+    _drawTime: number;
+    map: Map;
+    _mask: Polygon | MultiPolygon | Marker;
+    _maskGeoJSON: Record<string, any>;
+    _loaded: boolean;
+    _collisionIndex: CollisionIndex;
+    _optionsHook?(conf?: any): void;
+    _silentConfig: boolean | undefined | any;
+    options: LayerOptionsType;
+    constructor(id: string, options?: LayerOptionsType);
+    /**
+     * 加载tile layer,不能被子类重写
+     *
+     * @english
+     * load the tile layer, can't be overrided by sub-classes
+     */
+    load(): this;
+    /**
+     * 获取layer Id
+     *
+     * @english
+     * Get the layer id
+     * @returns id
+     */
+    getId(): string;
+    /**
+     * 为layer新设一个 Id
+     *
+     * @english
+     * Set a new id to the layer
+     * @param id - new layer id
+     * @return this
+     * @fires Layer#idchange
+     */
+    setId(id: string): this;
+    /**
+     * 将图层添加至 map
+     *
+     * @english
+     * Adds itself to a map.
+     * @param map - map added to
+     * @return this
+     */
+    addTo(map: Map): this;
+    /**
+     * 为layer 设置zIndex
+     *
+     * @engilsh
+     * Set a z-index to the layer
+     * @param zIndex - layer's z-index
+     * @return this
+     */
+    setZIndex(zIndex: number): this;
+    /**
+     * 获取layer 的 zIndex
+     *
+     * @english
+     * Get the layer's z-index
+     * @return
+     */
+    getZIndex(): number;
+    /**
+     * 获取 layer 的 minZoom
+     *
+     * @english
+     * Get Layer's minZoom to display
+     * @return
+     */
+    getMinZoom(): number;
+    /**
+     * 获取layer 的 maxZoom
+     *
+     * @english
+     * Get Layer's maxZoom to display
+     * @return
+     */
+    getMaxZoom(): number;
+    /**
+     * 获取 layer 的 opacity
+     *
+     * @english
+     * Get layer's opacity
+     * @returns {Number}
+     */
+    getOpacity(): number;
+    /**
+     * 设置 layer 的 opacity
+     *
+     * @english
+     * Set opacity to the layer
+     * @param opacity - layer's opacity
+     * @return this
+     */
+    setOpacity(op: number): this;
+    /**
+     * layer 是否为 HTML5 Canvas 渲染
+     *
+     * @english
+     * If the layer is rendered by HTML5 Canvas.
+     * @return
+     * @protected
+     */
+    isCanvasRender(): boolean;
+    /**
+     * 获取图层所在 map
+     *
+     * @english
+     * Get the map that the layer added to
+     * @returns {Map}
+     */
+    getMap(): Map;
+    /**
+     * 获取 layer 所在map 的 projection
+     *
+     * @english
+     * Get projection of layer's map
+     * @returns
+     */
+    getProjection(): CommonProjectionType;
+    /**
+     * 将图层置顶
+     *
+     * @english
+     * Brings the layer to the top of all the layers
+     * @returns this
+     */
+    bringToFront(): this;
+    /**
+     * 将图层置底
+     *
+     * @english
+     * Brings the layer under the bottom of all the layers
+     * @returns {Layer} this
+     */
+    bringToBack(): this;
+    /**
+     * 显示图层
+     *
+     * @english
+     * Show the layer
+     * @returns this
+     */
+    show(): this;
+    /**
+     * 隐藏图层
+     *
+     * @english
+     * Hide the layer
+     * @returns this
+     */
+    hide(): this;
+    /**
+     * layer 的当前 visible 状态
+     *
+     * @english
+     * Whether the layer is visible now.
+     * @return
+     */
+    isVisible(): boolean;
+    /**
+     * 移除图层
+     *
+     * @english
+     * Remove itself from the map added to.
+     * @returns this
+     */
+    remove(): this;
+    /**
+     * 获取 mask geometry
+     *
+     * @english
+     * Get the mask geometry of the layer
+     * @return {Geometry}
+     */
+    getMask(): Marker | MultiPolygon | Polygon;
+    /**
+     * 设置mask geometry, 只显示掩码的区域
+     *
+     * @english
+     * Set a mask geometry on the layer, only the area in the mask will be displayed.
+     * @param {Geometry} mask - mask geometry, can only be a Marker with vector symbol, a Polygon or a MultiPolygon
+     * @returns {Layer} this
+     */
+    setMask(mask: Polygon | MultiPolygon | Marker): this;
+    /**
+     * 移除mask
+     *
+     * @engilsh
+     * Remove the mask
+     * @returns {Layer} this
+     */
+    removeMask(): this;
+    /**
+     * 准备层的加载，是一个由子类重写的方法。
+     *
+     * @english
+     * Prepare Layer's loading, this is a method intended to be overrided by subclasses.
+     * @return true to continue loading, false to cease.
+     * @protected
+     */
+    onLoad(): boolean;
+    onLoadEnd(): void;
+    /**
+     * 是否加载layer
+     *
+     * @english
+     * Whether the layer is loaded
+     * @return
+     */
+    isLoaded(): boolean;
+    /**
+     * 获取collision index
+     *
+     * @english
+     * Get layer's collision index
+     * @returns {CollisionIndex}
+     */
+    getCollisionIndex(): CollisionIndex;
+    /**
+     * 清除 layer 的 collision index。
+     * 如果 collisionScope !== 'layer' 将忽略
+     *
+     * @english
+     * Clear layer's collision index.
+     * Will ignore if collisionScope is not layer
+     */
+    clearCollisionIndex(): this;
+    getRenderer(): CanvasRenderer$1;
+    onConfig(conf: {
+        [key: string]: any;
+    }): void;
+    onAdd(): void;
+    onRendererCreate(): void;
+    onCanvasCreate(): void;
+    onRemove(): void;
+    _bindMap(map: Map, zIndex?: number): void;
+    _initRenderer(): void;
+    _doRemove(): void;
+    _switchEvents(to: any, emitter: any): void;
+    _getRenderer(): CanvasRenderer$1;
+    _getLayerList(): Layer[];
+    _getMask2DExtent(): Extent;
+    toJSON(options?: any): LayerJSONType;
+    /**
+     * Reproduce a Layer from layer's JSON.
+     * @param  {Object} layerJSON - layer's JSON
+     * @return {Layer}
+     */
+    static fromJSON(layerJSON: {
+        [key: string]: any;
+    }): Layer | null;
+}
+
+type LayerOptionsType = {
+    attribution?: string;
+    minZoom?: number;
+    maxZoom?: number;
+    visible?: boolean;
+    opacity?: number;
+    zIndex?: number;
+    globalCompositeOperation?: string;
+    renderer?: 'canvas' | 'gl' | 'dom';
+    debugOutline?: string;
+    cssFilter?: string;
+    forceRenderOnMoving?: boolean;
+    forceRenderOnZooming?: boolean;
+    forceRenderOnRotating?: boolean;
+    collision?: boolean;
+    collisionScope?: 'layer' | 'map';
+    hitDetect?: boolean;
+    canvas?: HTMLCanvasElement;
+    mask?: any;
+    drawImmediate?: boolean;
+    geometryEvents?: boolean;
+    geometryEventTolerance?: number;
+    maskClip?: boolean;
+};
+type LayerJSONType = {
+    id: string;
+    type: string;
+    options: Record<string, any>;
+    geometries?: Array<any>;
+    layers?: Array<any>;
+};
+
+declare const Map_base: {
+    new (...args: any[]): {
+        _handlers?: Handler[];
+        addHandler(name: any, handlerClass: any): any;
+        removeHandler(name: any): any;
+        _clearHandlers(): void;
+    };
+} & {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any; /**
+         * Get map's container
+         * @returns {HTMLElement}
+         */
+    };
+} & {
+    new (...args: any[]): {};
+    registerRenderer<T extends typeof Class>(name: string, clazz: T): any & typeof Class;
+    getRendererClass(name: string): Class;
+} & typeof Class;
+/**
+ * The central class of the library, to create a map on a container.
+ *
+ * @category map
+ *
+ * @mixes Eventable
+ * @mixes Handlerable
+ * @mixes ui.Menuable
+ * @mixes Renderable
+ *
+ * @example
+ * var map = new maptalks.Map("map",{
+ *      center:     [180,0],
+ *      zoom:  4,
+ *      baseLayer : new maptalks.TileLayer("base",{
+ *          urlTemplate:'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+ *          subdomains:['a','b','c']
+ *      }),
+ *      layers : [
+ *          new maptalks.VectorLayer('v', [new maptalks.Marker([180, 0])])
+ *      ]
+ * });
+ */
+declare class Map extends Map_base {
+    VERSION: string;
+    private _loaded;
+    private _panels;
+    private _baseLayer;
+    private _layers;
+    private _zoomLevel;
+    private _center;
+    private _centerZ;
+    private _mapViewPoint;
+    isMap: boolean;
+    private _containerDOM;
+    private _spatialReference;
+    private _originLng;
+    private _altitudeOriginDirty;
+    private _glScale;
+    private _cursor;
+    private _prjCenter;
+    private centerAltitude;
+    width: number;
+    height: number;
+    private _prjMaxExtent;
+    private _glRes;
+    private _zooming;
+    private _layerCache;
+    private _mapViewCoord;
+    private _eventSilence;
+    private _moving;
+    private _originCenter;
+    private _suppressRecenter;
+    private _dragRotating;
+    CanvasClass: any;
+    private _priorityCursor;
+    private _initTime;
+    private _renderer;
+    private _containerDomContentRect;
+    private _mapRes;
+    private _onLoadHooks;
+    private cameraCenterDistance;
+    options: MapOptionsType;
+    static VERSION: string;
+    JSON_VERSION: '1.0';
+    /**
+     * @param {(string|HTMLElement|object)} container - The container to create the map on, can be:<br>
+     *                                          1. A HTMLElement container.<br/>
+     *                                          2. ID of a HTMLElement container.<br/>
+     *                                          3. Any canvas compatible container
+     * @param {Object} options - construct options
+     * @param {(Number[]|Coordinate)} options.center - initial center of the map.
+     * @param {Number} options.zoom - initial zoom of the map.
+     * @param {Object} [options.spatialReference=null] - map's spatial reference, default is using projection EPSG:3857 with resolutions used by google map/osm.
+     * @param {Layer} [options.baseLayer=null] - base layer that will be set to map initially.
+     * @param {Layer[]} [options.layers=null] - layers that will be added to map initially.
+     * @param {*} options.* - any other option defined in [Map.options]{@link Map#options}      [description]
+     */
+    constructor(container: MapContainerType, options: MapCreateOptionsType);
+    /**
+     * Add hooks for additional codes when map's loading complete, useful for plugin developping.
+     * Note that it can only be called before the map is created.
+     * @param {Function | any} fn
+     * @returns {Map}
+     */
+    static addOnLoadHook(fn: string | ((...args: any[]) => void), ...args: any[]): typeof Map;
+    /**
+     * Whether the map is loaded or not.
+     * @return {Boolean}
+     */
+    isLoaded(): boolean;
+    /**
+     * Get map's container
+     * @returns {HTMLElement}
+     */
+    getContainer(): HTMLCanvasElement | HTMLDivElement;
+    /**
+     * Get the spatial reference of the Map.
+     * @return {SpatialReference} map's spatial reference
+     */
+    getSpatialReference(): SpatialReference;
+    /**
+     * Change the spatial reference of the map. <br>
+     * A SpatialReference is a series of settings to decide the map presentation:<br>
+     * 1. the projection.<br>
+     * 2. zoom levels and resolutions. <br>
+     * 3. full extent.<br>
+     * There are some [predefined spatial references]{@link http://www.foo.com}, and surely you can [define a custom one.]{@link http://www.foo.com}.<br>
+     * SpatialReference can also be updated by map.config('spatialReference', spatialReference);
+     * @param {SpatialReference} spatialReference - spatial reference
+     * @returns {Map} this
+     * @fires Map#spatialreferencechange
+     * @example
+     *  map.setSpatialReference({
+            projection:'EPSG:4326',
+            resolutions: (function() {
+                const resolutions = [];
+                for (let i=0; i < 19; i++) {
+                    resolutions[i] = 180/(Math.pow(2, i)*128);
+                }
+                return resolutions;
+            })()
+     *  });
+       @example
+     *  map.config('spatialReference', {
+            projection:'EPSG:4326',
+            resolutions: (function() {
+                const resolutions = [];
+                for (let i=0; i < 19; i++) {
+                    resolutions[i] = 180/(Math.pow(2, i)*128);
+                }
+                return resolutions;
+            })()
+        });
+     */
+    setSpatialReference(ref: SpatialReferenceType): this;
+    _updateSpatialReference(ref: SpatialReferenceType, oldRef: any): this;
+    /**
+     * Callback when any option is updated
+     * @param  {Object} conf - options to update
+     * @return {Map}   this
+     */
+    onConfig(conf: {
+        [key: string]: any;
+    }): this;
+    /**
+     * Get the projection of the map. <br>
+     * Projection is an algorithm for map projection, e.g. well-known [Mercator Projection]{@link https://en.wikipedia.org/wiki/Mercator_projection} <br>
+     * A projection must have 2 methods: <br>
+     * 1. project(coordinate) - project the input coordinate <br>
+     * 2. unproject(coordinate) - unproject the input coordinate <br>
+     * Projection also contains measuring method usually extended from a measurer: <br>
+     * 1. measureLength(coord1, coord2) - compute length between 2 coordinates.  <br>
+     * 2. measureArea(coords[]) - compute area of the input coordinates. <br>
+     * 3. locate(coord, distx, disty) - compute the coordinate from the coord with xdist on axis x and ydist on axis y.
+     * @return {Object}
+     */
+    getProjection(): ProjectionType;
+    /**
+     * Get map's full extent, which is defined in map's spatial reference. <br>
+     * eg: {'left': -180, 'right' : 180, 'top' : 90, 'bottom' : -90}
+     * @return {Extent}
+     */
+    getFullExtent(): Extent;
+    /**
+     * Set map's cursor style, cursor style is same with CSS.
+     * @param {String} cursor - cursor style
+     * @returns {Map} this
+     * @example
+     * map.setCursor('url(cursor.png) 4 12, auto');
+     */
+    setCursor(cursor: string): this;
+    /**
+     * Reset map's cursor style.
+     * @return {Map} this
+     * @example
+     * map.resetCursor();
+     */
+    resetCursor(): this;
+    /**
+     * Get center of the map.
+     * @return {Coordinate}
+     */
+    getCenter(): Coordinate;
+    /**
+     * Set a new center to the map.
+     * @param {Coordinate} center
+     * @param  {Object} [padding]
+     * @param  {Number} [padding.paddingLeft] - Sets the amount of padding in the left of a map container
+     * @param  {Number} [padding.paddingTop] - Sets the amount of padding in the top of a map container
+     * @param  {Number} [padding.paddingRight] - Sets the amount of padding in the right of a map container
+     * @param  {Number} [padding.paddingBottom] - Sets the amount of padding in the bottom of a map container
+     * @return {Map} this
+     */
+    setCenter(center: Coordinate, padding?: MapPaddingType): this;
+    /**
+     * Get map's size (width and height) in pixel.
+     * @return {Size}
+     */
+    getSize(): Size;
+    /**
+     * Get container extent of the map
+     * @return {PointExtent}
+     */
+    getContainerExtent(): PointExtent;
+    _getVisualHeight(visualPitch: any): number;
+    /**
+     * Get the geographical extent of map's current view extent.
+     *
+     * @return {Extent}
+     */
+    getExtent(): Extent;
+    /**
+     * Get the projected geographical extent of map's current view extent.
+     *
+     * @return {Extent}
+     */
+    getProjExtent(): Extent;
+    /**
+     * Alias for getProjExtent
+     *
+     * @return {Extent}
+     */
+    getPrjExtent(): Extent;
+    /**
+     * Get the max extent that the map is restricted to.
+     * @return {Extent}
+     */
+    getMaxExtent(): Extent;
+    /**
+     * Sets the max extent that the map is restricted to.
+     * @param {Extent}
+     * @return {Map} this
+     * @example
+     * map.setMaxExtent(map.getExtent());
+     */
+    setMaxExtent(extent: Extent): this;
+    /**
+     * Get map's current zoom.
+     * @return {Number}
+     */
+    getZoom(): number;
+    /**
+     * Caculate the target zoom if scaling from "fromZoom" by "scale"
+     * @param  {Number} scale
+     * @param  {Number} fromZoom
+     * @param  {Boolean} isFraction - can return fractional zoom
+     * @return {Number} zoom fit for scale starting from fromZoom
+     */
+    getZoomForScale(scale: number, fromZoom?: number, isFraction?: boolean): number;
+    getZoomFromRes(res: number): number;
+    /**
+     * Sets zoom of the map
+     * @param {Number} zoom
+     * @param {Object} [options=null] options
+     * @param {Boolean} [options.animation=true] whether zoom is animation, true by default
+     * @returns {Map} this
+     */
+    setZoom(zoom: number, options?: {
+        animation: boolean;
+    }): this;
+    /**
+     * Get the max zoom that the map can be zoom to.
+     * @return {Number}
+     */
+    getMaxZoom(): number;
+    /**
+     * Sets the max zoom that the map can be zoom to.
+     * @param {Number} maxZoom
+     * @returns {Map} this
+     */
+    setMaxZoom(maxZoom: number): this;
+    /**
+     * Get the min zoom that the map can be zoom to.
+     * @return {Number}
+     */
+    getMinZoom(): number;
+    /**
+     * Sets the min zoom that the map can be zoom to.
+     * @param {Number} minZoom
+     * @return {Map} this
+     */
+    setMinZoom(minZoom: number): this;
+    /**
+     * Maximum zoom the map has
+     * @return {Number}
+     */
+    getMaxNativeZoom(): number;
+    /**
+     * Resolution for world point in WebGL context
+     * @returns {Number}
+     */
+    getGLRes(): number;
+    /**
+     * Caculate scale from gl zoom to given zoom (default by current zoom)
+     * @param {Number} [zoom=undefined] target zoom, current zoom by default
+     * @returns {Number}
+     * @examples
+     * const point = map.coordToPoint(map.getCenter());
+     * // convert to point in gl zoom
+     * const glPoint = point.multi(this.getGLScale());
+     */
+    getGLScale(zoom?: number): number;
+    /**
+     * zoom in
+     * @return {Map} this
+     */
+    zoomIn(): this;
+    /**
+     * zoom out
+     * @return {Map} this
+     */
+    zoomOut(): this;
+    /**
+     * Whether the map is zooming
+     * @return {Boolean}
+     */
+    isZooming(): boolean;
+    /**
+     * Whether the map is being interacted
+     * @return {Boolean}
+     */
+    isInteracting(): boolean;
+    /**
+     * Sets the center and zoom at the same time.
+     * @param {Coordinate} center
+     * @param {Number} zoom
+     * @return {Map} this
+     */
+    setCenterAndZoom(center: Coordinate, zoom?: number): this;
+    /**
+     * Get the padding Size
+     * @param  {Object} options
+     * @param  {Number} [options.paddingLeft] - Sets the amount of padding in the left of a map container
+     * @param  {Number} [options.paddingTop] - Sets the amount of padding in the top of a map container
+     * @param  {Number} [options.paddingRight] - Sets the amount of padding in the right of a map container
+     * @param  {Number} [options.paddingBottom] - Sets the amount of padding in the bottom of a map container
+     * @returns {Object|null}
+     */
+    _getPaddingSize(options?: {}): {
+        width: any;
+        height: any;
+    };
+    /**
+     * Caculate the zoom level that contains the given extent with the maximum zoom level possible.
+     * @param {Extent} extent
+     * @param  {Boolean} [isFraction] - can return fractional zoom
+     * @param  {Object} [padding] [padding] - padding
+     * @param  {Object} [padding.paddingLeft] - Sets the amount of padding in the left of a map container
+     * @param  {Object} [padding.paddingTop] - Sets the amount of padding in the top of a map container
+     * @param  {Object} [padding.paddingRight] - Sets the amount of padding in the right of a map container
+     * @param  {Object} [padding.paddingBottom] - Sets the amount of padding in the bottom of a map container
+     * @return {Number} zoom fit for scale starting from fromZoom
+     */
+    getFitZoom(extent: Extent, isFraction?: boolean, padding?: MapPaddingType): number;
+    /**
+     * Get map's current view (center/zoom/pitch/bearing)
+     * @return {Object} { center : *, zoom : *, pitch : *, bearing : * }
+     */
+    getView(): MapViewType$1;
+    /**
+     * Set map's center/zoom/pitch/bearing at one time
+     * @param {Object} view - a object containing center/zoom/pitch/bearing
+     * return {Map} this
+     */
+    setView(view: MapViewType$1): this;
+    /**
+     * Get map's resolution
+     * @param {Number} zoom - zoom or current zoom if not given
+     * @return {Number} resolution
+     */
+    getResolution(zoom?: number): number;
+    /**
+     * Get scale of resolutions from zoom to max zoom
+     * @param {Number} zoom - zoom or current zoom if not given
+     * @return {Number} scale
+     */
+    getScale(zoom?: number): number;
+    /**
+     * Get center by the padding.
+     * @private
+     * @param  {Coordinate} center
+     * @param  {Number} zoom
+     * @param  {Object} padding
+     * @param  {Number} [padding.paddingLeft] - Sets the amount of padding in the left of a map container
+     * @param  {Number} [padding.paddingTop] - Sets the amount of padding in the top of a map container
+     * @param  {Number} [padding.paddingRight] - Sets the amount of padding in the right of a map container
+     * @param  {Number} [padding.paddingBottom] - Sets the amount of padding in the bottom of a map container
+     * @return {Coordinate}
+     */
+    _getCenterByPadding(center: Coordinate, zoom?: number, padding?: MapPaddingType): Coordinate;
+    /**
+     * Set the map to be fit for the given extent with the max zoom level possible.
+     * @param  {Extent} extent - extent
+     * @param  {Number} zoomOffset - zoom offset
+     * @param  {Object} [options={}] - options
+     * @param  {Object} [options.animation]
+     * @param  {Object} [options.duration]
+     * @param  {Object} [options.zoomAnimationDuration]
+     * @param  {Object} [options.easing='out']
+     * @param  {Number} [options.paddingLeft] - Sets the amount of padding in the left of a map container
+     * @param  {Number} [options.paddingTop] - Sets the amount of padding in the top of a map container
+     * @param  {Number} [options.paddingRight] - Sets the amount of padding in the right of a map container
+     * @param  {Number} [options.paddingBottom] - Sets the amount of padding in the bottom of a map container
+     * @param  {Boolean} [options.isFraction=false] - can locate to fractional zoom
+     * @param  {Function} step - step function for animation
+     * @return {Map | player} - this
+     */
+    fitExtent(extent: Extent, zoomOffset?: number, options?: MapFitType, step?: (frame: any) => void): this | Player;
+    /**
+     * Get the base layer of the map.
+     * @return {Layer}
+     */
+    getBaseLayer(): Layer;
+    /**
+     * Sets a new base layer to the map.<br>
+     * Some events will be thrown such as baselayerchangestart, baselayerload, baselayerchangeend.
+     * @param  {Layer} baseLayer - new base layer
+     * @return {Map} this
+     * @fires Map#setbaselayer
+     * @fires Map#baselayerchangestart
+     * @fires Map#baselayerchangeend
+     */
+    setBaseLayer(baseLayer: Layer): this;
+    /**
+     * Remove the base layer from the map
+     * @return {Map} this
+     * @fires Map#baselayerremove
+     */
+    removeBaseLayer(): this;
+    /**
+     * Get the layers of the map, except base layer (which should be by getBaseLayer). <br>
+     * A filter function can be given to filter layers, e.g. exclude all the VectorLayers.
+     * @param {Function} [filter=undefined] - a filter function of layers, return false to exclude the given layer.
+     * @return {Layer[]}
+     * @example
+     * var vectorLayers = map.getLayers(function (layer) {
+     *     return (layer instanceof VectorLayer);
+     * });
+     */
+    getLayers(filter?: (layer: Layer) => boolean): Array<Layer>;
+    /**
+     * Get the layer with the given id.
+     * @param  {String} id - layer id
+     * @return {Layer}
+     */
+    getLayer(id: string): Layer | null;
+    /**
+     * Add a new layer on the top of the map.
+     * @param  {Layer|Layer[]} layer - one or more layers to add
+     * @return {Map} this
+     * @fires Map#addlayer
+     */
+    addLayer(layers: Layer | Array<Layer>, ...otherLayers: Array<Layer>): this;
+    /**
+     * Remove a layer from the map
+     * @param  {String|String[]|Layer|Layer[]} layer - one or more layers or layer ids
+     * @return {Map} this
+     * @fires Map#removelayer
+     */
+    removeLayer(layers: Layer | Array<Layer>): this;
+    /**
+     * Sort layers according to the order provided, the last will be on the top.
+     * @param  {string[]|Layer[]} layers - layers or layer ids to sort
+     * @return {Map} this
+     * @example
+     * map.addLayer([layer1, layer2, layer3]);
+     * map.sortLayers([layer2, layer3, layer1]);
+     * map.sortLayers(['3', '2', '1']); // sort by layer ids.
+     */
+    sortLayers(layers: Array<Layer>): this;
+    /**
+     * Exports image from the map's canvas.
+     * @param {Object} [options=undefined] - options
+     * @param {String} [options.mimeType=image/png] - mime type of the image: image/png, image/jpeg, image/webp
+     * @param {String} [options.quality=0.92] - A Number between 0 and 1 indicating the image quality to use for image formats that use lossy compression such as image/jpeg and image/webp.
+     * @param {Boolean} [options.save=false] - whether pop a file save dialog to save the export image.
+     * @param {String} [options.fileName=export] - specify the file name, if options.save is true.
+     * @return {String} image of base64 format.
+     */
+    toDataURL(options?: MapDataURLType): string | null;
+    /**
+     * shorter alias for coordinateToPoint
+     */
+    coordToPoint(coordinate: Coordinate, zoom?: number, out?: Point): Point;
+    /**
+     * shorter alias for coordinateToPointAtRes
+     */
+    coordToPointAtRes(coordinate: Coordinate, res?: number, out?: Point): Point;
+    /**
+     * shorter alias for pointToCoordinate
+     */
+    pointToCoord(point: Point, zoom?: number, out?: Coordinate): Coordinate;
+    /**
+     * shorter alias for pointAtResToCoordinate
+     */
+    pointAtResToCoord(point: Point, res?: number, out?: Coordinate): Coordinate;
+    /**
+     * shorter alias for coordinateToViewPoint
+     */
+    coordToViewPoint(coordinate: Coordinate, out?: Point, altitude?: number): Point;
+    /**
+     * shorter alias for viewPointToCoordinate
+     */
+    viewPointToCoord(viewPoint: Point, out?: Coordinate): Coordinate;
+    /**
+     * shorter alias for coordinateToContainerPoint
+     */
+    coordToContainerPoint(coordinate: Coordinate, zoom?: number, out?: Point): Point;
+    /**
+     * shorter alias for containerPointToCoordinate
+     */
+    containerPointToCoord(containerPoint: Point, out?: Coordinate): Coordinate;
+    /**
+     * Converts a container point to the view point.
+     * Usually used in plugin development.
+     * @param {Point}
+     * @param  {Point} [out=undefined]    - optional point to receive result
+     * @returns {Point}
+     */
+    containerPointToViewPoint(containerPoint: Point, out?: Point): Point;
+    /**
+     * Converts a view point to the container point.
+     * Usually used in plugin development.
+     * @param {Point}
+     * @param  {Point} [out=undefined]    - optional point to receive result
+     * @returns {Point}
+     */
+    viewPointToContainerPoint(viewPoint: Point, out?: Point): Point;
+    /**
+     * Checks if the map container size changed and updates the map if so.
+     * @return {Map} this
+     * @fires Map#resize
+     */
+    checkSize(force?: boolean): this;
+    /**
+     * Computes the coordinate from the given meter distance.
+     * @param  {Coordinate} coordinate - source coordinate
+     * @param  {Number} dx           - meter distance on X axis
+     * @param  {Number} dy           - meter distance on Y axis
+     * @return {Coordinate} Result coordinate
+     */
+    locate(coordinate: Coordinate, dx: number, dy: number): Coordinate;
+    /**
+     * Return map's main panel
+     * @returns {HTMLElement}
+     */
+    getMainPanel(): HTMLDivElement | null;
+    /**
+     * Returns map panels.
+     * @return {Object}
+     */
+    getPanels(): Record<string, PanelDom>;
+    /**
+     * Remove the map
+     * @return {Map} this
+     */
+    remove(): this;
+    /**
+     * whether the map is removed
+     * @return {Boolean}
+     */
+    isRemoved(): boolean;
+    /**
+     * Whether the map is moving
+     * @return {Boolean}
+     */
+    isMoving(): boolean;
+    /**
+     * The callback function when move started
+     * @private
+     * @fires Map#movestart
+     */
+    onMoveStart(param?: any): void;
+    onMoving(param: any): void;
+    onMoveEnd(param: any): void;
+    onDragRotateStart(param: any): void;
+    onDragRotating(param: any): void;
+    onDragRotateEnd(param: any): void;
+    isDragRotating(): boolean;
+    /**
+     * Test if given box is out of current screen
+     * @param {Number[] | PointExtent} box - [minx, miny, maxx, maxy]
+     * @param {Number} padding - test padding
+     * @returns {Boolean}
+     */
+    isOffscreen(box: PointExtent | Array<number>, viewportPadding?: number): boolean;
+    getRenderer(): any;
+    /**
+     * Get map's devicePixelRatio, you can override it by setting devicePixelRatio in options.
+     * @returns {Number}
+     */
+    getDevicePixelRatio(): number;
+    /**
+     * Set map's devicePixelRatio
+     * @param {Number} dpr
+     * @returns {Map} this
+     */
+    setDevicePixelRatio(dpr: number): this;
+    _initContainer(container: MapContainerType): void;
+    /**
+     * try to change cursor when map is not setCursored
+     * @private
+     * @param  {String} cursor css cursor
+     */
+    _trySetCursor(cursor: string): this;
+    _setPriorityCursor(cursor: string): this;
+    _setCursorToPanel(cursor: string): void;
+    _removeLayer(layer: Layer, layerList: Array<Layer>): void;
+    _sortLayersByZIndex(): void;
+    _fireEvent(eventName: string, param?: {
+        [key: string]: any;
+    }): void;
+    _Load(): void;
+    _initRenderer(): void;
+    _getRenderer(): any;
+    _loadAllLayers(): void;
+    /**
+     * Gets layers that fits for the filter
+     * @param  {fn} filter - filter function
+     * @return {Layer[]}
+     * @private
+     */
+    _getLayers(filter?: (layer: Layer) => boolean): any[];
+    _eachLayer(fn: any, ...layerLists: any[]): void;
+    _onLayerEvent(param: any): void;
+    _resetMapStatus(): void;
+    setContainerDomRect(domRect: DOMRect): void;
+    _getContainerDomSize(): Size | null;
+    _updateMapSize(mSize: Size): this;
+    /**
+     * Gets projected center of the map
+     * @return {Coordinate}
+     * @private
+     */
+    _getPrjCenter(): Coordinate;
+    _setPrjCenter(pcenter: Coordinate): void;
+    _setPrjCoordAtContainerPoint(coordinate: Coordinate, point: Point): this;
+    _setPrjCoordAtOffsetToCenter(prjCoord: Coordinate, offset: Point): this;
+    _verifyExtent(prjCenter: Coordinate): boolean;
+    /**
+     * Move map's center by pixels.
+     * @param  {Point} pixel - pixels to move, the relation between value and direction is as:
+     * -1,1 | 1,1
+     * ------------
+     *-1,-1 | 1,-1
+     * @private
+     * @returns {Coordinate} the new projected center.
+     */
+    _offsetCenterByPixel(pixel: Point): void;
+    /**
+     * offset map panels.
+     *
+     * @param  {Point} offset - offset in pixel to move
+     * @return {Map} this
+     */
+    /**
+     * Gets map panel's current view point.
+     * @return {Point}
+     */
+    offsetPlatform(offset?: Point): Point;
+    /**
+     * Get map's view point, adding in frame offset
+     * @return {Point} map view point
+     */
+    getViewPoint(): Point;
+    _resetMapViewPoint(): void;
+    /**
+     * Get map's current resolution
+     * @return {Number} resolution
+     * @private
+     */
+    _getResolution(zoom?: number): number;
+    _getResolutions(): number[];
+    /**
+     * Converts the projected coordinate to a 2D point in the specific zoom
+     * @param  {Coordinate} pCoord - projected Coordinate
+     * @param  {Number} zoom   - point's zoom level
+     * @return {Point} 2D point
+     * @private
+     */
+    _prjToPoint(pCoord: any, zoom?: number, out?: Point): Point;
+    _prjToPointAtRes(pCoord: Coordinate, res?: number, out?: Point): Point;
+    /**
+     * Converts the projected coordinate to a 2D point in the specific resolution
+     * @param  {Coordinate} pCoord - projected Coordinate
+     * @param  {Number} res   - point's resolution
+     * @return {Point} 2D point
+     * @private
+     */
+    _prjsToPointsAtRes(pCoords: Array<Coordinate>, res?: number, resultPoints?: any[]): Array<Point>;
+    /**
+     * Converts the 2D point to projected coordinate
+     * @param  {Point} point - 2D point
+     * @param  {Number} zoom   - point's zoom level
+     * @return {Coordinate} projected coordinate
+     * @private
+     */
+    _pointToPrj(point: Point, zoom?: number, out?: Coordinate): Coordinate;
+    _pointToPrjAtRes(point: Point, res?: number, out?: Coordinate): Coordinate;
+    /**
+     * Convert point at zoom to point at current zoom
+     * @param  {Point} point point
+     * @param  {Number} zoom point's zoom
+     * @return {Point} point at current zoom
+     * @private
+     */
+    _pointToPoint(point: Point, zoom?: number, out?: Point): Point;
+    _pointAtResToPoint(point: Point, res?: number, out?: Point): Point;
+    /**
+     * Convert point at current zoom to point at target res
+     * @param  {Point} point point
+     * @param  {Number} res target res
+     * @return {Point} point at target res
+     * @private
+     */
+    _pointToPointAtRes(point: Point, res?: number, out?: Point): Point;
+    /**
+     * transform container point to geographical projected coordinate
+     *
+     * @param  {Point} containerPoint
+     * @return {Coordinate}
+     * @private
+     */
+    _containerPointToPrj(containerPoint: Point, out?: Coordinate): Coordinate;
+    _callOnLoadHooks(): void;
+    _fixPrjOnWorldWide(prjCoord: Coordinate): this;
+    /**
+     * Export the map's json, a snapshot of the map in JSON format.<br>
+     * It can be used to reproduce the instance by [fromJSON]{@link Map#fromJSON} method
+     * @param  {Object} [options=null] - export options
+     * @param  {Boolean|Object} [options.baseLayer=null] - whether to export base layer's JSON, if yes, it will be used as layer's toJSON options.
+     * @param  {Boolean|Extent} [options.clipExtent=null] - if set with an extent instance, only the geometries intersectes with the extent will be exported.
+     *                                                             If set to true, map's current extent will be used.
+     * @param  {Boolean|Object|Object[]} [options.layers=null] - whether to export other layers' JSON, if yes, it will be used as layer's toJSON options.
+     *                                                        It can also be an array of layer export options with a "id" attribute to filter the layers to export.
+     * @return {Object} layer's JSON
+     */
+    toJSON(options?: MapOptionsType): {
+        [key: string]: any;
+    };
+    /**
+     * Reproduce a map from map's profile JSON.
+     * @param {(string|HTMLElement|object)} container - The container to create the map on, can be:<br>
+     *                                          1. A HTMLElement container.<br/>
+     *                                          2. ID of a HTMLElement container.<br/>
+     *                                          3. A canvas compatible container in node,
+     *                                          e.g. [node-canvas]{@link https://github.com/Automattic/node-canvas},
+     *                                              [canvas2svg]{@link https://github.com/gliffy/canvas2svg}
+     * @param  {Object} mapJSON - map's profile JSON
+     * @param  {Object} [options=null] - options
+     * @param  {Object} [options.baseLayer=null] - whether to import the baseLayer
+     * @param  {Object} [options.layers=null]    - whether to import the layers
+     * @return {Map}
+     * @static
+     * @function
+     * @example
+     * var map = Map.fromJSON('map', mapProfile);
+     */
+    static fromJSON(container: MapContainerType, profile: {
+        [key: string]: any;
+    }, options?: MapOptionsType): Map;
+}
+
+type MapOptionsType = {
+    baseLayer?: Layer;
+    layers?: Array<Layer>;
+    draggable?: boolean;
+    dragPan?: boolean;
+    dragRotate?: boolean;
+    dragPitch?: boolean;
+    dragRotatePitch?: boolean;
+    touchGesture?: boolean;
+    touchZoom?: boolean;
+    touchRotate?: boolean;
+    touchPitch?: boolean;
+    touchZoomRotate?: boolean;
+    doubleClickZoom?: boolean;
+    scrollWheelZoom?: boolean;
+    geometryEvents?: boolean;
+    control?: boolean;
+    attribution?: boolean;
+    zoomControl?: boolean;
+    scaleControl?: boolean;
+    overviewControl?: boolean;
+    fog?: boolean;
+    fogColor?: any;
+    devicePixelRatio?: number;
+    heightFactor?: number;
+    cameraInfiniteFar?: boolean;
+    originLatitudeForAltitude?: number;
+    viewHistory?: boolean;
+    viewHistoryCount?: number;
+    seamlessZoom?: boolean;
+    maxVisualPitch?: number;
+    maxPitch?: number;
+    centerCross?: boolean;
+    zoomInCenter?: boolean;
+    zoomOrigin?: Array<number>;
+    zoomAnimation?: boolean;
+    zoomAnimationDuration?: number;
+    panAnimation?: boolean;
+    panAnimationDuration?: number;
+    rotateAnimation?: boolean;
+    rotateAnimationDuration?: number;
+    zoomable?: boolean;
+    enableInfoWindow?: boolean;
+    hitDetect?: boolean;
+    hitDetectLimit?: number;
+    fpsOnInteracting?: number;
+    layerCanvasLimitOnInteracting?: number;
+    maxZoom?: number;
+    minZoom?: number;
+    maxExtent?: Extent;
+    fixCenterOnResize?: boolean;
+    checkSize?: boolean;
+    checkSizeInterval?: number;
+    renderer?: 'canvas' | 'gl';
+    cascadePitches?: Array<number>;
+    renderable?: boolean;
+    clickTimeThreshold?: number;
+    stopRenderOnOffscreen?: boolean;
+    preventWheelScroll?: boolean;
+    preventTouch?: boolean;
+    supportPluginEvent?: boolean;
+    switchDragButton?: boolean;
+    mousemoveThrottleTime?: number;
+    maxFPS?: number;
+    debug?: boolean;
+    spatialReference?: SpatialReferenceType;
+    autoPanAtEdge?: boolean;
+    boxZoom?: boolean;
+    boxZoomSymbol?: {
+        'markerType': string;
+        'markerLineWidth': number;
+        'markerLineColor': string;
+        'markerLineDasharray': Array<number>;
+        'markerFillOpacity': number;
+        'markerFill': string;
+        'markerWidth': number;
+        'markerHeight': number;
+    };
+    onlyVisibleGeometryEvents?: boolean;
+    compassControl?: boolean;
+    layerSwitcherControl?: boolean;
+    navControl?: boolean;
+    resetControl?: boolean;
+};
+type MapCreateOptionsType = {
+    center: Array<number> | Coordinate;
+    zoom: number;
+} & MapOptionsType;
+type MapPaddingType = {
+    paddingLeft: number;
+    paddingRight: number;
+    paddingTop: number;
+    paddingBottom: number;
+};
+type MapViewType$1 = {
+    center?: Array<number> | Coordinate;
+    zoom?: number;
+    pitch?: number;
+    bearing?: number;
+    height?: number;
+};
+type MapFitType = {
+    isFraction?: boolean;
+    animation?: boolean;
+    duration?: number;
+    easing?: EasingType;
+} & MapPaddingType;
+type MapDataURLType = {
+    mimeType?: string;
+    fileName?: string;
+    quality?: number;
+    save?: boolean;
+};
+type MapIdentifyOptionsType = {
+    tolerance?: number;
+    eventTypes?: Array<string>;
+    layers?: Array<Layer>;
+    count?: number;
+    includeInvisible?: boolean;
+    includeInternals?: boolean;
+};
+type MapContainerType = string | HTMLDivElement | HTMLCanvasElement | {
+    [key: string]: any;
+};
+type PanelDom = (HTMLDivElement | HTMLElement) & {
+    layerDOM: HTMLElement;
+    uiDOM: HTMLElement;
+};
+
+declare const MapTool_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Class;
+/**
+ * @classdesc
+ * <pre>
+ * The parent class for all the map tools.
+ * It is abstract and not intended to be instantiated.
+ * Some interface methods to implement:
+ * 1. onAdd: optional, a callback method to do some prepares before enabled when the map tool is added to a map
+ * 2. onEnable: optional, called when the map tool is enabled, used to setup the context such as adding more event listeners other than the map, disabling map's default handlers (draggable, scrollWheelZoom, etc) and creating temporary layers.
+ * 3. getEvents: required, provide an event map to register event listeners on the map.
+ * 4. onDisable: optional, called when the map tool is disabled, used to cleanup such as unregistering event listeners, enable map's original handlers and remove temporary layers.
+ * </pre>
+ * @abstract
+ * @category maptool
+ * @extends Class
+ * @mixes Eventable
+ */
+declare class MapTool extends MapTool_base {
+    _map: Map;
+    _enabled?: boolean;
+    onEnable?(): void;
+    getEvents?(): void;
+    onDisable?(): void;
+    onAdd?(): void;
+    /**
+     * Adds the map tool to a map.
+     * @param {Map} map
+     * @return {MapTool} this
+     * @fires MapTool#add
+     */
+    addTo(map: Map): this;
+    /**
+     * Gets the map it added to.
+     * @return {Map} map
+     */
+    getMap(): Map;
+    /**
+     * Enable the map tool.
+     * @return {MapTool} this
+     * @fires MapTool#enable
+     */
+    enable(): this;
+    /**
+     * Disable the map tool
+     * @return {MapTool} this
+     * @fires MapTool#disable
+     */
+    disable(): this;
+    /**
+     * Returns whether the tool is enabled
+     * @return {Boolean} true | false
+     */
+    isEnabled(): boolean;
+    remove(): this;
+    _registerEvents(): void;
+    _switchEvents(to: any): void;
+    _fireEvent(eventName: string, param?: any): void;
+}
+//# sourceMappingURL=MapTool.d.ts.map
+
+type DrawToolOptions = {
+    mode?: string;
+    symbol?: any;
+    once?: boolean;
+    autoPanAtEdge?: boolean;
+    blockGeometryEvents?: boolean;
+    zIndex?: number;
+    doubleClickZoom?: boolean;
+    ignoreMouseleave?: boolean;
+    enableAltitude?: boolean;
+    interactive?: boolean;
+    edgeAutoComplete?: boolean;
+};
+type modeActionType = {
+    action?: string | Array<string>;
+    create?: any;
+    update?: any;
+    generate?: any;
+    clickLimit?: number | string;
+};
+/**
+ * 图形绘制工具类
+ *
+ * @english
+ * A map tool to help draw geometries.
+ * @category maptool
+ * @extends MapTool
+ * @example
+ * var drawTool = new DrawTool({
+ *     mode : 'Polygon',
+ *     symbol : {
+ *         'lineColor' : '#000',
+ *         'lineWidth' : 5
+ *     },
+ *     once : true
+ * }).addTo(map);
+ */
+declare class DrawTool extends MapTool {
+    options: DrawToolOptions;
+    _vertexes: Array<any>;
+    _historyPointer: any;
+    _events: any;
+    _geometry?: any;
+    _drawToolLayer?: any;
+    _mapAutoPanAtEdge?: boolean;
+    _geometryEvents?: boolean;
+    _mapDoubleClickZoom?: boolean;
+    _ending: boolean;
+    _mapDraggable?: boolean;
+    _clickCoords?: Array<any>;
+    _layers?: Array<any>;
+    /**
+     * 为DrawTool注册一个新mode
+     *
+     * @english
+     * Register a new mode for DrawTool
+     * @param name                  mode name
+     * @param modeAction            modeActions
+     * @param modeAction.action     the action of DrawTool: click, mousedown, clickDblclick
+     * @param modeAction.create     the create method of drawn geometry
+     * @param modeAction.update     the update method of drawn geometry
+     * @param modeAction.generate   the method to generate geometry at the end of drawing.
+     * @example
+     * //Register "CubicBezierCurve" mode to draw Cubic Bezier Curves.
+     * DrawTool.registerMode('CubicBezierCurve', {
+        'action': 'clickDblclick',
+        'create': path => new CubicBezierCurve(path),
+        'update': (path, geometry) => {
+            geometry.setCoordinates(path);
+        },
+        'generate': geometry => geometry
+       }
+     });
+     */
+    static registerMode(name: string, modeAction: modeActionType): void;
+    /**
+     * 根据name获取mode actions
+     *
+     * @english
+     * Get mode actions by mode name
+     * @param name      DrawTool mode name
+     * @return          mode actions
+     */
+    static getRegisterMode(name: string): any;
+    /**
+     * 实例化DrawTool工具
+     *
+     * @english
+     * In default, DrawTool supports the following modes: <br>
+     * [Point, LineString, Polygon, Circle, Ellipse, Rectangle, ArcCurve, QuadBezierCurve, CubicBezierCurve] <br>
+     * You can easily add new mode to DrawTool by calling [registerMode]{@link DrawTool.registerMode}
+     * @param options=null                  - construct options
+     * @param options.mode=null             - mode of the draw tool
+     * @param options.symbol=null           - symbol of the geometries drawn
+     * @param options.once=null             - whether disable immediately once drawn a geometry.
+     * @param options.autoPanAtEdge=false   - Whether to make edge judgement or not.
+     */
+    constructor(options: DrawToolOptions);
+    /**
+     * 获取当前mode
+     *
+     * @english
+     * Get current mode of draw tool
+     * @return mode
+     */
+    getMode(): string;
+    /**
+     * 设置mode
+     *
+     * @english
+     * Set mode of the draw tool
+     * @param mode - mode of the draw tool
+     * @returns {DrawTool} this
+     * @expose
+     */
+    setMode(mode: string): DrawTool;
+    /**
+     * 获取DrawTool的symbol属性
+     *
+     * @english
+     * Get symbol of the draw tool
+     * @return symbol
+     */
+    getSymbol(): any;
+    /**
+     * 设置DrawTool的symbol属性
+     *
+     * @english
+     * Set draw tool's symbol
+     * @param symbol - symbol set
+     * @returns {DrawTool} this
+     */
+    setSymbol(symbol: any): DrawTool;
+    /**
+     * 获取当前绘制图形
+     *
+     * @english
+     * Get geometry is currently drawing
+     * @return geometry currently drawing
+     */
+    getCurrentGeometry(): Geometry;
+    onAdd(): void;
+    onEnable(): this;
+    onDisable(): this;
+    /**
+     * 撤消绘图，仅适用于点击/删除模式
+     *
+     * @english
+     * Undo drawing, only applicable for click/dblclick mode
+     * @return this
+     */
+    undo(): this;
+    /**
+     * 重做绘图，只适用于click/dblclick模式
+     *
+     * @english
+     * Redo drawing, only applicable for click/dblclick mode
+     * @return this
+     */
+    redo(): this;
+    /**
+     * 检查历史记录
+     *
+     * @english
+     * check should recor history
+     * @param actions
+     * @returns {boolean}
+     * @private
+     */
+    _shouldRecordHistory(actions: any): boolean;
+    _checkMode(): void;
+    _saveMapCfg(): void;
+    _restoreMapCfg(): void;
+    _loadResources(): void;
+    _getProjection(): ProjectionType;
+    _getRegisterMode(): any;
+    getEvents(): {};
+    /**
+     * 鼠标按下开始绘画
+     *
+     * @english
+     * mouse down start draw
+     * @param event
+     * @private
+     */
+    _mouseDownHandler(event: any): void;
+    /**
+     * 监听 mouse up 事件
+     *
+     * @english
+     * handle mouse up event
+     * @param event
+     * @private
+     */
+    _mouseUpHandler(event: any): void;
+    /**
+     * 监听mouse first click点击事件
+     *
+     * @english
+     * handle mouse first click handle
+     * @param event
+     * @private
+     */
+    _clickHandler(event: any): this;
+    /**
+     * 第一次事件创建相关geometry
+     *
+     * @param event
+     * @private
+     */
+    _createGeometry(event: any): void;
+    /**
+     * 监听鼠标移动
+     *
+     * @english
+     * handle mouse move event
+     * @param event
+     * @private
+     */
+    _mouseMoveHandler(event: any): this;
+    /**
+     * 监听double click事件
+     *
+     * @english
+     * handle mouse double click event
+     * @param event
+     * @private
+     */
+    _doubleClickHandler(event: any): this;
+    _addGeometryToStage(geometry: any): void;
+    /**
+     * 结束当前绘制
+     *
+     * @english
+     * End current draw
+     * @param [param=null] params of drawend event
+     * @returns this
+     */
+    endDraw(param: any): DrawTool;
+    _clearStage(): void;
+    /**
+     * 获取鼠标事件 ontainer point 信息
+     *
+     * @english
+     * Get container point of the mouse event
+     * @param event -  mouse event
+     * @return
+     * @private
+     */
+    _getMouseContainerPoint(event: Event): Point;
+    _isValidContainerPoint(containerPoint: any): boolean;
+    _getSnapResult(snapTo: any, containerPoint: any): {
+        prjCoord: any;
+        effectedVertex: any;
+    };
+    _getDrawLayer(): any;
+    _fireEvent(eventName: any, param: any): void;
+    _pushLayers(layers: any): this;
+    _outLayers(layers: any): this;
+    /**
+    * 设置Layer的zIndex
+    * @english
+    * set draw inner layers zIndex
+    * @param  {Number} zIndex -  draw layer zIndex
+    * @return this
+    */
+    setLayerZIndex(zIndex: number): this;
+}
+
+declare module "./Map" {
+    interface Map {
+        _mapAnimPlayer: Player;
+        isRotating(): boolean;
+        _animateTo(view: MapViewType, options?: MapAnimationOptionsType, step?: (frame: any) => void): Player;
+        _stopAnim(player?: Player): void;
+        animateTo(view: MapViewType, options?: MapAnimationOptionsType, step?: (frame: any) => void): Player;
+        flyTo(view: MapViewType, options?: MapAnimationOptionsType, step?: (frame: any) => void): this;
+        isAnimating(): boolean;
+    }
+}
+//# sourceMappingURL=Map.Anim.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        isFullScreen(): boolean;
+        requestFullScreen(dom?: HTMLDivElement): this;
+        cancelFullScreen(): this;
+        _requestFullScreen(dom: HTMLDivElement): void;
+        _cancelFullScreen(): void;
+    }
+}
+//# sourceMappingURL=Map.FullScreen.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        panTo(coordinate: Coordinate, options?: MapAnimationOptionsType, step?: (frame: any) => void): this;
+        _panTo(prjCoord: Coordinate, options?: MapAnimationOptionsType): this;
+        panBy(offset: Point | Array<number>, options?: MapAnimationOptionsType, step?: (frame: any) => void): this;
+        _panAnimation(target: Coordinate, t?: number, cb?: (frame: any) => void): void;
+    }
+}
+//# sourceMappingURL=Map.Pan.d.ts.map
+
+type identifyOptionsType = MapIdentifyOptionsType & {
+    coordinate: Coordinate;
+};
+type identifyAtPointOptionsType = MapIdentifyOptionsType & {
+    containerPoint: Point;
+};
+type MapIdentifyCBType = (geos: Array<Geometry>) => void;
+declare module "./Map" {
+    interface Map {
+        computeLength(coord1: Coordinate, coord2: Coordinate): number;
+        computeGeometryLength(geometry: Geometry): number;
+        computeGeometryArea(geometry: Geometry): number;
+        identify(opts: identifyOptionsType, cb: MapIdentifyCBType): void;
+        identifyAtPoint(opts: identifyAtPointOptionsType, cb: MapIdentifyCBType): void;
+    }
+}
+//# sourceMappingURL=Map.Topo.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        _zoom(nextZoom: number, origin?: Point): any;
+        _zoomAnimation(nextZoom: number, origin?: Point, startScale?: number): any;
+        _checkZoomOrigin(origin?: Point): Point;
+        _startZoomAnim(nextZoom: number, origin?: Point, startScale?: number): any;
+        onZoomStart(nextZoom: number, origin?: Point): any;
+        onZooming(nextZoom: number, origin?: Point, startScale?: number): any;
+        onZoomEnd(nextZoom: number, origin?: Point): any;
+        _zoomTo(nextZoom: number, origin?: Point): any;
+        _checkZoom(nextZoom: number): number;
+    }
+}
+//# sourceMappingURL=Map.Zoom.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        cameraPosition: Point;
+        cameraLookAt: number[];
+        projViewMatrix: Matrix4;
+        getFov(): number;
+        setFov(fov: number): this;
+        getBearing(): number;
+        setBearing(bearing: number): this;
+        _setBearing(bearing: number): this;
+        getPitch(): number;
+        setPitch(pitch: number): this;
+        _setPitch(pitch: number): this;
+        _calcMatrices(): void;
+        _containerPointToPoint(p: Point, zoom?: number, out?: Point): Point;
+        _recenterOnTerrain(): void;
+        setCameraMovements(frameOptions: Array<MapViewType>, option?: {
+            autoRotate: boolean;
+        }): any;
+        setCameraOrientation(params: MapViewType): this;
+        setCameraPosition(coordinate: Coordinate): any;
+        getFitZoomForCamera(cameraPosition: Array<number>, pitch: number): any;
+        isTransforming(): boolean;
+        getFrustumAltitude(): number;
+        updateCenterAltitude(): any;
+        _queryTerrainByProjCoord(coord: Coordinate): number;
+        _hasAltitudeLayer(): boolean;
+        _queryTerrainInfo(containerPoint: Point): {
+            coordinate: Coordinate;
+            altitude: number;
+        } | null;
+        _pointAtResToContainerPoint(point: Point, res?: number, altitude?: number, out?: Point): Point;
+        _pointToContainerPoint(point: Point, zoom?: number, out?: Point): Point;
+        _pointsAtResToContainerPoints(point: Point[], res?: number, altitude?: number[], out?: Point[]): Point[];
+    }
+}
+//# sourceMappingURL=Map.Camera.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        zoomToPreviousView(options?: any): MapViewType;
+        hasPreviousView(): boolean;
+        zoomToNextView(options?: any): MapViewType;
+        hasNextView(): boolean;
+        getViewHistory(): Array<MapViewType>;
+        _onViewChange(view: MapViewType): void;
+        _getCurrentView(): MapViewType;
+    }
+}
+//# sourceMappingURL=Map.ViewHistory.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        getCollisionIndex(): CollisionIndex;
+        createCollisionIndex(): CollisionIndex;
+        clearCollisionIndex(): this;
+        _insertUICollidesQueue(): this;
+        uiCollides(): this;
+        _addUI(ui: UIComponent): this;
+        _removeUI(ui: UIComponent): number;
+    }
+}
+//# sourceMappingURL=Map.Collision.d.ts.map
+
+declare module "./Map" {
+    interface Map {
+        /**
+         * Converts a coordinate to the 2D point in current zoom or in the specific zoom. <br>
+         * The 2D point's coordinate system's origin is the same with map's origin.
+         * Usually used in plugin development.
+         * @param  coordinate - coordinate
+         * @param  zoom  - zoom level
+         * @param  out    - optional point to receive result
+         * @return  2D point
+         * @example
+         * var point = map.coordinateToPoint(new Coordinate(121.3, 29.1));
+         */
+        coordinateToPoint(coordinate: Coordinate, zoom?: number, out?: Point): Point;
+        /**
+         * Converts a coordinate to the 2D point at specified resolution. <br>
+         * The 2D point's coordinate system's origin is the same with map's origin.
+         * Usually used in plugin development.
+         * @param  coordinate - coordinate
+         * @param  res  - target resolution
+         * @param  out    - optional point to receive result
+         * @return  2D point
+         * @example
+         * var point = map.coordinateToPoint(new Coordinate(121.3, 29.1));
+         */
+        coordinateToPointAtRes(coordinate: Coordinate, res?: number, out?: Point): Point;
+        /**
+         * Converts a 2D point in current zoom or a specific zoom to a coordinate.
+         * Usually used in plugin development.
+         * @param  point - 2D point
+         * @param  zoom  - point's zoom level
+         * @param  out    - optional coordinate to receive result
+         * @return coordinate
+         * @example
+         * var coord = map.pointToCoordinate(new Point(4E6, 3E4));
+         */
+        pointToCoordinate(point: Point, zoom?: number, out?: Coordinate): Coordinate;
+        /**
+         * Converts a 2D point at specific resolution to a coordinate.
+         * Usually used in plugin development.
+         * @param  point - 2D point
+         * @param  res  - point's resolution
+         * @param  out    - optional coordinate to receive result
+         * @return coordinate
+         * @example
+         * var coord = map.pointAtResToCoordinate(new Point(4E6, 3E4), map.getResolution());
+         */
+        pointAtResToCoordinate(point: Point, res?: number, out?: Coordinate): Coordinate;
+        /**
+         * Converts a geographical coordinate to view point.<br>
+         * A view point is a point relative to map's mapPlatform panel's position. <br>
+         * Usually used in plugin development.
+         * @param coordinate
+         * @param  out    - optional point to receive result
+         * @return          */
+        coordinateToViewPoint(coordinate: Coordinate, out?: Point, altitude?: number): Point;
+        /**
+         * Converts a view point to the geographical coordinate.
+         * Usually used in plugin development.
+         * @param viewPoint
+         * @param  out    - optional coordinate to receive result
+         * @return          */
+        viewPointToCoordinate(viewPoint: Point, out?: Coordinate): Coordinate;
+        /**
+         * Convert a geographical coordinate to the container point. <br>
+         *  A container point is a point relative to map container's top-left corner. <br>
+         * @param                - coordinate
+         * @param  zoom  - zoom level
+         * @param  out    - optional point to receive result
+         * @return          */
+        coordinateToContainerPoint(coordinate: Coordinate, zoom?: number, out?: Point): Point;
+        coordinateToContainerPointAtRes(coordinate: Coordinate, res?: number, out?: Point): Point;
+        /**
+         * Convert a geographical coordinate to the container point. <br>
+         * Batch conversion for better performance <br>
+         *  A container point is a point relative to map container's top-left corner. <br>
+         * @param  coordinates - coordinates
+         * @param  zoom  - zoom level
+         * @return {Point[]}
+         */
+        coordinatesToContainerPoints(coordinates: Array<Coordinate>, zoom?: number): Array<Point>;
+        /**
+         * Convert a geographical coordinate to the container point. <br>
+         * Batch conversion for better performance <br>
+         *  A container point is a point relative to map container's top-left corner. <br>
+         * @param  coordinates                - coordinates
+         * @param  resolution  - container points' resolution
+         * @return
+         */
+        coordinatesToContainerPointsAtRes(coordinates: Array<Coordinate>, res?: number): Array<Point>;
+        /**
+         * Converts a container point to geographical coordinate.
+         * @param          * @param  out    - optional coordinate to receive result
+         * @return          */
+        containerPointToCoordinate(containerPoint: Point, out?: Coordinate): Coordinate;
+        /**
+         * Converts a container point extent to the geographic extent.
+         * @param  containerExtent - containeproints extent
+         * @return  geographic extent
+         */
+        containerToExtent(containerExtent: PointExtent): Extent;
+        /**
+         * Converts geographical distances to the pixel length.<br>
+         * The value varis with difference zoom level.
+         *
+         * @param  xDist - distance on X axis.
+         * @param  yDist - distance on Y axis.
+         * @return {Size} result.width: pixel length on X axis; result.height: pixel length on Y axis
+         */
+        distanceToPixel(xDist: number, yDist: number, zoom?: number): Size;
+        /**
+         * Converts geographical distances to the 2d point length.<br>
+         * The value varis with difference zoom level.
+         *
+         * @param  xDist - distance on X axis.
+         * @param  yDist - distance on Y axis.
+         * @param  zoom - point's zoom
+         * @return          */
+        distanceToPoint(xDist: number, yDist: number, zoom?: number, paramCenter?: Coordinate): Point;
+        /**
+         * Converts geographical distances to the 2d point length at specified resolution.
+         *
+         * @param  xDist - distance on X axis.
+         * @param  yDist - distance on Y axis.
+         * @param  res - target resolution
+         * @return          */
+        distanceToPointAtRes(xDist: number, yDist: number, res?: number, paramCenter?: Coordinate, out?: Point): Point;
+        /**
+         * Converts height/altitude  to the 2d point
+         *
+         * @param  altitude - the value of altitude,suche as: map.altitudeToPoint(100);
+         * @param  res - target resolution
+         * @param  [originCenter=null] - optional original coordinate for caculation
+         * @return          */
+        altitudeToPoint(altitude: number, res?: number, originCenter?: Coordinate): number;
+        pointAtResToAltitude(point: Point, res?: number, originCenter?: Coordinate): number;
+        /**
+         * Converts pixel size to geographical distance.
+         *
+         * @param  width - pixel width
+         * @param  height - pixel height
+         * @return  distance - Geographical distance
+         */
+        pixelToDistance(width: number, height: number): number;
+        /**
+         * Converts 2d point distances to geographic length.<br>
+         *
+         * @param  dx - distance on X axis.
+         * @param  dy - distance on Y axis.
+         * @param  zoom - point's zoom
+         * @return distance
+         */
+        pointToDistance(dx: number, dy: number, zoom?: number): number;
+        /**
+         * Converts 2d point distances to geographic length.<br>
+         *
+         * @param  dx - distance on X axis.
+         * @param  dy - distance on Y axis.
+         * @param  res - point's resolution
+         * @return distance
+         */
+        pointAtResToDistance(dx: number, dy: number, res?: number, paramCenter?: Coordinate): number;
+        /**
+         * Computes the coordinate from the given pixel distance.
+         * @param  coordinate - source coordinate
+         * @param  px           - pixel distance on X axis
+         * @param  py           - pixel distance on Y axis
+         * @return Result coordinate
+         */
+        locateByPoint(coordinate: Coordinate, px: number, py: number): Coordinate;
+        /**
+         * Get map's extent in view points.
+         * @param zoom - zoom
+         * @return
+         */
+        get2DExtent(zoom?: number, out?: PointExtent): PointExtent;
+        get2DExtentAtRes(res?: number, out?: PointExtent): PointExtent;
+        /**
+         * Converts a view point extent to the geographic extent.
+         * @param  extent2D - view points extent
+         * @return  geographic extent
+         */
+        pointToExtent(extent2D: PointExtent): Extent;
+        /**
+         * When moving map, map's center is updated in real time, but platform will be moved in the next frame to keep syncing with other layers
+         * Get the offset in current frame and the next frame
+         * @return view point offset
+         */
+        getViewPointFrameOffset(): Point | null;
+        /**
+     * transform view point to geographical projected coordinate
+        * @param  viewPoint
+        * @param  out  - optional coordinate to receive result
+        * @return         */
+        viewPointToPrj(viewPoint: Point, out?: Point): Point;
+        /**
+         * transform geographical projected coordinate to container point
+         * @param  pCoordinate
+         * @param  zoom target zoom
+         * @param  out    - optional point to receive result
+         */
+        prjToContainerPoint(pCoordinate: Coordinate, zoom?: number, out?: Point, altitude?: number): Point;
+        prjToContainerPointAtRes(pCoordinate: Coordinate, res?: number, out?: Point, altitude?: number): Point;
+        /**
+         * transform geographical projected coordinate to view point
+         * @param  pCoordinate
+         * @return          */
+        prjToViewPoint(pCoordinate: Coordinate, out?: Point, altitude?: number): Point;
+        viewPointToPoint(viewPoint: Point, zoom?: number, out?: Point): Point;
+        pointToViewPoint(point: Point, zoom?: number, out?: Point): Point;
+    }
+}
+//# sourceMappingURL=Map.CoordTransform.d.ts.map
+
+interface ILanguage {
+    distancetool: Distancetool;
+    areatool: Areatool;
+}
+interface Distancetool {
+    start: string;
+    units: Units;
+}
+interface Areatool {
+    units: Units;
+}
+interface Units {
+    mile: string;
+    feet: string;
+    kilometer: string;
+    meter: string;
+}
+type Lang = 'zh-CN' | 'es-MX' | 'en-US';
+declare class Translator extends Class {
+    languages: {
+        [key: string]: ILanguage;
+    };
+    nodes: ILanguage;
+    constructor(lang: Lang);
+    /**
+     *  Method to update the language of maptalks
+     *  @param {string} lang - Available Langs (zh-CN, en-US, es-MX)
+     *  @example setLang('zh-CN')
+    */
+    setLang(lang: Lang): void;
+    _validateNestedProps(nestedProps: string[]): void;
+    /**
+     *  method to return the text of the current language available on lang json's
+     *  @param {string} textNode - Accesible property with the current language text.
+     *  @return {string} Text to show in screen
+     *  @example document.write(translate('areatool.units.kilometer'))
+    */
+    translate(textNode?: string | null): string;
+}
+
+type DistanceToolOptions = {
+    mode?: string;
+    language?: string;
+    metric?: boolean;
+    imperial?: boolean;
+    symbol?: any;
+    vertexSymbol?: any;
+    labelOptions?: any;
+    decimalPlaces?: number;
+    formatLabelContent?: any;
+    clearButtonSymbol?: any;
+    zIndex?: number;
+} & DrawToolOptions;
+/**
+ * 距离测量工具类
+ *
+ * @english
+ * A map tool to help measure distance on the map
+ * @category maptool
+ * @extends DrawTool
+ * @example
+ * var distanceTool = new DistanceTool({
+ *     'once' : true,
+ *     'symbol': {
+ *       'lineColor' : '#34495e',
+ *       'lineWidth' : 2
+ *     },
+ *     'vertexSymbol' : {
+ *       'markerType'        : 'ellipse',
+ *       'markerFill'        : '#1bbc9b',
+ *       'markerLineColor'   : '#000',
+ *       'markerLineWidth'   : 3,
+ *       'markerWidth'       : 10,
+ *      'markerHeight'      : 10
+ *    },
+ *    'language' : 'en-US'
+ *  }).addTo(map);
+ *
+ */
+declare class DistanceTool extends DrawTool {
+    options: DistanceToolOptions;
+    _measureLayers: Array<any>;
+    translator: Translator;
+    _tailMarker?: any;
+    _tailLabel?: any;
+    _lastMeasure?: number | string;
+    _lastVertex?: any;
+    _measureMarkerLayer?: any;
+    _measureLineLayer?: any;
+    /**
+     * 配置项
+     *
+     * @param options=null                  - construct options
+     * @param options.language=zh-CN        - language of the distance tool, zh-CN or en-US
+     * @param options.metric=true           - display result in metric system
+     * @param options.imperial=false        - display result in imperial system.
+     * @param options.symbol=null           - symbol of the line
+     * @param options.vertexSymbol=null     - symbol of the vertice
+     * @param options.labelOptions=null     - construct options of the vertice labels.
+     */
+    constructor(options: DistanceToolOptions);
+    /**
+     * 清空测量
+     *
+     * @english
+     * Clear the measurements
+     * @return {DistanceTool} this
+     */
+    clear(): this;
+    /**
+     * 获取在绘制图形期间的VectorLayers
+     *
+     * @english
+     * Get the VectorLayers with the geometries drawn on the map during measuring.
+     * @return {Array<Layer>}
+     */
+    getMeasureLayers(): any[];
+    /**
+     * 获取最后测量结果
+     *
+     * @english
+     * Get last measuring result
+     * @return {Number}
+     */
+    getLastMeasure(): string | number;
+    /**
+     * 撤消绘图，仅适用于点击/删除模式
+     *
+     * @english
+     * Undo drawing, only applicable for click/dblclick mode
+     * @return {DistanceTool} this
+     */
+    undo(): this;
+    /**
+     * 重做绘图，只适用于click/dblclick模式
+     *
+     * @english
+     * Redo drawing, only applicable for click/dblclick mode
+     * @return {DistanceTool} this
+     */
+    redo(): this;
+    _formatLabelContent(params: any): string;
+    _measure(toMeasure: any): string;
+    _registerMeasureEvents(): void;
+    _afterEnable(): void;
+    _afterDisable(): void;
+    _msOnDrawStart(param: any): void;
+    _msOnMouseMove(param: any): void;
+    _msGetCoordsToMeasure(param: any): any;
+    _msOnDrawVertex(param: any): void;
+    _addVertexMarker(marker: Marker, vertexLabel?: any): void;
+    _msOnDrawEnd(param: any): void;
+    _addClearMarker(coordinates: Coordinate, prjCoord: any, dx: number | string): void;
+    _clearTailMarker(): void;
+    _clearMeasureLayers(): void;
+    _getFirstCoordinate(): any;
+    _getLasttCoordinate(): any;
+}
+
+type AreaToolOptions = {
+    language?: string;
+    metric?: boolean;
+    imperial?: boolean;
+    symbol?: any;
+    vertexSymbol?: any;
+    labelOptions?: any;
+    mode?: string;
+} & DistanceToolOptions;
+/**
+ * 一个继承于DistanceTool类，测量面积的地图工具类。
+ *
+ * @english
+ * A map tool to help measure area on the map .it is extends DistanceTool
+ * @category maptool
+ * @extends DistanceTool
+ * @example
+ * var areaTool = new AreaTool({
+ *     'once' : true,
+ *     'symbol': {
+ *       'lineColor' : '#34495e',
+ *       'lineWidth' : 2
+ *     },
+ *     'vertexSymbol' : {
+ *       'markerType'        : 'ellipse',
+ *       'markerFill'        : '#1bbc9b',
+ *       'markerLineColor'   : '#000',
+ *       'markerLineWidth'   : 3,
+ *       'markerWidth'       : 10,
+ *      'markerHeight'      : 10
+ *    },
+ *    'language' : 'en-US'
+ *  }).addTo(map);
+ */
+declare class AreaTool extends DistanceTool {
+    options: AreaToolOptions;
+    /**
+     * 配置项
+     *
+     * @english
+     * @param options option              - construct options
+     * @param options.language=zh-CN      - language of the distance tool, zh-CN or en-US
+     * @param options.metric=true         - display result in metric system
+     * @param options.imperial=false      - display result in imperial system.
+     * @param options.symbol=null         - symbol of the line
+     * @param options.vertexSymbol=null   - symbol of the vertice
+     * @param options.labelOptions=null   - construct options of the vertice labels.
+     */
+    constructor(options: AreaToolOptions);
+    _measure(toMeasure: Geometry | Array<any>): string;
+    _msGetCoordsToMeasure(param: any): any;
+    _msOnDrawVertex(param: any): void;
+    _msOnDrawEnd(param: any): void;
+}
+
+declare const UIMarker_base: {
+    new (...args: any[]): {
+        _handlers?: Handler[];
+        addHandler(name: any, handlerClass: any): any;
+        removeHandler(name: any): any;
+        _clearHandlers(): void;
+    };
+} & typeof UIComponent;
+/**
+ *
+ * @classdesc
+ * Class for UI Marker, a html based marker positioned by geographic coordinate. <br>
+ *
+ * @category ui
+ * @extends ui.UIComponent
+ * @mixes Handlerable
+ * @memberOf ui
+ * @example
+ * var dom = document.createElement('div');
+ * dom.innerHTML = 'hello ui marker';
+ * var marker = new maptalks.ui.UIMarker([0, 0], {
+ *      draggable : true,
+ *      content : dom
+ *  }).addTo(map);
+ */
+declare class UIMarker extends UIMarker_base {
+    _markerCoord: Coordinate;
+    options: UIMarkerOptionsType;
+    _owner: Map;
+    _mousedownEvent: MouseEvent;
+    _mouseupEvent: MouseEvent;
+    _touchstartTime: number;
+    /**
+     * As it's renderered by HTMLElement such as a DIV, it: <br>
+     * 1. always on the top of all the map layers <br>
+     * 2. can't be snapped as it's not drawn on the canvas. <br>
+     * @param  {Coordinate} coordinate - UIMarker's coordinates
+     * @param {Object} options - options defined in [UIMarker]{@link UIMarker#options}
+     */
+    constructor(coordinate: Coordinate | Array<number>, options: UIMarkerOptionsType);
+    _getClassName(): string;
+    /**
+     * Sets the coordinates
+     * @param {Coordinate} coordinates - UIMarker's coordinate
+     * @returns {UIMarker} this
+     * @fires UIMarker#positionchange
+     */
+    setCoordinates(coordinates: Coordinate): this;
+    /**
+     * Gets the coordinates
+     * @return {Coordinate} coordinates
+     */
+    getCoordinates(): Coordinate;
+    getCenter(): Coordinate;
+    getAltitude(): number;
+    setAltitude(alt: number): this;
+    /**
+     * Sets the content of the UIMarker
+     * @param {String|HTMLElement} content - UIMarker's content
+     * @returns {UIMarker} this
+     * @fires UIMarker#contentchange
+     */
+    setContent(content: string | HTMLElement): this;
+    /**
+     * Gets the content of the UIMarker
+     * @return {String|HTMLElement} content
+     */
+    getContent(): string | HTMLElement;
+    onAdd(): this;
+    /**
+     * Show the UIMarker
+     * @returns {UIMarker} this
+     * @fires UIMarker#showstart
+     * @fires UIMarker#showend
+     */
+    show(): this;
+    /**
+     * Flash the UIMarker, show and hide by certain internal for times of count.
+     *
+     * @param {Number} [interval=100]     - interval of flash, in millisecond (ms)
+     * @param {Number} [count=4]          - flash times
+     * @param {Function} [cb=null]        - callback function when flash ended
+     * @param {*} [context=null]          - callback context
+     * @return {UIMarker} this
+     */
+    flash(interval: number, count: number, cb?: (arg: any) => void, context?: any): any;
+    /**
+     * A callback method to build UIMarker's HTMLElement
+     * @protected
+     * @param {Map} map - map to be built on
+     * @return {HTMLElement} UIMarker's HTMLElement
+     */
+    buildOn(): HTMLElement;
+    /**
+     * Gets UIMarker's HTMLElement's position offset, it's caculated dynamically accordiing to its actual size.
+     * @protected
+     * @return {Point} offset
+     */
+    getOffset(): Point;
+    /**
+     * Gets UIMarker's transform origin for animation transform
+     * @protected
+     * @return {Point} transform origin
+     */
+    getTransformOrigin(): string;
+    onDomRemove(): void;
+    /**
+     * Whether the uimarker is being dragged.
+     * @returns {Boolean}
+     */
+    isDragging(): boolean;
+    _registerDOMEvents(dom: HTMLElement): void;
+    _onDomEvents(e: MouseEvent, type?: string): void;
+    _removeDOMEvents(dom: HTMLElement): void;
+    _mouseClickPositionIsChange(): boolean;
+    /**
+     * Get the connect points of panel for connector lines.
+     * @private
+     */
+    _getConnectPoints(): Coordinate[];
+    _getViewPoint(): Point;
+    _getDefaultEvents(): {
+        'zooming rotate pitch': () => void;
+        zoomend: () => void;
+        moving: () => void;
+        moveend: () => void;
+        resize: () => void;
+    } & {
+        'zooming zoomend': () => void;
+    };
+    _setPosition(): void;
+    onZoomFilter(): void;
+    isVisible(): boolean;
+    isSupportZoomFilter(): boolean;
+}
+
+type UIMarkerOptionsType = {
+    containerClass?: string;
+    eventsPropagation?: boolean;
+    draggable?: boolean;
+    single?: boolean;
+    content?: string | HTMLElement;
+    altitude?: number;
+    minZoom?: number;
+    maxZoom?: number;
+    horizontalAlignment?: 'middle' | 'left' | 'right';
+    verticalAlignment?: 'middle' | 'top' | 'bottom';
+} & UIComponentOptionsType;
+
+/**
+ * @classdesc
+ * Class for tooltip, a tooltip used for showing some useful infomation attached to geometries on the map.
+ * @category ui
+ * @extends ui.UIComponent
+ * @memberOf ui
+ */
+declare class ToolTip extends UIComponent {
+    options: ToolTipOptionsType;
+    _content: string;
+    _timeout: NodeJS.Timeout;
+    _owner: Geometry;
+    _getClassName(): string;
+    /**
+     * @param {String} content         - content of tooltip
+     * @param {Object} [options=null]  - options defined in [ToolTip]{@link ToolTip#options}
+     */
+    constructor(content: string, options?: ToolTipOptionsType);
+    /**
+     * Adds the UI Component to a geometry UIMarker Other graphic elements
+     * @param {Geometry} owner - geometry to add.
+     * @returns {UIComponent} this
+     * @fires UIComponent#add
+     */
+    addTo(owner: Geometry): this;
+    /**
+     * set ToolTip's content's css class name.
+     * @param {String} css class name - set for ToolTip's content.
+     */
+    setStyle(cssName: string): this;
+    /**
+     * get ToolTip's  content's css class name
+     * @returns {String} css class name - set for ToolTip's content.
+     */
+    getStyle(): string;
+    /**
+     * get the UI Component's content
+     * @returns {String} tooltip's content
+     */
+    getContent(): string;
+    buildOn(): HTMLElement;
+    onMouseOut(): void;
+    onMouseMove(e: any): void;
+    /**
+     * remove the tooltip, this method will be called by 'this.remove()'
+     */
+    onRemove(): void;
+    hideDom(): void;
+    onEvent(): this;
+    /**
+     * override UIComponent method
+     * ignore altitude calculation
+     */
+    _getViewPoint(): Point;
+}
+
+type ToolTipOptionsType = {
+    width?: number;
+    height?: number;
+    animation?: string;
+    containerClass?: string;
+    cssName?: string;
+    showTimeout?: number;
+} & UIComponentOptionsType;
+
+/**
+ * @classdesc
+ * Class for context menu, useful for interactions with right clicks on the map.
+ * @category ui
+ * @extends ui.UIComponent
+ * @memberOf ui
+ */
+declare class Menu extends UIComponent {
+    options: MenuOptionsType;
+    /**
+     * Menu items is set to options.items or by setItems method. <br>
+     * <br>
+     * Normally items is a object array, containing: <br>
+     * 1. item object: {'item': 'This is a menu text', 'click': function() {alert('oops! You clicked!');)}} <br>
+     * 2. minus string "-", which will draw a splitor line on the menu. <br>
+     * <br>
+     * If options.custom is set to true, the menu is considered as a customized one. Then items is the customized html codes or HTMLElement. <br>
+     * @param {Object} options - options defined in [ui.Menu]{@link ui.Menu#options}
+     */
+    constructor(options: MenuOptionsType);
+    _getClassName(): string;
+    addTo(owner: Geometry | Map): any;
+    /**
+     * Set the items of the menu.
+     * @param {Object[]|String|HTMLElement} items - items of the menu
+     * return {ui.Menu} this
+     * @example
+     * menu.setItems([
+     *      //return false to prevent event propagation
+     *     {'item': 'Query', 'click': function() {alert('Query Clicked!'); return false;}},
+     *     '-',
+     *     {'item': 'Edit', 'click': function() {alert('Edit Clicked!')}},
+     *     {'item': 'About', 'click': function() {alert('About Clicked!')}}
+     * ]);
+     */
+    setItems(items: Array<MenuItem>): this;
+    /**
+     * Get items of  the menu.
+     * @return {Object[]|String|HTMLElement} - items of the menu
+     */
+    getItems(): MenuItem[];
+    /**
+     * Create the menu DOM.
+     * @protected
+     * @return {HTMLElement} menu's DOM
+     */
+    buildOn(): HTMLElement;
+    /**
+     * Offset of the menu DOM to fit the click position.
+     * @return {Point} offset
+     * @private
+     */
+    getOffset(): Point;
+    getTransformOrigin(): string;
+    getEvents(): {
+        '_zoomstart _zoomend _movestart _dblclick _click': () => void;
+    };
+    _createMenuItemDom(): HTMLElement;
+    _getMenuWidth(): number;
+}
+
+type MenuItem = {
+    name?: string;
+    click?: () => void;
+};
+type MenuOptionsType = {
+    containerClass?: string;
+    animationDelay?: number;
+    animationOnHide?: boolean;
+    autoPan?: boolean;
+    width?: number;
+    maxHeight?: number;
+    custom?: boolean;
+    items?: Array<MenuItem>;
+} & UIComponentOptionsType;
+
+interface MenuAbles {
+    _menuOptions: MenuOptionsType;
+    _menu: Menu;
+    setMenu(options: MenuOptionsType): this;
+    getMenu(): Menu;
+    openMenu(coordinate?: Coordinate): this;
+    setMenuItems(items: Array<MenuItem>): this;
+    getMenuItems(): Array<MenuItem>;
+    closeMenu(): this;
+    removeMenu(): this;
+    _bindMenu(): this;
+    _unbindMenu(): this;
+    _defaultOpenMenu(param: any): boolean;
+}
+declare module "../geometry/Geometry" {
+    interface Geometry extends MenuAbles {
+    }
+}
+declare module "../map/Map" {
+    interface Map extends MenuAbles {
+    }
+}
+/**
+ * Mixin of the context menu methods.
+ * @mixin ui.Menuable
+ */
+declare const Menuable: {
+    /**
+     * Set a context menu
+     * @param {Object} options - menu options
+     * @return {*} this
+     * @example
+     * foo.setMenu({
+     *  'width'  : 160,
+     *  'custom' : false,
+     *  'items' : [
+     *      //return false to prevent event propagation
+     *     {'item': 'Query', 'click': function() {alert('Query Clicked!'); return false;}},
+     *     '-',
+     *     {'item': 'Edit', 'click': function() {alert('Edit Clicked!')}},
+     *     {'item': 'About', 'click': function() {alert('About Clicked!')}}
+     *    ]
+     * });
+     * @function ui.Menuable.setMenu
+     */
+    setMenu(options: MenuOptionsType): any;
+    /**
+    * get a context menu
+    * @return {*} ui.Menu
+    * @function ui.Menuable.getMenu
+    */
+    getMenu(): Menu;
+    /**
+     * Open the context menu, default on the center of the geometry or map.
+     * @param {Coordinate} [coordinate=null] - coordinate to open the context menu
+     * @return {*} this
+     * @function ui.Menuable.openMenu
+     */
+    openMenu(coordinate?: Coordinate): any;
+    /**
+     * Set menu items to the context menu
+     * @param {Object[]} items - menu items
+     * @return {*} this
+     * @function ui.Menuable.setMenuItems
+     */
+    setMenuItems(items: Array<MenuItem>): any;
+    /**
+     * Get the context menu items
+     * @return {Object[]}
+     * @function ui.Menuable.getMenuItems
+     */
+    getMenuItems(): Array<MenuItem>;
+    /**
+     * Close the contexnt menu
+     * @return {*} this
+     * @function ui.Menuable.closeMenu
+     */
+    closeMenu(): any;
+    /**
+     * Remove the context menu
+     * @return {*} this
+     * @function ui.Menuable.removeMenu
+     */
+    removeMenu(): any;
+    _bindMenu(): any;
+    _unbindMenu(): any;
+    /**
+     * If contextmenu is not listened, open the menu in default.<br>
+     * Otherwise, do nothing here.
+     * @param  {Object} param - event parameter
+     * @return {Boolean} true | false to stop event propagation
+     * @private
+     */
+    _defaultOpenMenu(param: any): boolean;
+};
+//# sourceMappingURL=Menuable.d.ts.map
+
+//# sourceMappingURL=index.d.ts.map
+
+type index_d$1_InfoWindow = InfoWindow;
+declare const index_d$1_InfoWindow: typeof InfoWindow;
+type index_d$1_Menu = Menu;
+declare const index_d$1_Menu: typeof Menu;
+declare const index_d$1_Menuable: typeof Menuable;
+type index_d$1_ToolTip = ToolTip;
+declare const index_d$1_ToolTip: typeof ToolTip;
+type index_d$1_UIComponent = UIComponent;
+declare const index_d$1_UIComponent: typeof UIComponent;
+type index_d$1_UIMarker = UIMarker;
+declare const index_d$1_UIMarker: typeof UIMarker;
+declare namespace index_d$1 {
+  export { index_d$1_InfoWindow as InfoWindow, index_d$1_Menu as Menu, index_d$1_Menuable as Menuable, index_d$1_ToolTip as ToolTip, index_d$1_UIComponent as UIComponent, index_d$1_UIMarker as UIMarker };
+}
+
+declare const Control_base: {
+    new (...args: any[]): {
+        _eventMap?: Record<string, {
+            handler: HandlerFn;
+            context: any;
+        }[]>;
+        _eventParent?: any;
+        _eventTarget?: any;
+        on(eventsOn: string | EventRecords, handler: HandlerFn, context?: any): any;
+        addEventListener(...args: any[]): any;
+        once(eventTypes: string | EventRecords, handler: HandlerFn, context?: any): any;
+        off(eventsOff: string | EventRecords, handler: HandlerFn, context?: any): any;
+        removeEventListener(...args: any[]): any;
+        listens(eventType: string, handler?: HandlerFn, context?: any): number;
+        getListeningEvents(): string[];
+        copyEventListeners(target: any): any;
+        fire(eventType: string, param?: BaseEventParamsType): any;
+        _wrapOnceHandler(evtType: string, handler: HandlerFn, context?: any): (...args: any[]) => void;
+        _switch(to: string, eventRecords: EventRecords, context?: any): any;
+        _clearListeners(eventType: string): void;
+        _clearAllListeners(): void;
+        _setEventParent(parent: any): any;
+        _setEventTarget(target: any): any;
+        _fire(eventType: string, param: BaseEventParamsType): any;
+    };
+} & typeof Class;
+/**
+ * Base class for all the map controls, you can extend it to build your own customized Control.
+ * It is abstract and not intended to be instantiated.
+ * @category control
+ * @memberOf control
+ * @abstract
+ * @extends Class
+ * @mixes Eventable
+ */
+declare abstract class Control extends Control_base {
+    _map: Map;
+    __ctrlContainer: HTMLElement;
+    _controlDom: HTMLElement;
+    options: ControlOptionsType;
+    static positions: {
+        [key: string]: PositionType;
+    };
+    /**
+     * Methods needs to implement:  <br>
+     *  <br>
+     * 1. Method to create UI's Dom element  <br>
+     * function buildOn : HTMLElement  <br>
+     *  <br>
+     * 2. Optional, a callback when the control is added.  <br>
+     * function onAdd : void  <br>
+     * 3. Optional, a callback when the control is removed.  <br>
+     * function onRemove : void  <br>
+     *  <br>
+     * @param  {Object} [options=null] configuration options
+     */
+    constructor(options: ControlOptionsType);
+    _appendCustomClass(dom: HTMLElement): this;
+    onAdd(): void;
+    onRemove(): void;
+    abstract buildOn(map?: Map): HTMLElement;
+    /**
+     * Adds the control to a map.
+     * @param {Map} map
+     * @returns {control.Control} this
+     * @fires control.Control#add
+     */
+    addTo(map: Map): this;
+    /**
+     * update control container
+     * @return {control.Control} this
+     */
+    update(): this;
+    /**
+     * Get the map that the control is added to.
+     * @return {Map}
+     */
+    getMap(): Map;
+    /**
+     * Get the position of the control
+     * @return {Object}
+     */
+    getPosition(): PositionType;
+    /**
+     * update the control's position
+     * @param {String|Object} position - can be one of 'top-left', 'top-right', 'bottom-left', 'bottom-right' or a position object like {'top': 40,'left': 60}
+     * @return {control.Control} this
+     * @fires control.Control#positionchange
+     */
+    setPosition(position: ControlPositionType): this;
+    /**
+     * Get the container point of the control.
+     * @return {Point}
+     */
+    getContainerPoint(): Point;
+    /**
+     * Get the control's container.
+     * Container is a div element wrapping the control's dom and decides the control's position and display.
+     * @return {HTMLElement}
+     */
+    getContainer(): HTMLElement;
+    /**
+     * Get html dom element of the control
+     * @return {HTMLElement}
+     */
+    getDOM(): HTMLElement;
+    /**
+     * Show
+     * @return {control.Control} this
+     */
+    show(): this;
+    /**
+     * Hide
+     * @return {control.Control} this
+     */
+    hide(): this;
+    /**
+     * Whether the control is visible
+     * @return {Boolean}
+     */
+    isVisible(): boolean;
+    /**
+     * Remove itself from the map
+     * @return {control.Control} this
+     * @fires control.Control#remove
+     */
+    remove(): this;
+    _parse(position: ControlPositionType): PositionType;
+    _updatePosition(): void;
+}
+type PositionType = {
+    top?: number | string;
+    bottom?: number | string;
+    left?: number | string;
+    right?: number | string;
+};
+type ControlPositionType = string | PositionType;
+type ControlOptionsType = {
+    position?: ControlPositionType;
+    cssName?: string | Array<string>;
+};
+declare module "./../map/Map" {
+    interface Map {
+        addControl(control: Control): this;
+        removeControl(control: Control): this;
+    }
+}
+
+/**
+ * @classdesc
+ * A control to allows to display attribution content in a small text box on the map.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var map = new maptalks.Map('map', {
+ *    center: [-0.113049, 51.498568],
+ *    zoom: 14,
+ *    attribution: {
+ *       content : 'my attribution',
+ *       position : 'bottom-left'
+ *    },
+ *    baseLayer: new maptalks.TileLayer('base', {
+ *        urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+ *        subdomains: ['a','b','c','d'],
+ *        attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
+ *    })
+ * });
+ * map.addLayer(new maptalks.TileLayer('base', {
+ *      urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+ *      subdomains: ['a','b','c','d'],
+ *      attribution: '&copy; <a href="http://osm.org">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/">CARTO</a>'
+ * }));
+ */
+declare class Attribution extends Control {
+    options: AttributionOptionsType;
+    _attributionContainer: HTMLDivElement;
+    buildOn(): HTMLDivElement;
+    onAdd(): void;
+    onRemove(): void;
+    _update(): void;
+}
+
+type AttributionOptionsType = {
+    content?: string;
+} & ControlOptionsType;
+
+declare class Compass extends Control {
+    options: CompassOptionsType;
+    _compass: HTMLDivElement;
+    _bearing: number;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(map: Map): HTMLDivElement;
+    onAdd(): void;
+    _getCompass(): HTMLElement;
+    _registerDomEvents(): void;
+    _rotateCompass(): void;
+    onRemove(): void;
+    _resetView(): void;
+}
+
+type CompassOptionsType = {
+    position: string | PositionType;
+} & ControlOptionsType;
+
+/**
+ * @classdesc
+ * A LayerSwitcher control for the map.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var LayerSwitcher = new LayerSwitcher({
+ *     position : {'top': '0', 'right': '0'}
+ * }).addTo(map);
+*/
+declare class LayerSwitcher extends Control {
+    options: LayerSwitcherOptionsType;
+    container: HTMLDivElement;
+    panel: HTMLDivElement;
+    button: HTMLButtonElement;
+    /**
+     * method to build DOM of the control
+     * @return {HTMLDOMElement}
+     */
+    buildOn(): HTMLDivElement;
+    onAdd(): void;
+    onRemove(): void;
+    _show(): void;
+    _hide(e: any): void;
+    _createPanel(): void;
+    _renderLayers(map: Map, elm: HTMLElement): void;
+    _isExcluded(layer: Layer): boolean;
+    _renderLayer(layer: any, isBase?: boolean, parentChecked?: boolean): HTMLElement;
+}
+
+type LayerSwitcherOptionsType = {
+    baseTitle?: string;
+    overlayTitle?: string;
+    containerClass?: string;
+    excludeLayers?: Array<string>;
+} & ControlOptionsType;
+
+/**
+ * @classdesc
+ * An overview control for the map.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var overview = new Overview({
+ *     position: {'bottom': '0', 'right': '0'},
+ *     size: [300, 200]
+ * }).addTo(map);
+ */
+declare class Overview extends Control {
+    options: OverviewOptionsType;
+    mapContainer: HTMLDivElement;
+    button: HTMLDivElement;
+    _overview: Map;
+    _perspective: Polygon;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(): HTMLElement;
+    onAdd(): void;
+    onRemove(): void;
+    /**
+     * Maximize overview control
+     * @returns {control.Overview}
+     */
+    maxmize(): this;
+    /**
+     * Minimize overview control
+     * @returns {control.Overview}
+     */
+    minimize(): this;
+    /**
+     * Return overview's map object
+     * @returns {Map}
+     */
+    getOverviewMap(): Map;
+    _onButtonClick(): void;
+    _updateButtonText(): void;
+    _createOverview(): void;
+    _getOverviewZoom(): number;
+    _onDragEnd(): void;
+    _getPerspectiveCoords(): Coordinate[];
+    _update(): void;
+    _updateSpatialReference(): void;
+    _updateBaseLayer(): void;
+}
+
+type OverviewOptionsType = {
+    level?: number;
+    size?: Array<number>;
+    maximize?: boolean;
+    symbol?: {
+        'lineWidth': number;
+        'lineColor': string;
+        'polygonFill': string;
+        'polygonOpacity': number;
+    };
+    containerClass?: string;
+    buttonClass?: string;
+} & ControlOptionsType;
+
+/**
+ * @classdesc
+ * Class for panel controls.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var panel = new Panel({
+ *     position : {'bottom': '0', 'right': '0'},
+ *     draggable : true,
+ *     custom : false,
+ *     content : '<div class="map-panel">hello </div>',
+ *     closeButton : true
+ * }).addTo(map);
+ */
+declare class Panel extends Control {
+    draggable: DragHandler;
+    options: PanelOptionsType;
+    _startPos: Point;
+    _startPosition: PositionType;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(): HTMLDivElement;
+    /**
+     * update control container
+     * @return {control.Panel} this
+     */
+    update(): any;
+    /**
+     * Set the content of the Panel.
+     * @param {String|HTMLElement} content - content of the infowindow.
+     * return {control.Panel} this
+     * @fires Panel#contentchange
+     */
+    setContent(content: string | HTMLElement): this;
+    /**
+     * Get content of  the infowindow.
+     * @return {String|HTMLElement} - content of the infowindow
+     */
+    getContent(): string | HTMLElement;
+    _cancelOn(domEvent: any): boolean;
+    _onDragStart(param: any): void;
+    _onDragging(param: any): void;
+    _onDragEnd(param: any): void;
+    /**
+     * Get the connect points of panel for connector lines.
+     * @private
+     */
+    _getConnectPoints(): Coordinate[];
+}
+
+type PanelOptionsType = {
+    draggable?: boolean;
+    custom?: boolean;
+    content?: string | HTMLElement;
+    closeButton?: boolean;
+} & ControlOptionsType;
+
+declare class Reset extends Control {
+    _reset: HTMLDivElement;
+    _view: MapViewType$1;
+    options: ResetOptionsType;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(): HTMLDivElement;
+    onAdd(): void;
+    setView(view: MapViewType$1): void;
+    _getReset(): HTMLDivElement;
+    _registerDomEvents(): void;
+    onRemove(): void;
+    _resetView(): void;
+}
+
+type ResetOptionsType = {
+    view?: MapViewType$1;
+} & ControlOptionsType;
+
+declare class Scale extends Control {
+    _scaleContainer: HTMLDivElement;
+    _mScale: HTMLDivElement;
+    _iScale: HTMLDivElement;
+    options: ScaleOptionsType;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(map: Map): HTMLDivElement;
+    onRemove(): void;
+    _addScales(): void;
+    _update(): void;
+    _updateScales(maxMeters: number): void;
+    _updateMetric(maxMeters: number): void;
+    _updateImperial(maxMeters: number): void;
+    _updateScale(scale: HTMLDivElement, text: string, ratio: number): void;
+    _getRoundNum(num: number): number;
+}
+
+type ScaleOptionsType = {
+    maxWidth?: number;
+    metric?: boolean;
+    imperial?: boolean;
+    containerClass?: string;
+} & ControlOptionsType;
+
+/**
+ * @classdesc
+ * A toolbar control of the map.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var toolbar = new Toolbar({
+ *     position : 'top-right',
+ *     items: [
+ *          {
+ *            item: 'item1',
+ *            click: function () {
+ *              alert('item1 clicked');
+ *            }
+ *          },
+ *          {
+ *            item: 'item2',
+ *            click: function () {
+ *              alert('item2 clicked');
+ *            }
+ *          }
+ *      ]
+ * }).addTo(map);
+ */
+declare class Toolbar extends Control {
+    options: ToolbarOptionsType;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(map: Map): HTMLElement;
+    _createDropMenu(index: number): HTMLElement;
+    _getItems(): ToolBarItem[];
+}
+
+type ToolBarItem = {
+    item: string;
+    click: () => void;
+};
+type ToolbarOptionsType = {
+    height?: number;
+    vertical?: boolean;
+    reverseMenu?: boolean;
+    items: Array<ToolBarItem>;
+} & ControlOptionsType;
+
+/**
+ * @classdesc
+ * A zoom control with buttons to zoomin/zoomout and a slider indicator for the zoom level.
+ * @category control
+ * @extends control.Control
+ * @memberOf control
+ * @example
+ * var zoomControl = new Zoom({
+ *     position : 'top-left',
+ *     slider : true,
+ *     zoomLevel : false
+ * }).addTo(map);
+ */
+declare class Zoom extends Control {
+    options: ZoomOptionsType;
+    _levelDOM: HTMLSpanElement;
+    _zoomInButton: HTMLLinkElement;
+    _zoomOutButton: HTMLLinkElement;
+    /**
+     * method to build DOM of the control
+     * @param  {Map} map map to build on
+     * @return {HTMLDOMElement}
+     */
+    buildOn(map: Map): HTMLElement;
+    onRemove(): void;
+    _update(): void;
+    _updateText(): void;
+    _registerDomEvents(): void;
+    _onZoomInClick(e: any): void;
+    _onZoomOutClick(e: any): void;
+}
+
+type ZoomOptionsType = {
+    zoomLevel?: boolean;
+    seamless?: boolean;
+} & ControlOptionsType;
+
+//# sourceMappingURL=index.d.ts.map
+
+type index_d_Attribution = Attribution;
+declare const index_d_Attribution: typeof Attribution;
+type index_d_Compass = Compass;
+declare const index_d_Compass: typeof Compass;
+type index_d_Control = Control;
+declare const index_d_Control: typeof Control;
+type index_d_LayerSwitcher = LayerSwitcher;
+declare const index_d_LayerSwitcher: typeof LayerSwitcher;
+type index_d_Overview = Overview;
+declare const index_d_Overview: typeof Overview;
+type index_d_Panel = Panel;
+declare const index_d_Panel: typeof Panel;
+type index_d_Reset = Reset;
+declare const index_d_Reset: typeof Reset;
+type index_d_Scale = Scale;
+declare const index_d_Scale: typeof Scale;
+type index_d_Toolbar = Toolbar;
+declare const index_d_Toolbar: typeof Toolbar;
+type index_d_Zoom = Zoom;
+declare const index_d_Zoom: typeof Zoom;
+declare namespace index_d {
+  export { index_d_Attribution as Attribution, index_d_Compass as Compass, index_d_Control as Control, index_d_LayerSwitcher as LayerSwitcher, index_d_Overview as Overview, index_d_Panel as Panel, index_d_Reset as Reset, index_d_Scale as Scale, index_d_Toolbar as Toolbar, index_d_Zoom as Zoom };
+}
+
+type AnimationStyles = {
+    [key: string]: any;
+};
+declare module "../Geometry" {
+    interface Geometry {
+        _animPlayer: Player;
+        animate(styles: AnimationStyles, options?: AnimationOptionsType | ((frame: Frame) => void), step?: (frame: Frame) => void): Player;
+    }
+}
+//# sourceMappingURL=Geometry.Animation.d.ts.map
+
+declare module "../Geometry" {
+    interface Geometry {
+        isDragging(): boolean;
+    }
+}
+//# sourceMappingURL=Geometry.Drag.d.ts.map
+
+declare module "../Geometry" {
+    interface Geometry {
+        _onEvent(event: MouseEvent | TouchEvent, type?: string): void;
+    }
+}
+//# sourceMappingURL=Geometry.Events.d.ts.map
+
+declare module "../Geometry" {
+    interface Geometry {
+        _infoWindow: InfoWindow;
+        setInfoWindow(options: InfoWindowOptionsType): this;
+        getInfoWindow(): InfoWindow;
+        openInfoWindow(coordinate?: Coordinate): this;
+        closeInfoWindow(): this;
+        removeInfoWindow(): this;
+        _bindInfoWindow(): this;
+        _unbindInfoWindow(): this;
+    }
+}
+//# sourceMappingURL=Geometry.InfoWindow.d.ts.map
+
+type AdapterFunction = (exports: {
+    initialize: Function;
+    onmessage: (message: any, postResponse: Function) => void;
+}, global: any) => void;
+type Adapter = string | AdapterFunction;
+/**
+ * Register a worker adapter
+ * @param {String} workerKey  - an unique key name of the worker adapter
+ * @param {Function} adapter  - the worker adapter function, it must be a complete packaged function with no dependency of other functions
+ * @example
+ * maptalks.registerWorkerAdapter('foo', function (exports, global) {
+        //will be called only for once when loaded in worker thread
+        exports.initialize = function () {
+          console.log('[worker] initialized');
+        };
+        //to receive message from main thread sent by maptalks.worker.Actor
+        exports.onmessage = function (message, postResponse) {
+          const data = message.data;
+          console.log(`[worker] received data : ` + data);
+          //send message back to main thread
+          //the parameters:
+          //error, data, buffers (arraybuffers in data)
+          postResponse(null, 'message from worker thread', null);
+        };
+     });
+    @global
+    @static
+ */
+declare function registerWorkerAdapter(workerKey: string, adapter: Adapter): void;
+
+/**
+ * @namespace worker
+ */
+declare const worker: {
+    Actor: typeof Actor;
+};
+//# sourceMappingURL=index.d.ts.map
+
+export { Ajax, ArcConnectorLine, ArcCurve, AreaTool, Browser, COLOR_PROPERTIES, CRS, Canvas, CanvasLayer, CanvasTileLayer, Circle, Class, CollisionIndex, ConnectorLine, Coordinate, CubicBezierCurve, Curve, DEFAULT_TEXT_SIZE, DistanceTool, dom_d as DomUtil, DragHandler, DrawTool, Ellipse, export_default$3 as Eventable, Extent, GEOJSON_TYPES, GEOMETRY_COLLECTION_TYPES, GeoJSON, type Geometries, Geometry, GeometryCollection, GlobalConfig, GlobalEvent, GroupTileLayer, Handler, export_default$1 as Handlerable, INTERNAL_LAYER_PREFIX, ImageLayer, export_default$2 as JSONAble, LRUCache, Label, Layer, LineString, Map, MapTool, index_d$6 as MapboxUtil, Marker, MicroTask_d as MicroTask, MultiLineString, MultiPoint, MultiPolygon, NUMERICAL_PROPERTIES, OverlayLayer, ParticleLayer, type PathLikeGeometries, Point, PointExtent, Polygon, QuadBezierCurve, RESOURCE_PROPERTIES, RESOURCE_SIZE_PROPERTIES, Rectangle, ResourceProxy, Sector, Size, SpatialReference, strings_d as StringUtil, TextBox, TextMarker, TileConfig, TileLayer, TileSystem, Transformation, index_d$7 as Util, VectorLayer, WMSTileLayer, animate, Animation_d as animation, index_d as control, formatResourceUrl, index_d$5 as measurer, parseSVG, index_d$4 as projection, registerWorkerAdapter, index_d$3 as renderer, index_d$2 as symbolizer, index_d$1 as ui, worker };
+//# sourceMappingURL=maptalks.d.ts.map

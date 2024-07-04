@@ -233,27 +233,35 @@ const loadDTS = (monaco: any) => {
         target: monaco.languages.typescript.ScriptTarget.ESNext,
         esModuleInterop: true,
         noEmit: true,
-        noImplicitAny: true
+        noImplicitAny: true,
+        typeRoots: ["node_modules/@types"]
     });
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
         noSemanticValidation: false,
         noSyntaxValidation: false
     })
-    fetch(`/lib/maptalks.d.ts.json?t=${new Date().getTime()}`).then(res => res.json()).then(json => {
-        type Item = { path: string, content: string };
-        json.forEach((item: Item) => {
-            if (!item.path || !item.content) {
-                return;
-            }
-            var libUri = `file:///node_modules/@types/maptalks/${item.path}`;
-            if (libUri.includes('maptalks/index.d.ts')) {
-                item.content += '\n export as namespace maptalks';
-                console.log(item.content);
-            }
+    //https://stackoverflow.com/questions/43058191/how-to-use-addextralib-in-monaco-with-an-external-type-definition
+    fetch(`/lib/maptalks.d.ts?t=${new Date().getTime()}`).then(res => res.text()).then(text => {
+        const nameSpaceText = text + `\n export as namespace maptalks`;
+        const moduleText = `declare module 'maptalks' {${text}}`;
+        var libUri = `node_modules/@types/maptalks`;
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(moduleText, `${libUri}/index.d.ts`);
+        monaco.languages.typescript.javascriptDefaults.addExtraLib(nameSpaceText, `${libUri}/namespace.d.ts`);
+        // monaco.editor.createModel(text, "typescript", monaco.Uri.parse(libUri));
+        // type Item = { path: string, content: string };
+        // json.forEach((item: Item) => {
+        //     if (!item.path || !item.content) {
+        //         return;
+        //     }
+        //     var libUri = `file:///node_modules/@types/maptalks/${item.path}`;
+        //     if (libUri.includes('maptalks/index.d.ts')) {
+        //         item.content += '\n export as namespace maptalks';
+        //         console.log(item.content);
+        //     }
 
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(item.content, libUri);
-            // monaco.editor.createModel(item.content, "typescript", monaco.Uri.parse(libUri));
-        });
+        //     monaco.languages.typescript.javascriptDefaults.addExtraLib(item.content, libUri);
+        //     // monaco.editor.createModel(item.content, "typescript", monaco.Uri.parse(libUri));
+        // });
         state.loading = false;
 
     }).catch(error => {

@@ -17,6 +17,9 @@ import Example_Tree from './Example-Tree.vue';
 import { checkTreeData, locationAchor, searchTree, TreeNode, decodeHash } from './util';
 import { ElLoading } from 'element-plus'
 
+import { createHighlighter } from 'shiki'
+import { shikiToMonaco } from '@shikijs/monaco'
+
 
 const editorJSRef = ref(null);
 const editorHTMLRef = ref(null);
@@ -27,10 +30,15 @@ const allExamples = checkTreeData(examplesZH as Array<TreeNode>);
 
 const TIME_DELAY = 400;
 
+const THEME_LIGHT = 'light-plus', THEME_DARK = 'dark-plus';
+const DARK_BG_COLOR = 'rgba(0,0,0,0.7)', WHITE_BG_COLOR = 'rgba(255,255,255,0.7)';
+
 const state = reactive({
     loading: false,
     size: 'small',
     loaded: false,
+    loadingBgColor: WHITE_BG_COLOR,
+    editorTheme: THEME_LIGHT,
     isDark: false,
     esmEnable: false,
     runUrl: '',
@@ -105,7 +113,7 @@ const createEditor = (monaco: any) => {
             autohide: true
         },
         value: '',
-        // theme: 'vs-dark',
+        theme: state.editorTheme,
         automaticLayout: true
     }
     editorJS = monaco.editor.create(editorJSRef.value, Object.assign({}, editorOptions, {
@@ -200,24 +208,20 @@ const openInNewWindow = () => {
 }
 
 let rAFId: number;
-let currentTheme = 'vs';
+let currentTheme = '';
 const checkTheme = () => {
-    if (editors.length) {
-        const htmlElement = document.body.parentElement;
-        if (htmlElement) {
-            const isDark = htmlElement.classList.contains('dark');
-            const theme = isDark ? 'vs-dark' : 'vs';
-            state.isDark = isDark;
-            if (theme !== currentTheme) {
-                editors.forEach(editor => {
-                    editor.updateOptions({ theme });
-                })
-                currentTheme = theme;
-            }
+    const htmlElement = document.body.parentElement;
+    if (htmlElement) {
+        const isDark = htmlElement.classList.contains('dark');
+        state.isDark = isDark;
+        state.editorTheme = isDark ? THEME_DARK : THEME_LIGHT;
+        if (state.editorTheme !== currentTheme) {
+            editors.forEach(editor => {
+                editor.updateOptions({ theme: state.editorTheme });
+            })
+            currentTheme = state.editorTheme;
         }
-    }
-    if (!state.loaded) {
-        state.loaded = true;
+        state.loadingBgColor = isDark ? DARK_BG_COLOR : WHITE_BG_COLOR;
     }
     rAFId = requestAnimationFrame(checkTheme);
 }
@@ -292,7 +296,7 @@ const hashChange = () => {
     const loading = ElLoading.service({
         lock: true,
         text: `Loading ${path} Example Codes`,
-        // background: 'rgba(0, 0, 0, 0.9)',
+        background: state.loadingBgColor
     })
     console.log(`load ${path} codes`);
     const htmlUrl = `./../examples/${path}/index.html`;
@@ -367,11 +371,32 @@ onMounted(() => {
     loader.config({
         paths: { vs: `${CDNURL}/monaco-editor@0.47.0/min/vs` }
     });
+    checkTheme();
     state.loading = true;
-    loader.init().then((monaco) => {
+    loader.init().then(async (monaco) => {
+        // https://shiki.style/packages/monaco
+        // Create the highlighter, it can be reused
+        const highlighter = await createHighlighter({
+            themes: [
+                THEME_LIGHT,
+                THEME_DARK
+            ],
+            langs: [
+                'javascript',
+                'css',
+                'html'
+            ],
+        })
+
+        // Register the languageIds first. Only registered languages will be highlighted.
+        monaco.languages.register({ id: 'html' })
+        monaco.languages.register({ id: 'css' })
+        monaco.languages.register({ id: 'javascript' });
+        shikiToMonaco(highlighter, monaco)
+
         loadDTS(monaco);
         createEditor(monaco);
-        rAFId = requestAnimationFrame(checkTheme);
+        state.loaded = true;
         hashChange();
     }).catch(() => {
         state.loading = false;
@@ -403,7 +428,7 @@ onUnmounted(() => {
     <div class="main-container flex" :style="state.mainContainerStyle">
         <div class="aside-container" :class="{ 'slider-dark': state.isDark }">
             <div class="search-container">
-                <el-input v-model="state.keywords" :size="state.size" style="width: 100%" placeholder="Search Examples"
+                <el-input v-model="state.keywords" :size="state.size" style="width: 100%" placeholder="Input for Search"
                     @input="search" clearable />
             </div>
             <div class="example-container">
@@ -412,7 +437,7 @@ onUnmounted(() => {
         </div>
         <div class="editor-container">
             <div id="editor-panel" class="editor-panel panel" v-loading="state.loading"
-                element-loading-text="Loading editor and d.ts files">
+                element-loading-text="Loading editor and d.ts files" :element-loading-background="state.loadingBgColor">
                 <div class="editor-item editor-middle">
                     <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
                         <span class="title">JavaScript <el-tooltip class="box-item" effect="dark"

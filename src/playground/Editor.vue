@@ -440,9 +440,10 @@ onUnmounted(() => {
                 element-loading-text="Loading editor and d.ts files" :element-loading-background="state.loadingBgColor">
                 <div class="editor-item editor-middle">
                     <div v-if="state.loaded" class="tools" :class="{ 'tools-dark': state.isDark }">
-                        <span class="title">JavaScript <el-tooltip class="box-item" effect="dark"
-                                content="If your code is ESM,Please checked it" placement="top-start"><el-checkbox
-                                    v-model="state.esmEnable" label="ESM" :size="state.size" />
+                        <span class="title">JavaScript
+                            <el-tooltip class="box-item" effect="dark" content="If your code is ESM,Please checked it"
+                                placement="top-start">
+                                <el-checkbox v-model="state.esmEnable" label="ESM" :size="state.size" />
                             </el-tooltip>
 
                         </span>
@@ -579,7 +580,9 @@ onUnmounted(() => {
 }
 
 .button {
-    background-color: var(--vp-c-brand-1);
+    /* background-color: var(--vp-c-brand-1); */
+    background-color:  var(--vue-theme-color);
+
     color: white;
     margin-left: 6px;
     padding: 0px 5px;
@@ -590,6 +593,10 @@ onUnmounted(() => {
 }
 </style>
 <style>
+:root {
+    --vue-theme-color: #42b883;
+}
+
 .slider-dark {
     border-right: 1px solid black !important;
 }
@@ -617,5 +624,18 @@ onUnmounted(() => {
 
 .el-input__wrapper {
     background-color: transparent !important;
+}
+
+.el-checkbox__input.is-checked+.el-checkbox__label {
+    color: var(--vue-theme-color);
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: var(--vue-theme-color);
+    border-color: var(--vue-theme-color);
+}
+.el-input__wrapper.is-focus{
+    box-shadow: 0 0 0 1px var(--vue-theme-color) inset;
+
 }
 </style>

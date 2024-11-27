@@ -1,4 +1,4 @@
-# maptalks 3D Builder web site
+# maptalks web site
 
 ## 添加文档的步骤
 ### 添加中文文档

@@ -1,6 +1,7 @@
 {
   "type": "module",
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
     "@element-plus/icons-vue": "^2.3.1",
     "@monaco-editor/loader": "^1.4.0",
     "@shikijs/monaco": "^1.12.0",

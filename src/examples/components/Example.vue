@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import ExampleRepl from "./ExampleRepl.vue";
+import ExampleRepl from "./ExampleRepl.vue";
 import ThumbList from "./ExampleThumb.vue";
 import { onHashChange } from "./utils";
 

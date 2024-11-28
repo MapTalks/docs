@@ -6,7 +6,7 @@ function getSrc(hash: string) {
 }
 
 function goPage(link: string) {
-  window.location = link;
+  window.location.href = link;
 }
 </script>
 
@@ -23,9 +23,11 @@ function goPage(link: string) {
           :lg="6"
         >
           <div class="card">
-            <img width="100%" :src="getSrc(exampleJ.link!)" @click="goPage(exampleJ.link!)" /><span
-              class="text"
-            >
+            <img
+              width="100%"
+              :src="getSrc(exampleJ.link!)"
+              @click="goPage(exampleJ.link!)"
+            /><span class="text">
               <div class="circle" />
               <span class="name" :title="exampleJ.text">{{
                 exampleJ.text

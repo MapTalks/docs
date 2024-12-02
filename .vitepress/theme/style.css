@@ -43,7 +43,7 @@
  *   in custom container, badges, etc.
  * -------------------------------------------------------------------------- */
 
- :root {
+:root {
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
   --vp-c-default-3: var(--vp-c-gray-3);
@@ -146,6 +146,13 @@ details {
 }
 
 details[open] summary::before {
-  content:"▼";
-  padding: .7em;
+  content: "▼";
+  padding: 0.7em;
+}
+
+/**
+ * Component: Layout
+ * -------------------------------------------------------------------------- */
+:root {
+  --vp-layout-max-width: 1680px;
 }

@@ -1,20 +1,35 @@
 <script setup lang="ts">
 import { Repl, useStore } from "@vue/repl";
 import CodeMirror from "@vue/repl/codemirror-editor";
-import { watchEffect, toRef, ref } from "vue";
+import { watchEffect, toRef, ref, reactive } from "vue";
 import { onHashChange } from "./utils";
 import { data } from "./examples.data";
+import html2canvas from "html2canvas";
 import {
   SaveOutlined,
   ReloadOutlined,
   ShareAltOutlined,
   DownloadOutlined,
+  FolderAddOutlined,
 } from "@ant-design/icons-vue";
 import { ElMessage } from "element-plus";
 
 const replRef = ref<InstanceType<typeof Repl>>();
 
 const loading = ref(false);
+const dialogFormVisible = ref(false);
+const formLabelWidth = "140px";
+
+const form = reactive({
+  name: "",
+  region: "",
+  date1: "",
+  date2: "",
+  delivery: false,
+  type: [],
+  resource: "",
+  desc: "",
+});
 
 const importMap = {
   imports: {
@@ -46,7 +61,7 @@ function updateExample() {
   }
   const htmlText = (data[hash]["index.html"] as string).replaceAll(
     "{res}",
-    "/examples/resources",
+    "/examples/resources"
   );
   const cssText = data[hash]["index.css"] as string;
   store.setFiles(
@@ -54,12 +69,13 @@ function updateExample() {
       "index.html": htmlText,
       "index.css": cssText,
     },
-    "index.html",
+    "index.html"
   );
 }
 
 function savePage() {
   loading.value = true;
+  dialogFormVisible.value = false;
   setTimeout(() => {
     ElMessage.success(`示例修改成功, 已创建 pr: basic/map/load`);
     loading.value = false;
@@ -71,6 +87,14 @@ function reloadPage() {
 }
 
 async function copyLink() {
+  const iframeWindow = (
+    document.querySelector(".iframe-container iframe") as any
+  ).contentWindow;
+  console.log(iframeWindow.document.body);
+  html2canvas(iframeWindow.document.body).then(function (canvas) {
+    const url = canvas.toDataURL("image/webp")
+    console.log(url)
+  });
   await navigator.clipboard.writeText(window.location.href);
   ElMessage.success("分享链接已经复制到剪切板。");
 }
@@ -79,7 +103,20 @@ async function copyLink() {
 <template>
   <div class="examples-action-icons">
     <el-tooltip content="保存">
-      <SaveOutlined :style="{ marginRight: '12px' }" @click="savePage" />
+      <el-popconfirm
+        title="确认提交当前示例的修改吗?"
+        confirm-button-text="确定"
+        cancel-button-text="取消"
+        @confirm="savePage"
+        ><template #reference>
+          <SaveOutlined :style="{ marginRight: '12px' }" /></template
+      ></el-popconfirm>
+    </el-tooltip>
+    <el-tooltip content="另存为"
+      ><FolderAddOutlined
+        :style="{ marginRight: '12px' }"
+        @click="dialogFormVisible = true"
+      />
     </el-tooltip>
     <el-tooltip content="刷新">
       <ReloadOutlined :style="{ marginRight: '12px' }" @click="reloadPage" />
@@ -106,6 +143,31 @@ async function copyLink() {
     >
       <span class="i-ant-design:github-outlined w-1.5em h-1.5em"></span>
     </el-link>
+    <el-dialog
+      append-to-body
+      v-model="dialogFormVisible"
+      :z-index="99"
+      title="新增示例"
+      width="500"
+    >
+      <el-form :model="form">
+        <el-form-item label="示例名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="选择分类" :label-width="formLabelWidth">
+          <el-select v-model="form.region" placeholder="请选择示例所属分类">
+            <el-option label="Zone No.1" value="shanghai" />
+            <el-option label="Zone No.2" value="beijing" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="savePage"> 确定 </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
   <div class="examples-repl-page" v-loading="loading">
     <Repl

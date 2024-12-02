@@ -1,8 +1,6 @@
 import { join, resolve } from "path";
 import { readFileSync, readdirSync, statSync } from "fs";
 
-import { createMarkdownRenderer } from "vitepress";
-
 export declare const data: Record<string, ExampleData>;
 
 export type ExampleData = {

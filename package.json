@@ -6,11 +6,14 @@
     "@vue/repl": "^4.4.2",
     "element-plus": "^2.9.0",
     "html2canvas": "^1.4.1",
+    "lodash": "^4.17.21",
     "md-editor-v3": "^5.0.2",
+    "octokit": "^4.0.2",
     "vitepress": "^1.5.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.13",
     "@types/node": "^22.10.1"
   },
   "scripts": {

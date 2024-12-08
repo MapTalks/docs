@@ -6,16 +6,20 @@ import { zh } from "./config/zh";
 export default defineConfig({
   title: "MapTalks",
   description: "",
-  srcDir: 'src',
+  srcDir: "src",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
 
     socialLinks: [
       { icon: "github", link: "https://github.com/maptalks/maptalks.js" },
     ],
+    // editLink: {
+    //   pattern: 'https://github.com/fuzhenn/builder-docs/edit/master/src/:path'
+    // }
     editLink: {
-      pattern: 'https://github.com/fuzhenn/builder-docs/edit/master/src/:path'
-    }
+      pattern: "http://localhost:5173/editor?origin=:path",
+      text: "Edit",
+    },
   },
 
   locales: {

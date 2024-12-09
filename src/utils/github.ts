@@ -141,7 +141,7 @@ export function getFolder(currentFiles: File[]) {
  */
 export async function createFile(
   files: File[],
-  { branch, folder, repositoryId }: any
+  { head, folder }: { head: string; folder: string }
 ) {
   let isUpdate = false;
   for (let i = 0; i < files.length; i++) {
@@ -166,16 +166,13 @@ export async function createFile(
     });
   }
 
-  await to(
-    createPR({
-      repositoryId,
-      branch,
-      title: isUpdate
-        ? `update: edit ${folder} playground`
-        : `feature: add ${folder} playground`,
-      body: isUpdate ? `edit ${folder} playground` : `add ${folder} playground`,
-    })
-  );
+  await createPR({
+    title: isUpdate
+      ? `update: edit ${folder} playground`
+      : `feature: add ${folder} playground`,
+    body: isUpdate ? `edit ${folder} playground` : `add ${folder} playground`,
+    head,
+  });
 }
 
 export function filterFolder(list: any) {
@@ -201,7 +198,7 @@ export function filterFolders(list: any[]) {
 
 export async function updatePlayground(
   folder: string,
-  content: any[],
+  content: File[],
   isUpdate = false
 ) {
   const branch = buildBranch();
@@ -215,7 +212,9 @@ export async function updatePlayground(
         owner,
         repo,
         commit_sha: data.oid,
-        headers: {},
+        headers: {
+          ...COMMON_HEADERS
+        },
       })
     );
 
@@ -246,12 +245,11 @@ export async function updatePlayground(
             owner,
             repo,
             message: isUpdate
-              ? `update: edit ${folder} playground`
-              : `feature: add ${folder} playground`,
+              ? `update: edit ${folder} examples`
+              : `feature: add ${folder} examples`,
             tree: treeRes.data.sha,
             parents: [data.oid],
-            committer: "",
-            author: "",
+            author: committer,
             headers: {},
           })
         );
@@ -270,16 +268,16 @@ export async function updatePlayground(
 
           if (!updateError && updateRes) {
             // 6: 创建pr
-            return await createPR({
-              repositoryId: data.repositoryId,
-              branch,
-              title: isUpdate
-                ? `update: edit ${folder} playground`
-                : `feature: add ${folder} playground`,
-              body: isUpdate
-                ? `edit ${folder} playground`
-                : `add ${folder} playground`,
-            });
+            // return await createPR({
+            //   repositoryId: data.repositoryId,
+            //   branch,
+            //   title: isUpdate
+            //     ? `update: edit ${folder} playground`
+            //     : `feature: add ${folder} playground`,
+            //   body: isUpdate
+            //     ? `edit ${folder} playground`
+            //     : `add ${folder} playground`,
+            // });
           }
           ElNotification({
             title: "",
@@ -316,285 +314,59 @@ export async function updatePlayground(
   }
 }
 
-/**
- * 获取仓库的文件目录树
- */
-export async function getFileTree(sha = "main", depth = 0, path = "") {
-  if (depth > 2) return [];
-
-  const [error, res] = await to<any>(
-    octokit.graphql(
-      `
-      query($owner: String!, $repo: String!, $expression: String!) {
-        repository(owner: $owner, name: $repo) {
-          object(expression: $expression) {
-            ... on Tree {
-              entries {
-                mode
-                path
-                name
-                type
-                sha: oid
-                object {
-                  ... on Tree {
-                    entries {
-                      mode
-                      path
-                      name
-                      type
-                      oid
-                      object {
-                        ... on Tree {
-                          entries {
-                            mode
-                            path
-                            name
-                            type
-                            oid
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-      {
-        owner,
-        repo,
-        expression: `${sha}:`,
-        headers: {},
-      }
-    )
-  );
-
-  if (!error && res.repository) {
-    const data = (get(res, "repository.object.entries", []) as any).filter(
-      (item: any) => item.type === "tree"
-    );
-
-    const appStore = useAppStoreHook() as any;
-    const loop = (array: any, parent?: any) => {
-      for (let i = 0; i < array.length; i++) {
-        const item = array[i];
-
-        const p = appStore.playgroundTypes.find(
-          (pl: any) => pl.id === item.name
-        );
-
-        if (p) {
-          // 给枚举数据赋值上sha
-          p.sha = item.sha;
-          // 给枚举数据赋值上祖先节点(第一级节点无父级)
-          p.ancestors = [];
-          assign(item, p);
-        } else {
-          assign(item, {
-            collapse: true,
-            ancestors: parent?.ancestors
-              ? [
-                  ...parent.ancestors,
-                  { name: parent.name, oid: parent.oid || parent.sha },
-                ]
-              : [
-                  {
-                    name: parent?.name,
-                    oid: parent?.oid || parent?.sha,
-                  },
-                ],
-          });
-        }
-
-        if (item.type === "tree" && item?.object?.entries?.length > 0) {
-          item.children = loop(item.object.entries, item).filter(
-            (it: any) => ![".gitkeep"].includes(it.name)
-          );
-        } else {
-          item.children = null;
-          item.ancestors = parent?.ancestors
-            ? [
-                ...parent.ancestors,
-                { name: parent.name, oid: parent.oid || parent.sha },
-              ]
-            : [
-                {
-                  name: parent?.name,
-                  oid: parent?.oid || parent?.sha,
-                },
-              ];
-        }
-      }
-
-      return array;
-    };
-
-    const newData = loop(data);
-
-    return ascending(newData);
-  }
-
-  return [];
-}
-
-// 以下文件无需拉取，这是通用公共文件
-const excludeFileName = [
-  "index.html",
-  "vite.config.js",
-  "README.md",
-  "main.js",
-  "package.json",
-  ".gitkeep",
-];
-
-export async function getPlayground(item: any) {
-  const [error, res] = await to<any>(
-    octokit.graphql(
-      `
-      query($owner: String!, $repo: String!, $expression: String!) {
-        repository(owner: $owner, name: $repo) {
-          object(expression: $expression) {
-            ... on Tree {
-              entries {
-                mode
-                path
-                name
-                type
-                sha: oid
-                object {
-                  ... on Blob {
-                    byteSize
-                    isBinary
-                    text
-                  }
-
-                  ... on Tree {
-                    entries {
-                      mode
-                      path
-                      name
-                      type
-                      sha: oid
-                      object {
-                        ... on Blob {
-                          byteSize
-                          isBinary
-                          text
-                        }
-
-                        ... on Tree {
-                          entries {
-                            mode
-                            path
-                            name
-                            type
-                            sha: oid
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    `,
-      {
-        owner,
-        repo,
-        // oid: item.oid,
-        expression: `${item.oid}:`,
-        headers: {},
-      }
-    )
-  );
-
-  const entries = get(res, "repository.object.entries", []);
-
-  const tree: any[] = [];
-  const buildTree = (es: any) => {
-    for (let i = 0; i < es.length; i++) {
-      const entry = es[i];
-
-      if (entry.type === "tree") {
-        buildTree(entry.object.entries);
-      } else if (
-        entry.type === "blob" &&
-        !excludeFileName.includes(entry.name)
-      ) {
-        tree.push({
-          ...entry,
-          playgroundCode: entry.object.text,
-          playgroundPath: entry.path,
-        });
-      }
+export async function deleteFile(file: File) {
+  const res = await octokit.request(
+    "DELETE /repos/{owner}/{repo}/contents/{path}",
+    {
+      owner,
+      repo,
+      path: file.path,
+      message: "my commit message",
+      committer,
+      sha: file.sha,
+      headers: {
+        ...COMMON_HEADERS,
+      },
     }
-  };
+  );
 
-  if (!error && entries) {
-    buildTree(entries);
-    return tree;
-  }
-
-  return [];
-}
-
-export async function deleteFile(file: { path: string; sha: string }) {
-  await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
-    owner,
-    repo,
-    path: file.path,
-    message: "my commit message",
-    committer: "",
-    author: "",
-    sha: file.sha,
-    headers: {},
-  });
+  return res;
 }
 
 /**
  * 在 github 创建 pr
- * todo: 需要判断是否有文件变更
- * @param repositoryId
- * @param branch
  * @param title
  * @param body
+ * @param head
  */
 export async function createPR({
-  repositoryId,
-  branch,
   title,
   body,
+  head,
 }: {
-  repositoryId: string;
-  branch: string;
   title: string;
   body: string;
+  head: string;
 }) {
-  const res =  await octokit.request('POST /repos/{owner}/{repo}/pulls', {
+  const res = await octokit.request("POST /repos/{owner}/{repo}/pulls", {
     owner,
     repo,
     title,
     body,
-    head: 'octocat:new-feature',
-    base: 'master',
+    head,
+    base: BASE_BRANCH,
     headers: {
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
+      ...COMMON_HEADERS,
+    },
+  });
 
-  return res?.createPullRequest?.pullRequest;
+  return res;
 }
 
 export async function createFolder(body: {
   name: string;
   playgroundType: string;
-  sha?: string;
+  sha: string;
 }) {
   const branch = buildBranch();
 
@@ -607,8 +379,10 @@ export async function createFolder(body: {
       octokit.request("GET /repos/{owner}/{repo}/git/commits/{commit_sha}", {
         owner,
         repo,
-        commit_sha: data.oid,
-        headers: {},
+        commit_sha: body.sha,
+        headers: {
+          ...COMMON_HEADERS,
+        },
       })
     );
 
@@ -618,7 +392,7 @@ export async function createFolder(body: {
         octokit.request(`POST /repos/{owner}/{repo}/git/trees`, {
           owner,
           repo,
-          base_tree: cr.data.tree.sha,
+          tree_sha: cr.data.tree.sha,
           tree: [
             {
               path: `${body.playgroundType}/${body.name}/.gitkeep`,
@@ -628,7 +402,9 @@ export async function createFolder(body: {
               // content: Buffer.from('').toString('base64'),
             },
           ],
-          headers: {},
+          headers: {
+            ...COMMON_HEADERS,
+          },
         })
       );
 
@@ -639,11 +415,13 @@ export async function createFolder(body: {
             owner,
             repo,
             message: "docs: add folder",
+            author: committer,
+            parents: [data.sha],
             tree: treeRes.data.sha,
-            parents: [data.oid],
-            committer: "",
-            author: "",
-            headers: {},
+            committer,
+            headers: {
+              ...COMMON_HEADERS,
+            },
           })
         );
 
@@ -661,14 +439,14 @@ export async function createFolder(body: {
 
           if (!updateError && updateRes) {
             // 6: 创建pr
-            await to(
-              createPR({
-                repositoryId: data.repositoryId,
-                branch,
-                title: `update: add folder ${body.playgroundType}/${body.name}`,
-                body: `add folder ${body.playgroundType}/${body.name}`,
-              })
-            );
+            // await to(
+            //   createPR({
+            //     repositoryId: data.repositoryId,
+            //     branch,
+            //     title: `update: add folder ${body.playgroundType}/${body.name}`,
+            //     body: `add folder ${body.playgroundType}/${body.name}`,
+            //   })
+            // );
           } else {
             ElNotification({
               title: "",
